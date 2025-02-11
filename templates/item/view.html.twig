@@ -1,0 +1,194 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Vélo à venir chercher{% endblock %}
+{% block head %}
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="" />
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
+{% endblock %}
+
+{% block main %}
+
+    <div class="container mt-2 fill">
+        <a href="#" class="color-theme-green">Annonces <i class="bi bi-arrow-right-short"></i></a>
+        <a href="#" class="color-theme-green">Paris <i class="bi bi-arrow-right-short"></i></a>
+        <a href="#" class="color-theme-green">Musique <i class="bi bi-arrow-right-short"></i></a>
+        <span class="">Vélo </span>
+    </div>
+    <section class="container my-5" id="page-item-details">
+        <article class="col-12 d-flex">
+
+            <div class="position-relative col-9">
+                <div id="content-images-carousel" class="">
+                    <div class="position-absolute" >
+                        <button class="p-2 border-0 bg-theme-white-2 rounded-2 fs-3 fw-bold" data-bs-toggle="modal" data-bs-target="#carouselImage"><i class="bi bi-arrows-angle-expand"></i></button>
+                    </div>
+                    <div class="d-flex justify-content-center">
+                        <img src="{{ datas[0].image }}" alt="{{ datas[0].image }}" class="rounded-top-4" id="img-main">
+                    </div>
+
+                    <div class="d-flex flex-wrap justify-content-between" id="images-carousel">
+                        {% for index, data in datas %}
+                            <div class="{{ index >= 3 ? 'd-none' : '' }} col-4 my-2 row">
+                                <img src="{{ data.image }}" alt="{{ data.title }}" class="col-12 object-fit-cover img-carousel-small
+                            {%  if index == 0 %} rounded-start-4 {% elseif index == 2 %} rounded-end-4 {% endif %}" width="150" height="150">
+                            </div>
+                        {% endfor %}
+                    </div>
+                    {% if datas|length > 3 %}
+                        <!-- Icon favorite -->
+                        <div class="position-absolute" id="content-icon-favorite">
+                            <button class="p-2 border-0 bg-theme-white-2 rounded-2 fs-6 fw-bold"><i class="bi bi-heart"></i></button>
+                        </div>
+                        <div class="position-absolute" id="btn-details-img">
+                            <p class="btn bg-theme-white-2 rounded-4 px-3 py-1 col-12" data-bs-toggle="modal" data-bs-target="#carouselImage">Voir les {{ datas | length }} photos</p>
+                        </div>
+                    {% endif %}
+
+                </div>
+
+            </div>
+
+            <div class="border rounded-4 shadow-sm col-3 p-4 ms-3" id="message">
+                <div class="d-flex">
+                    <img src="{{ asset('/img/avatars/avatar-man.svg') }}" alt="" width="80" height="80">
+                    <div class="my-auto mx-2">
+                        <p class="h5 align-items-center my-auto">Bolain Bass</p>
+                        <p class="fs-6 my-auto">20 annonces</p>
+                    </div>
+                </div>
+                <div class="d-flex justify-content-center mt-4">
+                    <button class="border-0 col-12 py-3 btn-custom rounded-4 bg-theme-success color-theme-white-2">Contacter</button>
+                </div>
+
+
+                <div class="form-group mt-4">
+                    <div class="d-flex mb-3">
+                        <label for="datetimepicker-start" class="me-2 py-2">Du</label>
+                        <input type="text" id="datetimepicker-start" class="form-control rounded-4 py-2" placeholder="Choisir une date et une heure">
+                    </div>
+                    <div class="d-flex">
+                        <label for="datetimepicker-end" class="me-2 py-2">Au</label>
+                        <input type="text" id="datetimepicker-end" class="form-control rounded-4 py-2" placeholder="Choisir une date et une heure">
+                    </div>
+
+                </div>
+            </div>
+
+        </article>
+
+        <article class="col-9 mt-3">
+            <div id="info-item">
+                <h1 class="h5 fw-bolder mb-3">Guitare</h1>
+                <p>30 $</p>
+                <p class=""><small>Déposé le 28/01/2025 à 10:30</small></p>
+                <hr>
+                <p> <span class="h5">Categories</span>
+                <ul>
+                    <li><a href="#" class="color-theme-green">Sport</a></li>
+                    <li><a href="" class="color-theme-green">Musique</a></li>
+                    <li><a href="" class="color-theme-green">Appareil</a></li>
+                </ul>
+
+            </div>
+
+            <hr>
+            <div>
+                <h2 class="fs-5">Description</h2>
+                <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit.
+                    Adipisci animi dolores libero nam saepe. Aliquid autem blanditiis dolorum, expedita facere fuga
+                    id itaque maxime molestiae pariatur quis suscipit veritatis voluptas!
+
+                    Lorem ipsum dolor sit amet, consectetur adipisicing elit. Expedita harum odit officia reprehenderit tenetur.
+                    Aperiam consequuntur deleniti dicta earum eos est facilis harum mollitia, nesciunt placeat possimus recusandae sequi, soluta?
+                </p>
+            </div>
+
+
+            {% if coordonates is not empty %}
+                <div class="">
+                    <h2 class="fs-5">{{ coordonates.name }}</h2>
+                    <div id="map" class="rounded-3"></div>
+                </div>
+            {% endif %}
+
+            <hr>
+
+        </article>
+
+    </section>
+
+    {% include '_partial/item/modal.html.twig' %}
+
+    <script type="text/javascript">
+
+        document.addEventListener('DOMContentLoaded', () => {
+
+
+            flatpickr("#datetimepicker-start", {
+                locale: 'fr',
+                plugins: [
+                    new rangePlugin({ input: "#datetimepicker-end"}),
+                ],
+                enableTime: true,
+                minDate: "today",
+                time_24hr: true,
+                nextArrow: "<i class='bi bi-caret-right'></i>",
+                prevArrow: "<i class='bi bi-caret-left'></i>",
+                dateFormat: "d-m-Y H:i",
+                confirmIcon: "<i class='fa fa-check'></i>",
+                confirmText: "OK ",
+                showAlways: false,
+                theme:  "dark",
+                disableMobile: "true",
+                onChange: function (selectedDates, dateStr, instance) {
+                    // Vérifier si une date est sélectionnée
+                    if (selectedDates.length > 0) {
+                        const date = selectedDates[0]; // Obtenir l'objet Date
+                        // Obtenir le nom du jour en français
+                        const options = { weekday: 'long' };
+                        const dayName = date.toLocaleDateString('fr-FR', options);
+                        // Afficher le nom du jour
+                        document.getElementById('day_display').textContent = `Jour : ${dayName}`;
+                    }
+                    }
+                });
+
+            let imgCarousel = document.querySelectorAll('.img-carousel-small');
+            let imgCarouselMain = document.getElementById('img-main')
+
+            // les clicks sur image
+            imgCarousel.forEach((el) => {
+
+                el.addEventListener('click', () =>{
+
+                    imgCarouselMain.setAttribute('src', el.getAttribute('src'))
+                    imgCarouselMain.setAttribute('alt', el.getAttribute('alt'))
+
+                })
+            })
+
+
+
+            {% if coordonates is not empty %}
+
+                let lat = {{ coordonates.lat }};
+                let lon = {{ coordonates.lon }};
+
+                let map = L.map('map', {
+                    zoom: 13,
+                    center: [lat, lon]
+                })
+
+                L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                    minZoom: 1,
+                    maxZoom: 20,
+                    attribution: '© <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+                }).addTo(map);
+
+                let marker = L.marker([lat, lon]).addTo(map);
+
+            {% endif %}
+
+        })
+    </script>
+{% endblock %}

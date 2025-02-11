@@ -1,0 +1,26 @@
+parameters:
+    nameProject: '%env(APP_NAME)%'
+    urlNominatim: '%env(URL_NOMINATIM)%'
+    adressEmail: '%env(ADRESS_EMAIL)%'
+    urlApiGeoGouv: '%env(URL_API_GEO_GOUV)%'
+
+services:
+    # default configuration for services in *this* file
+    _defaults:
+        autowire: true      # Automatically injects dependencies in your services.
+        autoconfigure: true # Automatically registers your services as commands, event subscribers, etc.
+
+
+    # this creates a service per class whose id is the fully-qualified class name
+    App\:
+        resource: '../src/'
+        exclude:
+            - '../src/DependencyInjection/'
+            - '../src/Entity/'
+            - '../src/Kernel.php'
+
+    App\Service\HttpClientService:
+        arguments:
+            $urlApiGeoGouv: '%env(URL_API_GEO_GOUV)%'
+
+

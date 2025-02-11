@@ -1,0 +1,120 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Vélo à venir chercher{% endblock %}
+
+pa
+{% block main %}
+
+    <div class="container d-flex search-item flex-column flex-lg-row">
+
+        {% include('_partial/item/form_search.html.twig') %}
+        {% include('_partial/item/results_search.html.twig') %}
+
+    </div>
+
+    {% block javascripts %}
+        <script type="text/javascript">
+            document.addEventListener('DOMContentLoaded', () => {
+                // Fonction remplir les noms de ville
+                const getCities = async (input, dropdown) => {
+
+                    const url = Routing.generate('app_item_city', {
+                        city: input.value
+                    })
+
+                    try {
+                        const response = await fetch(url, {
+                            method: 'GET',
+                            headers: {
+                                "Accept": "application/json"
+                            }
+                        })
+                        const json = await response.json()
+
+                        dropdown.innerHTML = ''
+                        dropdown.innerHTML = json[0]
+
+                        dropdown.classList.remove('d-none')
+
+                    } catch (error) {
+                        console.log(error.message)
+                    }
+                }
+
+                // Function vider input sur un click
+                const emptyInput = () => {
+
+                    const btnEmpty = document.querySelectorAll('.btn-empty-input')
+
+                    btnEmpty.forEach((element) => {
+                        element.addEventListener('click', () => {
+                            const input = element.closest('div').querySelector('input')
+                            if(input){
+                                input.value = ''
+                            }
+                        })
+
+                    })
+                }
+
+                //
+                const emptyFilters = () => {
+                    const btn = document.querySelector('.empty-filter')
+                    if(btn){
+                        btn.addEventListener('click', (e) => {
+                            e.preventDefault()
+                            const inputs = btn.closest('form').querySelectorAll('input')
+                            inputs.forEach((input) => {
+                                input.value = ''
+                            })
+                        })
+                    }
+                }
+
+                // fonction qui empeche les saisies non numériques
+                const blockNonNumericInput = (event) => {
+                    // Vérifier si la touche pressée est un chiffre (0-9) ou une touche de contrôle
+                    const key = event.key;
+                    // Ajouter un événement 'keydown' pour bloquer les caractères non numériques
+                    if (!/[0-9]/.test(key) &&
+                        key !== "Backspace" &&
+                        key !== "ArrowLeft" &&
+                        key !== "ArrowRight" &&
+                        key !== "Tab") {
+                        event.preventDefault();
+                    }
+                }
+
+                const inputSearchCity = document.getElementById("search-city");
+                const cityOptions = document.getElementById("city-options");
+
+                const btnEmptyInput = document.querySelectorAll('.btn-empty-input')
+                const inputsPrice = document.querySelectorAll('.filter-price')
+
+                // afficher la liste des villes
+                inputSearchCity.addEventListener('keyup', async () => {
+                    cityOptions.classList.remove('d-none')
+                    await getCities(inputSearchCity, cityOptions)
+                })
+                // cacher la liste de ville
+                inputSearchCity.addEventListener('blur', () => {
+                    cityOptions.classList.add('d-none')
+                })
+                // vider input sur click
+                emptyInput()
+
+                // bloquer saisies non numériques
+                inputsPrice.forEach((input) => {
+                    input.addEventListener('keydown', function(event) {
+                        blockNonNumericInput(event)
+                    });
+                })
+
+                emptyFilters()
+
+
+
+            })
+        </script>
+    {% endblock %}
+{% endblock %}

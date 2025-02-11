@@ -1,0 +1,73 @@
+@import "_variables.scss";
+@import "~bootstrap/scss/bootstrap";
+@import "~bootstrap-icons/font/bootstrap-icons.css";
+
+@font-face {
+  font-family: 'Roboto';
+  src: url('../fonts/RobotoSlab-Regular.ttf') format('truetype');
+  font-weight: 400;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'Roboto';
+  src: url('../fonts/RobotoSlab-Bold.ttf') format('truetype');
+  font-weight: 600;
+  font-style: normal;
+}
+
+*{
+  font-family:  'Helvetica Neue', 'Roboto', sans-serif;
+}
+a, li {
+  text-decoration: none;
+  color: inherit;
+}
+li{
+  list-style: none;
+}
+
+.cursor-pointer{
+  cursor: pointer;
+}
+.pointer-events-none {
+  pointer-events: none;
+}
+
+
+// Les couleurs
+.color-theme-white{
+  color: $color-theme-white;
+}
+.color-theme-white-2{
+  color: $color-theme-white-2;
+}
+.bg-theme-gray{
+  background-color: $color-theme-gray;
+}
+.cursor-pointer{
+  cursor: pointer;
+}
+.pointer-events-none {
+  pointer-events: none;
+}
+
+
+header{
+  box-shadow: rgba(17, 17, 26, 0.05) 0 1px 0, rgba(17, 17, 26, 0.1) 0 0 8px;
+}
+
+main{
+  min-height: 4vh !important;
+}
+
+footer {
+  box-shadow: rgba(17, 17, 26, 0.05) 0px 1px 0px, rgba(17, 17, 26, 0.1) 0px 0px 8px;
+  .network-icon:hover{
+    color: white !important;
+    background-color: #1a1d20;
+  }
+  .nav-item:hover{
+    font-size: 1.1em;
+  }
+}

@@ -1,0 +1,87 @@
+<section class="container col-8 col-xs-12 col-md-12 col-sm-12 col-lg-8">
+
+    <div class="bg-theme-white-2 rounded-3 d-flex justify-content-between px-4 py-2 mb-3">
+        <p class="m-0 text-black-50">Nombre de résultats: 50</p>
+        <p class="m-0 text-black-50">Trier par: <span class="color-theme-green cursor-pointer"><i class="bi bi-sort-up"></i></span></p>
+    </div>
+    <div class="card-content">
+
+        <ul class="rounded-3 p-0">
+            {% for i in 1..2 %}
+
+                <li class="bg-theme-white-2 col-12 rounded-3 mb-3 item-card border-theme-green-2">
+                    <a href="#" class="d-flex">
+                        <div class="img-card-search col-4">
+                            <img src="https://picsum.photos/700/300" alt="img-{{ i }}" class="col-12 rounded-start-3 h-100">
+                        </div>
+
+                        <div class="py-3 ms-3">
+                            <h3 class="fs-6 fw-bolder title-card ">Drône Pro 4 - 4 batteries</h3>
+                            <p class="fw-bold">150 €</p>
+                            <span class="border-theme-dark-olive-green p-2 rounded-3">Particulier</span>
+                            <div class="d-flex flex-column col-12 text-black-50 mt-3">
+                                <small class="category d-block">Technologie</small>
+                                <small class="city">Cergy - 95000</small>
+                                <small class="date">Publié le 25 décembre à 12:30</small>
+                            </div>
+                        </div>
+
+
+                    </a>
+                </li>
+            {% endfor %}
+        </ul>
+
+        <div class="pagination-content col-8 mx-auto">
+
+            <ul class="pagination d-flex justify-content-between mt-5">
+                {% if nbPage > 1 %}
+
+                    {# Bouton "Précédent" #}
+                    <li class="{{ currentPage == 1 ? 'pointer-events-none' : '' }} rounded-3 p-2">
+                        <a href="{{ path('app_item_search', {'page': currentPage - 1}) }}">
+                            <i class="bi bi-chevron-left"></i>
+                        </a>
+                    </li>
+
+                    {# Définition des limites de la pagination #}
+                    {% set startPage = 1 %}
+                    {% set endPage = nbPage %}
+
+                    {% if nbPage > 10 %}
+                        {% if currentPage <= 5 %}
+                            {% set startPage = 1 %}
+                            {% set endPage = 10 %}
+                        {% elseif currentPage >= nbPage - 4 %}
+                            {% set startPage = nbPage - 9 %}
+                            {% set endPage = nbPage %}
+                        {% else %}
+                            {% set startPage = currentPage - 4 %}
+                            {% set endPage = currentPage + 5 %}
+                        {% endif %}
+                    {% endif %}
+
+                    {# Affichage des boutons de pagination #}
+                    {% for page in startPage..endPage %}
+                        <li  class="{{ page == currentPage ? 'bg-theme-dark-moss-green color-theme-white-2 active pointer-events-none' }} rounded-3 p-2">
+                            <a href="{{ path('app_item_search', {'page': page}) }}">
+                                {{ page }}
+                            </a>
+                        </li>
+                    {% endfor %}
+
+                    {# Bouton "Suivant" #}
+                    <li class="{{ currentPage == nbPage ? 'pointer-events-none' : '' }} rounded-3 p-2">
+                        <a href="{{ path('app_item_search', {'page': currentPage + 1}) }}">
+                            <i class="bi bi-chevron-right"></i>
+                        </a>
+                    </li>
+
+                {% endif %}
+            </ul>
+
+        </div>
+
+    </div>
+
+</section>

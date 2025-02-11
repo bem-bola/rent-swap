@@ -1,0 +1,21 @@
+{% if cities | length > 1 %}
+    {% for city in cities %}
+        {% if city.codesPostaux | length > 1 %}
+            {% for code in city.codesPostaux %}
+                <li class="city-name py-1 color-theme-dark-olive-green col-12" data-value="{{ city.nom }}" id="{{ city.nom }}-{{ code }}">
+                    {{ city.nom }} ({{ code }})
+                </li>
+            {% endfor %}
+        {% else %}
+            <li aria-disabled="true" class="city-name py-1 color-theme-dark-olive-green col-12" data-value="{{ city.nom }}">
+                {{ city.nom }} ({{ city.codesPostaux | first }})
+            </li>
+        {% endif %}
+    {% endfor %}
+{% else %}
+    <p class="p-3 text-danger">
+        <small>
+            <i class="bi bi-info-circle"></i> Aucun résultat ne correspond à <strong>{{ city }}</strong>
+        </small>
+    </p>
+{% endif %}
