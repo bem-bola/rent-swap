@@ -33,9 +33,15 @@ li{
 .pointer-events-none {
   pointer-events: none;
 }
+.font-size-3{
+  font-size: 3em;
+}
+.font-size-4{
+  font-size: 4em;
+}
 
 
-// Les couleurs
+  // Les couleurs
 .color-theme-white{
   color: $color-theme-white;
 }
@@ -45,13 +51,21 @@ li{
 .bg-theme-gray{
   background-color: $color-theme-gray;
 }
+.bg-theme-dark{
+  background-color: $color-theme-dark;
+}
 .cursor-pointer{
   cursor: pointer;
 }
 .pointer-events-none {
   pointer-events: none;
 }
+.bg-image-1{
+  background-image: url("/public/img/home/model-1.png");
+  background-repeat: no-repeat;
+  background-size: cover;
 
+}
 
 header{
   box-shadow: rgba(17, 17, 26, 0.05) 0 1px 0, rgba(17, 17, 26, 0.1) 0 0 8px;
@@ -59,6 +73,9 @@ header{
 
 main{
   min-height: 4vh !important;
+  #section-home-1 {
+
+  }
 }
 
 footer {

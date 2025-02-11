@@ -1,18 +1,8 @@
 $color-theme-white:                 #F0F2F2;
 $color-theme-white-2:               #F2F9F9;
 $color-theme-gray:                  #F5F5F5;
-$color-theme-green:                 #038C73;
-$color-theme-green-2:               #1CAB8C;
-$color-theme-success:               #45BF92;
-$color-theme-mint-green:            #BDE9D2;
-$color-theme-dark-olive-green:      #354034;
-$color-theme-dark-moss-green:       #02302F;
-$color-theme-blue:                  #2A86BF;
+$color-theme-dark:                  #131313;
 
-
-$input-focus-border-color:          $color-theme-green;
-
-$input-btn-focus-color-opacity:     $color-theme-green-2;
 $input-btn-focus-color:             none;
 $input-btn-focus-blur:              none;
 $input-btn-focus-box-shadow:        none;
@@ -26,7 +16,7 @@ $input-focus-box-shadow:            none;
 
 $input-group-addon-color:           red !important;
 $input-group-addon-bg:              #ffffff !important;
-$input-group-addon-color:           $color-theme-green !important;
+$input-group-addon-color:           $color-theme-dark  !important;
 $input-group-background:            green !important;
 
-$success:                           $color-theme-success;
+
