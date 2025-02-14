@@ -3,27 +3,128 @@
 {% block title %}RentSwap - Home{% endblock %}
 
 {% block main %}
-    <section id="section-home-1" class="">
+    <section id="section-home-1" class="mt-5">
         <h1 class="text-center font-size-3 mt-4">Louez les objets dont vous avez besoin, <br>quand vous en avez besion !</h1>
         <p class="text-center fs-5 mt-3">Réduisez vos dépenses et adoptez une consommation plus responsable <br>en louant des objets près de chez vous.</p>
+        <div class="d-flex justify-content-center">
+            <a href="#" class=" bg-theme-dark text-white fw-bold py-3 px-5 rounded-pill">Déposer une annonce </a>
+        </div>
     </section>
-    <section class="bg-theme-dark text-white py-5 rounded-4 row">
 
-        <div class="col-4 ps-5 py-5">
+    <section class="bg-theme-dark text-white rounded-4 d-flex mt-5 py-9 row" id="section-home-2">
+
+        <div class="col-4 ps-5 pt-5" >
 
             <h2 class="font-size-3 mt-5 mb-3">Plus de 5 000 objets disponibles à la location</h2>
             <a href="#" class="btn btn-light rounded-pill mb-5">Voir les objets</a>
 
         </div>
 
-        <div class="col"></div>
+        <div id="carousel-content" class="col-8 d-flex">
+            <div class="carousel-wrapper overflow-hidden position-relative col-12">
+                <div class="carousel-track d-flex">
+                    {% for card in 1..5 %}
+                        <div class="carousel-card text-white mx-2 col-3 rounded-4 bg-white">
+                            <div class="bg-primary d-flex py-6 justify-content-center px-auto rounded-4 mb-3">
+                                <h3 class="fs-4">Musique-{{ card }}</h3>
+                            </div>
+
+                            <div class="pb-5">
+                                <p class="text-dark text-center fs-4 ">4.80$ / heure</p>
+                                <a href="#" class="bg-theme-dark d-block mx-auto text-white py-2 col-9 text-center rounded-pill">Voir</a>
+                            </div>
+
+                        </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+
+
+    </section>
+
+    <section id="section-home-3" class="mt-5">
+        <div id="how">
+            <h2 class="text-center fs-2 fw-bold">Comment ça marche ?</h2>
+            <p class="text-center fst-italic">Louer un objet, c'est simple comme bonjour !</p>
+            <p class="text-center fw-bold mb-0">Étapes :</p>
+            <div class="d-flex flex-column justify-content-center align-items-center ">
+                <ul>
+                    <li class="text-start"><span class="fw-bold text-end">Recherchez </span><i class="bi bi-arrow-right"></i> Trouvez l’objet qu’il vous faut parmi des centaines d’annonces.</li>
+                    <li class="text-start"><span class="fw-bold text-end">Contactez </span><i class="bi bi-arrow-right"></i> Discutez avec le propriétaire pour convenir des détails.</li>
+                    <li class="text-star"><span class="fw-bold">Réservez </span><i class="bi bi-arrow-right"></i> Mettez-vous d’accord sur les dates et le mode d’échange.</li>
+                </ul>
+            </div>
+
+        </div>
+    </section>
+    <section class="row justify-content-center mt-5" id="section-home-4">
+
+
+        <div class="col-4 bg-theme-gray me-3 rounded-4 p-5">
+            <p class="color-theme-gray-2 h2 fs-6 mb-3">Propriétaire</p>
+            <h2 class="fs-1 mb-3">Proposez vos objets et gagnez de l’argent</h2>
+            <p class="fst-italic mb-3">Avez-vous des outils, du matériel high-tech ou des équipements de sport qui dorment chez vous ? Proposez-les à la location et rendez service à votre voisinage !</p>
+            <p class="h6">Rentabilisez vos objets inutilisés ou utilisés</p>
+            <div class="d-flex justify-content-center mb-3">
+                <img src="{{ asset('/img/home/model-4.png') }}" alt="" class="col-10 mx-auto">
+            </div>
+        </div>
+
+        <div class="col-4 bg-theme-gray me-3 rounded-4 p-5">
+            <p class="color-theme-gray-2 h2 fs-6 mb-3">Loueur</p>
+            <h2 class="fs-1 mb-3">Trouvez ce dont vous avez besoin à petit prix</h2>
+            <p class="fst-italic mb-3">Pas envie d’acheter un objet que vous utiliserez rarement ? Louez-le à un particulier près de chez vous et profitez d’un service pratique et économique !</p>
+            <div class="d-flex justify-content-center">
+                <img src="{{ asset('/img/home/model-3.png') }}" alt="" class="col-10 mx-auto">
+            </div>
+        </div>
+    </section>
+    <section class="mt-5" id="section-home-5">
+        <h2 class="text-center fs-2 fw-bold">Ils nous font déjà confiance !</h2>
+
+        <div class="carousel-container position-relative overflow-hidden m-auto col-5 mt-5 py-3 ">
+            {% for slide in slides %}
+                <div class="carousel-slide py-5 col-8  mx-auto bg-theme-yellow-2  rounded-3 {{ loop.first ? 'active' : '' }}">
+
+                    <div class="bg-white col-9 px-4 py-4 rounded-3 mx-auto">
+                    <!-- Les étoiles -->
+                        {% for i in 1..5 %}
+                            <span class="me-1"><i class="bi bi-star-fill fs-4 color-theme-yellow"></i></span>
+                        {% endfor %}
+                        <p>{{ slide.auteur }}</p>
+
+                        <p class="h6"> {{ slide.text|length > 100 ? slide.text |slice(0, 100) ~ '...' : slide.text }} </p>
+                    </div>
+                </div>
+            {% endfor %}
+
+            <div class="carousel-buttons position-absolute d-flex justify-content-between col-12 top-50">
+                <button id="carousel-prev" class="width-height-2 border-0 bg-theme-dark text-white rounded-circle"><i class="bi bi-chevron-left fw-bold "></i></button>
+                <button id="carousel-next" class="width-height-2 border-0 bg-theme-dark text-white rounded-circle"><i class="bi bi-chevron-right"></i></button>
+            </div>
+        </div>
 
     </section>
 
 
-    <section>
+    <script type="text/javascript">
+        document.addEventListener("DOMContentLoaded", () => {
+            const track = document.querySelector(".carousel-track");
+            const cards = Array.from(track.children);
 
-    </section>
+            // Dupliquer les cartes pour un effet infini
+            cards.forEach(card => {
+                let clone = card.cloneNode(true);
+                track.appendChild(clone);
+            });
+        });
 
+
+    </script>
 
 {% endblock %}
+
+
+
+
