@@ -108,21 +108,6 @@
     </section>
 
 
-    <script type="text/javascript">
-        document.addEventListener("DOMContentLoaded", () => {
-            const track = document.querySelector(".carousel-track");
-            const cards = Array.from(track.children);
-
-            // Dupliquer les cartes pour un effet infini
-            cards.forEach(card => {
-                let clone = card.cloneNode(true);
-                track.appendChild(clone);
-            });
-        });
-
-
-    </script>
-
 {% endblock %}
 
 
