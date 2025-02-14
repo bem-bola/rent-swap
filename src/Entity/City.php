@@ -3,6 +3,8 @@
 namespace App\Entity;
 
 use App\Repository\CityRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: CityRepository::class)]
@@ -18,6 +20,11 @@ class City
 
     #[ORM\Column(length: 5)]
     private ?string $CodePostal = null;
+
+    public function __construct()
+    {
+        $this->testttt = new ArrayCollection();
+    }
 
     public function getId(): ?int
     {
@@ -47,4 +54,5 @@ class City
 
         return $this;
     }
+
 }
