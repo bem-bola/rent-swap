@@ -33,23 +33,54 @@ li{
 .pointer-events-none {
   pointer-events: none;
 }
+.font-size-3{
+  font-size: 3em;
+}
+.font-size-4{
+  font-size: 4em;
+}
 
 
-// Les couleurs
+  // Les couleurs
 .color-theme-white{
   color: $color-theme-white;
 }
 .color-theme-white-2{
   color: $color-theme-white-2;
 }
+.color-theme-gray{
+  color: $color-theme-gray;
+}
+.color-theme-gray-2{
+  color: $color-theme-gray-2;
+}
+.color-theme-yellow{
+  color: $color-theme-yellow;
+}
 .bg-theme-gray{
   background-color: $color-theme-gray;
 }
+.bg-theme-dark{
+  background-color: $color-theme-dark;
+}
+.bg-theme-yellow-2{
+  background-color: $color-theme-yellow-2;
+}
+
 .cursor-pointer{
   cursor: pointer;
 }
 .pointer-events-none {
   pointer-events: none;
+}
+
+.py-9 {
+  padding-top: 9rem;
+  padding-bottom: 9rem;
+}
+.py-6 {
+  padding-top: 6em;
+  padding-bottom: 6em;
 }
 
 
@@ -59,6 +90,52 @@ header{
 
 main{
   min-height: 4vh !important;
+  #section-home-3{
+    font-size: 1.10rem;
+  }
+
+  #section-home-2{
+    .carousel-wrapper {
+      white-space: nowrap;
+    }
+
+    .carousel-track {
+      animation: scroll 20s linear infinite;
+    }
+
+    /* Animation du défilement */
+    @keyframes scroll {
+      from {
+        transform: translateX(0);
+      }
+      to {
+        transform: translateX(-100%);
+      }
+    }
+  }
+  #section-home-5{
+    .carousel-container {
+      .carousel-slide {
+        display: none;
+        opacity: 0;
+        box-shadow: $color-theme-yellow-2 0px 54px 55px, $color-theme-yellow-2 0px -12px 30px, $color-theme-yellow-2 0px 4px 6px, $color-theme-yellow-2 0px 12px 13px, $color-theme-yellow-2 0px -3px 5px;
+        &.active {
+          display: block;
+          opacity: 1;
+          -webkit-animation: fadein 1s linear forwards;
+          animation: fadein 1s linear forwards;
+        }
+      }
+
+      .carousel-buttons {
+        .width-height-2{
+          height: 3rem;
+          width: 3rem;
+        }
+        transform: translateY(-50%);
+      }
+    }
+  }
 }
 
 footer {
@@ -71,3 +148,11 @@ footer {
     font-size: 1.1em;
   }
 }
+
+
+
+
+
+
+
+
