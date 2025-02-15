@@ -2,10 +2,13 @@
 
 namespace App\Entity;
 
+use App\Repository\SubCategoryRepository;
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
+use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
-#[ORM\Entity]
+#[ORM\Entity(repositoryClass: SubCategoryRepository::class)]
 class SubCategory
 {
     #[ORM\Id]
@@ -16,11 +19,16 @@ class SubCategory
     #[ORM\Column(type: 'string', length: 150)]
     private string $name;
 
-    #[ORM\ManyToMany(targetEntity: Device::class, inversedBy: 'devices')]
+    #[ORM\ManyToMany(targetEntity: Device::class, inversedBy: 'devices', cascade: ['persist'])]
     private Collection $devices;
 
     #[ORM\ManyToOne(inversedBy: 'subCategories')]
     private ?Category $category = null;
+
+    public function __construct()
+    {
+        $this->devices = new ArrayCollection();
+    }
 
     public function getId(): ?int
     {

@@ -21,10 +21,6 @@ class City
     #[ORM\Column(length: 5)]
     private ?string $CodePostal = null;
 
-    public function __construct()
-    {
-        $this->testttt = new ArrayCollection();
-    }
 
     public function getId(): ?int
     {

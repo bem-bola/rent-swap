@@ -2,10 +2,12 @@
 
 namespace App\Entity;
 
+use App\Repository\MessageRepository;
 use DateTimeInterface;
+use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
-#[ORM\Entity]
+#[ORM\Entity(repositoryClass: MessageRepository::class)]
 class Message
 {
     #[ORM\Id]
@@ -117,6 +119,18 @@ class Message
     public function setCreated(DateTimeInterface $created): void
     {
         $this->created = $created;
+    }
+
+    public function isDeleted(): ?bool
+    {
+        return $this->isDeleted;
+    }
+
+    public function setDeleted(?bool $isDeleted): static
+    {
+        $this->isDeleted = $isDeleted;
+
+        return $this;
     }
 
 }

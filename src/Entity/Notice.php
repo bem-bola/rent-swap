@@ -1,11 +1,13 @@
 <?php
-// src/Entity/Notice.php
+
 namespace App\Entity;
 
+use App\Repository\NoticeRepository;
 use DateTimeInterface;
+use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
-#[ORM\Entity]
+#[ORM\Entity(repositoryClass: NoticeRepository::class)]
 class Notice
 {
     #[ORM\Id]
@@ -132,6 +134,18 @@ class Notice
     public function setIsDeleted(?bool $isDeleted): void
     {
         $this->isDeleted = $isDeleted;
+    }
+
+    public function isDeleted(): ?bool
+    {
+        return $this->isDeleted;
+    }
+
+    public function setDeleted(?bool $isDeleted): static
+    {
+        $this->isDeleted = $isDeleted;
+
+        return $this;
     }
 
 }

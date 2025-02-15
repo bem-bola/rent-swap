@@ -1,12 +1,13 @@
 <?php
-// src/Entity/Device.php
 namespace App\Entity;
 
+use App\Repository\DeviceRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
+use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
-#[ORM\Entity]
+#[ORM\Entity(repositoryClass: DeviceRepository::class)]
 class Device
 {
     #[ORM\Id]
@@ -52,7 +53,7 @@ class Device
     #[ORM\Column(type: 'string', length: 100)]
     private string $location;
 
-    #[ORM\Column(type: 'string', length: 10, nullable: true)]
+    #[ORM\Column(type: 'string', length: 20, nullable: true)]
     private ?string $phoneNumber = null;
 
     #[ORM\ManyToMany(targetEntity: SubCategory::class, mappedBy: 'device')]
@@ -255,6 +256,38 @@ class Device
     public function setQuantity(?int $quantity): static
     {
         $this->quantity = $quantity;
+
+        return $this;
+    }
+
+    public function isShowPhone(): ?bool
+    {
+        return $this->showPhone;
+    }
+
+    /**
+     * @return Collection<int, SubCategory>
+     */
+    public function getSubCategories(): Collection
+    {
+        return $this->subCategories;
+    }
+
+    public function addSubCategory(SubCategory $subCategory): static
+    {
+        if (!$this->subCategories->contains($subCategory)) {
+            $this->subCategories->add($subCategory);
+            $subCategory->addDevice($this);
+        }
+
+        return $this;
+    }
+
+    public function removeSubCategory(SubCategory $subCategory): static
+    {
+        if ($this->subCategories->removeElement($subCategory)) {
+            $subCategory->removeDevice($this);
+        }
 
         return $this;
     }

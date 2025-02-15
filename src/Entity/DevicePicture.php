@@ -1,10 +1,12 @@
 <?php
-// src/Entity/DevicePicture.php
+
 namespace App\Entity;
 
+use App\Repository\DevicePictureRepository;
+use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
-#[ORM\Entity]
+#[ORM\Entity(repositoryClass: DevicePictureRepository::class)]
 class DevicePicture
 {
     #[ORM\Id]
@@ -21,6 +23,9 @@ class DevicePicture
 
     #[ORM\Column(type: 'datetime', nullable: true)]
     private ?\DateTimeInterface $deleted = null;
+
+    #[ORM\Column(type: Types::TEXT)]
+    private ?string $filename = null;
 
     public function getId(): ?int
     {
@@ -57,6 +62,18 @@ class DevicePicture
     public function setDeleted(?\DateTimeInterface $deleted): self
     {
         $this->deleted = $deleted;
+        return $this;
+    }
+
+    public function getFilename(): ?string
+    {
+        return $this->filename;
+    }
+
+    public function setFilename(string $filename): static
+    {
+        $this->filename = $filename;
+
         return $this;
     }
 }
