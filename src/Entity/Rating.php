@@ -1,10 +1,12 @@
 <?php
-// src/Entity/Rating.php
+
 namespace App\Entity;
 
+use App\Repository\RatingRepository;
+use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
-#[ORM\Entity]
+#[ORM\Entity(repositoryClass: RatingRepository::class)]
 class Rating
 {
     #[ORM\Id]

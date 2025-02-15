@@ -3,6 +3,7 @@ parameters:
     urlNominatim: '%env(URL_NOMINATIM)%'
     adressEmail: '%env(ADRESS_EMAIL)%'
     urlApiGeoGouv: '%env(URL_API_GEO_GOUV)%'
+    dataFixture: '%kernel.project_dir%/dataFixtures/'
 
 services:
     # default configuration for services in *this* file
@@ -22,5 +23,11 @@ services:
     App\Service\HttpClientService:
         arguments:
             $urlApiGeoGouv: '%env(URL_API_GEO_GOUV)%'
+            $unsplashAccessKey: '%env(KEY_SECRET_API_UNSPLASH)%'
+
+    App\DataFixtures\AppFixtures:
+        arguments:
+            $dataFixture: '%kernel.project_dir%/dataFixtures/'
+            $uploadFileDevice: '%kernel.project_dir%/public/upload/devices/'
 
 

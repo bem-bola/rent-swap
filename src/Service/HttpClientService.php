@@ -6,6 +6,11 @@ namespace App\Service;
 use App\Entity\City;
 use Doctrine\ORM\EntityManagerInterface;
 use JetBrains\PhpStorm\NoReturn;
+use Symfony\Contracts\HttpClient\Exception\ClientExceptionInterface;
+use Symfony\Contracts\HttpClient\Exception\DecodingExceptionInterface;
+use Symfony\Contracts\HttpClient\Exception\RedirectionExceptionInterface;
+use Symfony\Contracts\HttpClient\Exception\ServerExceptionInterface;
+use Symfony\Contracts\HttpClient\Exception\TransportExceptionInterface;
 use Symfony\Contracts\HttpClient\HttpClientInterface;
 use Symfony\Contracts\HttpClient\ResponseInterface;
 
@@ -15,13 +20,16 @@ class HttpClientService
 
     private EntityManagerInterface $em;
 
+    private string $unsplashAccessKey;
+
     private string $urlApiGeoGouv;
 
-    public function __construct(HttpClientInterface $httpClient, EntityManagerInterface $em, string $urlApiGeoGouv)
+    public function __construct(HttpClientInterface $httpClient, EntityManagerInterface $em, string $urlApiGeoGouv, string $unsplashAccessKey)
     {
         $this->httpClient = $httpClient;
         $this->em =$em;
         $this->urlApiGeoGouv = $urlApiGeoGouv;
+        $this->unsplashAccessKey = $unsplashAccessKey;
     }
 
     /**
@@ -30,15 +38,36 @@ class HttpClientService
      * @param string $method
      * @param array $options
      * @return array
-     * @throws \Symfony\Contracts\HttpClient\Exception\ClientExceptionInterface
-     * @throws \Symfony\Contracts\HttpClient\Exception\DecodingExceptionInterface
-     * @throws \Symfony\Contracts\HttpClient\Exception\RedirectionExceptionInterface
-     * @throws \Symfony\Contracts\HttpClient\Exception\ServerExceptionInterface
-     * @throws \Symfony\Contracts\HttpClient\Exception\TransportExceptionInterface
+     * @throws ClientExceptionInterface
+     * @throws DecodingExceptionInterface
+     * @throws RedirectionExceptionInterface
+     * @throws ServerExceptionInterface
+     * @throws TransportExceptionInterface
      */
     public function request(string $url, array $options = [], array $headers = [], string $method = 'GET'): array{
         $response = $this->httpClient->request($method, $url, $options);
         return $response->toArray();
+    }
+
+    /**
+     * @throws RedirectionExceptionInterface
+     * @throws DecodingExceptionInterface
+     * @throws ClientExceptionInterface
+     * @throws TransportExceptionInterface
+     * @throws ServerExceptionInterface
+     */
+    public function downloadAndSaveImageUnsPlash(string $targetPath): void
+    {
+        $options = [
+            'query' => [
+                'query' => 'technology',
+                'client_id' => $this->unsplashAccessKey,
+            ],
+        ];
+        $response = $this->request('https://api.unsplash.com/photos/random', $options);
+        $imageUrl = $response['urls']['regular'];
+        $imageContent = $this->httpClient->request('GET', $imageUrl)->getContent();
+        file_put_contents($targetPath, $imageContent);
     }
 
     /**
@@ -79,9 +108,6 @@ class HttpClientService
                 ]
             ]
         );
-
-        dd($response->toArray());
-
 
         foreach ($response->toArray() as $data){
 

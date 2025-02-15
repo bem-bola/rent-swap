@@ -2,10 +2,12 @@
 
 namespace App\Entity;
 
+use App\Repository\PlanRepository;
 use DateTimeInterface;
+use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
-#[ORM\Entity]
+#[ORM\Entity(repositoryClass: PlanRepository::class)]
 class Plan
 {
     #[ORM\Id]

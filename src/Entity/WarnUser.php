@@ -2,10 +2,12 @@
 
 namespace App\Entity;
 
+use App\Repository\WarnUserRepository;
 use DateTimeInterface;
+use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
-#[ORM\Entity]
+#[ORM\Entity(repositoryClass: WarnUserRepository::class)]
 class WarnUser
 {
     #[ORM\Id]
@@ -131,6 +133,18 @@ class WarnUser
     public function setEnded(?DateTimeInterface $ended): void
     {
         $this->ended = $ended;
+    }
+
+    public function isBanned(): ?bool
+    {
+        return $this->isBanned;
+    }
+
+    public function setBanned(?bool $isBanned): static
+    {
+        $this->isBanned = $isBanned;
+
+        return $this;
     }
 
 }

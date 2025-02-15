@@ -2,9 +2,11 @@
 
 namespace App\Entity;
 
+use App\Repository\ReservationStatusRepository;
+use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
-#[ORM\Entity]
+#[ORM\Entity(repositoryClass: ReservationStatusRepository::class)]
 class ReservationStatus
 {
     #[ORM\Id]

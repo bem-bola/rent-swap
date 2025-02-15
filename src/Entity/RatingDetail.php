@@ -1,10 +1,12 @@
 <?php
 namespace App\Entity;
 
+use App\Repository\RatingDetailRepository;
 use DateTimeInterface;
+use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
-#[ORM\Entity]
+#[ORM\Entity(repositoryClass: RatingDetailRepository::class)]
 class RatingDetail
 {
     #[ORM\Id]
@@ -142,6 +144,13 @@ class RatingDetail
     public function setId(?int $id): void
     {
         $this->id = $id;
+    }
+
+    public function setDeleted(bool $isDeleted): static
+    {
+        $this->isDeleted = $isDeleted;
+
+        return $this;
     }
 
 

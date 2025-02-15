@@ -2,10 +2,12 @@
 
 namespace App\Entity;
 
+use App\Repository\SubscriptionRepository;
 use DateTimeInterface;
+use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
-#[ORM\Entity]
+#[ORM\Entity(repositoryClass: SubscriptionRepository::class)]
 class Subscription
 {
     #[ORM\Id]
@@ -127,6 +129,18 @@ class Subscription
     public function setIsActive(bool $isActive): void
     {
         $this->isActive = $isActive;
+    }
+
+    public function getId(): ?string
+    {
+        return $this->id;
+    }
+
+    public function setActive(bool $isActive): static
+    {
+        $this->isActive = $isActive;
+
+        return $this;
     }
 
 

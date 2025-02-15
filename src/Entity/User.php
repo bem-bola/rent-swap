@@ -1,13 +1,16 @@
 <?php
-// src/Entity/User.php
+
 namespace App\Entity;
 
+use App\Repository\UserRepository;
+use DateTimeInterface;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
+use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
-#[ORM\Entity]
-class User
+#[ORM\Entity(repositoryClass: UserRepository::class)]
+class User implements \Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
@@ -19,7 +22,7 @@ class User
     private TypeUser $type;
 
     #[ORM\Column(type: 'datetime')]
-    private \DateTimeInterface $created;
+    private DateTimeInterface $created;
 
     #[ORM\Column(type: 'string', length: 30, nullable: true)]
     private ?string $siret = null;
@@ -84,17 +87,17 @@ class User
     }
 
     /**
-     * @return \DateTimeInterface
+     * @return DateTimeInterface
      */
-    public function getCreated(): \DateTimeInterface
+    public function getCreated(): DateTimeInterface
     {
         return $this->created;
     }
 
     /**
-     * @param \DateTimeInterface $created
+     * @param DateTimeInterface $created
      */
-    public function setCreated(\DateTimeInterface $created): void
+    public function setCreated(DateTimeInterface $created): void
     {
         $this->created = $created;
     }
@@ -257,6 +260,25 @@ class User
     public function setRole(array $role): void
     {
         $this->role = $role;
+    }
+
+    public function setVerified(bool $isVerified): static
+    {
+        $this->isVerified = $isVerified;
+
+        return $this;
+    }
+
+    public function isDeleted(): ?bool
+    {
+        return $this->isDeleted;
+    }
+
+    public function setDeleted(?bool $isDeleted): static
+    {
+        $this->isDeleted = $isDeleted;
+
+        return $this;
     }
 
 }
