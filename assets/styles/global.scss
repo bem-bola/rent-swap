@@ -97,11 +97,16 @@ main{
   #section-home-2{
     .carousel-wrapper {
       white-space: nowrap;
+
+      .carousel-card {
+        height: 15rem;
+      }
+
+      .carousel-track {
+        animation: scroll 20s linear infinite;
+      }
     }
 
-    .carousel-track {
-      animation: scroll 20s linear infinite;
-    }
 
     /* Animation du défilement */
     @keyframes scroll {
@@ -148,6 +153,8 @@ footer {
     font-size: 1.1em;
   }
 }
+
+
 
 
 

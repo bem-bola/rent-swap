@@ -1,4 +1,4 @@
-<header class="px-5 py-4 box-shadow-fh row align-items-center">
+<header class="px-xs-3 px-sm-3 px-md-3 px-lg-5 py-4 box-shadow-fh row align-items-center">
     <!-- Logo et Search -->
     <div class="col-xs col-sm col-md col-lg-5 row py-0 align-items-center">
         <div class="logo-content col-xs-4 col-sm-4 col-md-4 col-lg-3">
@@ -6,18 +6,18 @@
                 <img src="{{ asset('img/logo/logo-rent-swap.svg') }}" alt="Logo du site Rent Swap" class="col-12">
             </a>
         </div>
-        <form action="" class="col-xs-8 col-sm-8 col-md-8 col-lg">
+        <form action="{{ path('app_device_search') }}" class="col-xs-8 col-sm-8 col-md-8 col-lg">
             <div class="input-group col-12" id="city-search-content">
                 <input type="text" class="form-control rounded-start-3 border-end-0 py-2" id="search-item-header" autocomplete="off" value="" name="title">
-                <span class="input-group-text rounded-end-3 btn-empty-input cursor-pointer"><i class="bi bi-search"></i></span>
+                <button type="submit" class="input-group-text rounded-end-3 btn-empty-input cursor-pointer"><i class="bi bi-search"></i></button>
             </div>
         </form>
     </div>
 
 
-    <div class="col-xs col-sm col-md col-7 d-flex align-items-center">
+    <div class="col-xs-4 col-sm-4 col-md-4 col-lg-7 d-flex align-items-center">
         <ul class="d-flex align-items-center justify-content-end col-12">
-            <li class="me-2"><a href="#how" class="btn box-shadow-sm fw-bolder py-2">Comment ça marche ?</a></li>
+            <li class="me-2 d-xs-none d-sm-none d-md-none d-lg-inline"><a href="#how" class="btn box-shadow-sm fw-bolder py-2">Comment ça marche ?</a></li>
             <li class="me-2"><a href="#" class="btn box-shadow-sm btn-dark border-dark border-xs-dark border-md-dark py-2"><span class="me-2 d-xs-none d-sm-none d-md-none d-lg-inline">Deposer une annonce</span><i class="bi bi-plus"></i></a></li>
             {% if app.user == true %}
                 <li class="me-2"><a href="#" class="btn box-shadow-sm fw-bolder border-dark py-2"><span class="me-2 d-xs-none d-sm-none d-md-none d-lg-inline">Bolain Bola</span><i class="bi bi-person-gear"></i></a></li>

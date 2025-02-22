@@ -56,11 +56,14 @@ class Device
     #[ORM\Column(type: 'string', length: 20, nullable: true)]
     private ?string $phoneNumber = null;
 
-    #[ORM\ManyToMany(targetEntity: SubCategory::class, mappedBy: 'device')]
+    #[ORM\ManyToMany(targetEntity: SubCategory::class, mappedBy: 'devices')]
     private Collection $subCategories;
 
     #[ORM\Column(nullable: true)]
     private ?int $quantity = null;
+
+    #[ORM\OneToMany(targetEntity: DevicePicture::class, mappedBy: 'device', cascade: ['persist', 'remove'])]
+    private Collection $devicePictures;
 
     public function __construct()
     {
@@ -289,6 +292,32 @@ class Device
             $subCategory->removeDevice($this);
         }
 
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, DevicePicture>
+     */
+    public function getDevicePictures(): Collection
+    {
+        return $this->devicePictures;
+    }
+    public function addDevicePicture(DevicePicture $devicePicture): self
+    {
+        if (!$this->devicePictures->contains($devicePicture)) {
+            $this->devicePictures[] = $devicePicture;
+            $devicePicture->setDevice($this);
+        }
+        return $this;
+    }
+
+    public function removeDevicePicture(DevicePicture $devicePicture): self
+    {
+        if ($this->devicePictures->removeElement($devicePicture)) {
+            if ($devicePicture->getDevice() === $this) {
+                $devicePicture->setDevice(null);
+            }
+        }
         return $this;
     }
 }
