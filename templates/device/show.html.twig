@@ -1,0 +1,31 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}RentSwap - {{ device.title }}{% endblock %}
+
+{% block main %}
+
+    <ul>
+        <li>title: {{ device.title }}</li>
+        <li>body: {{ device.body }} </li>
+        <li>price: {{ device.price }} $</li>
+        <li>
+            <ul class="row">
+                {% for subCategory in device.subCategories %}
+                   <li>SUB CATEGORIE: {{ subCategory.name }}</li>
+                   <li>CATEGORIE: {{ subCategory.category.name }}</li>
+
+                {% endfor %}
+            </ul>
+        </li>
+        <li>
+            <ul class="row">
+                {% for picture in device.devicePictures %}
+                    {% if picture.deleted == null or picture.deleted != false %}
+                        <li class="col-4 mb-3"><img class='col-12' src="{{ asset('upload/devices/' ~ picture.filename ) }}" alt=""></li>
+                    {% endif %}
+                {% endfor %}
+            </ul>
+        </li>
+    </ul>
+
+{% endblock %}
