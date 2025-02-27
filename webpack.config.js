@@ -74,7 +74,7 @@ Encore
     .autoProvidejQuery()
 
     .addPlugin(new FosRouting(
-            { target: './assets/js/routes.json' }, // <- path to dumped routes.json
+            {target: './assets/js/routes.json'}, // <- path to dumped routes.json
             false // <- set false to suppress automatic recompilation of the file
         )
     )

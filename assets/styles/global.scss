@@ -19,6 +19,9 @@
 *{
   font-family:  'Helvetica Neue', 'Roboto', sans-serif;
 }
+.dflex{
+  display: flex;
+}
 a, li {
   text-decoration: none;
   color: inherit;
@@ -118,12 +121,11 @@ main{
       }
     }
   }
-  #section-home-5{
+  #section-home-5, #section-show-1{
     .carousel-container {
       .carousel-slide {
         display: none;
         opacity: 0;
-        box-shadow: $color-theme-yellow-2 0px 54px 55px, $color-theme-yellow-2 0px -12px 30px, $color-theme-yellow-2 0px 4px 6px, $color-theme-yellow-2 0px 12px 13px, $color-theme-yellow-2 0px -3px 5px;
         &.active {
           display: block;
           opacity: 1;
@@ -131,7 +133,6 @@ main{
           animation: fadein 1s linear forwards;
         }
       }
-
       .carousel-buttons {
         .width-height-2{
           height: 3rem;
@@ -140,7 +141,16 @@ main{
         transform: translateY(-50%);
       }
     }
+    .box-shadow {
+      box-shadow: $color-theme-yellow-2 0px 54px 55px, $color-theme-yellow-2 0px -12px 30px, $color-theme-yellow-2 0px 4px 6px, $color-theme-yellow-2 0px 12px 13px, $color-theme-yellow-2 0px -3px 5px;
+    }
   }
+  .tt{
+    border: none;
+  }
+  //#section-show-1{
+  //  height: 50vh;
+  //}
 }
 
 footer {
