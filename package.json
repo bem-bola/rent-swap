@@ -6,6 +6,7 @@
         "@symfony/webpack-encore": "^5.0.1",
         "bootstrap": "^5.3.3",
         "core-js": "^3.38.0",
+        "file-loader": "^6.0.0",
         "fos-router": "./vendor/friendsofsymfony/jsrouting-bundle/Resources/",
         "jquery": "^3.7.1",
         "postcss-loader": "^8.1.1",

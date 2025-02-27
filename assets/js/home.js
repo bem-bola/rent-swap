@@ -1,12 +1,12 @@
 document.addEventListener("DOMContentLoaded", () => {
     const carouselNotice = () => {
 
+        const slides = document.querySelectorAll("#section-home-5 .carousel-slide, #section-show-1 .carousel-slide");
+        if(!slides) return;
+
         let currentIndex = 0;
-        const slides = document.querySelectorAll("#section-home-5 .carousel-slide");
         const totalSlides = slides.length;
         let autoSlideInterval;
-
-        if(!slides) return;
         const showSlide = (index) => {
             slides.forEach((slide, i) => {
                 slide.classList.toggle("active", i === index);
@@ -31,13 +31,13 @@ document.addEventListener("DOMContentLoaded", () => {
             clearInterval(autoSlideInterval);
         }
 
-        document.querySelector("#carousel-next").addEventListener("click", () => {
+        document.querySelector(".carousel-next").addEventListener("click", () => {
             nextSlide();
             stopAutoSlide();
             startAutoSlide();
         });
 
-        document.querySelector("#carousel-prev").addEventListener("click", () => {
+        document.querySelector(".carousel-prev").addEventListener("click", () => {
             prevSlide();
             stopAutoSlide();
             startAutoSlide();
@@ -49,6 +49,7 @@ document.addEventListener("DOMContentLoaded", () => {
     }
     const carouselInfinity = () => {
         const track = document.querySelector(".carousel-track");
+        if(!track) return;
         const cards = Array.from(track.children);
 
         if(!cards) return;

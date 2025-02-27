@@ -4,28 +4,106 @@
 
 {% block main %}
 
-    <ul>
-        <li>title: {{ device.title }}</li>
-        <li>body: {{ device.body }} </li>
-        <li>price: {{ device.price }} $</li>
-        <li>
-            <ul class="row">
-                {% for subCategory in device.subCategories %}
-                   <li>SUB CATEGORIE: {{ subCategory.name }}</li>
-                   <li>CATEGORIE: {{ subCategory.category.name }}</li>
+    {% set imagesDevice = device.devicePictures | length > 0 ? device.devicePictures : null %}
+<section id="section-show-1" class="mt-5" >
+
+    <article class="position-relative">
+
+
+
+        {% if imagesDevice is not null %}
+            <div class="position-relative overflow-hidden carousel-container col-12 py-5 rounded-3 mx-auto">
+                {% for picture in imagesDevice %}
+                    <div class="carousel-slide px-auto col-10 mx-auto h-50 rounded-5 ">
+                        <div class="col-12 h-100 d-flex justify-content-center">
+                            <img class='h-auto object-fit-contain rounded-5 mw-100 mh-100 w-auto' src="{{ asset('upload/devices/' ~ picture.filename ) }}" alt="{{ picture.alt }}" title="{{ picture.title }}">
+                        </div>
+                    </div>
 
                 {% endfor %}
-            </ul>
-        </li>
-        <li>
-            <ul class="row">
-                {% for picture in device.devicePictures %}
-                    {% if picture.deleted == null or picture.deleted != false %}
-                        <li class="col-4 mb-3"><img class='col-12' src="{{ asset('upload/devices/' ~ picture.filename ) }}" alt=""></li>
-                    {% endif %}
-                {% endfor %}
-            </ul>
-        </li>
-    </ul>
+                <div class="col-8 mx-auto d-flex justify-content-end mt-2 position-absolute col-12 bottom-0 px-5">
+                    <button class="bg-theme-dark text-white py-1 px-3 rounded-pill border-0 shadow-sm ">Voir toutes les photos </button>
+                </div>
+
+                <div class="carousel-buttons position-absolute d-flex justify-content-between col-12 top-50 px-5">
+                    <button class="width-height-2 carousel-prev border-0 bg-theme-dark text-white rounded-circle"><i
+                                class="bi bi-chevron-left fw-bold "></i></button>
+                    <button class="carousel-next width-height-2 border-0 bg-theme-dark text-white rounded-circle"><i
+                                class="bi bi-chevron-right"></i></button>
+                </div>
+            </div>
+
+        {% endif %}
+
+        <h1 class="fs-3 fw-bold text-capitalize">{{ device.title }}</h1>
+
+
+
+    </article>
+{#    description #}
+    <article class="row">
+{#        user contact#}
+        <div class="py-9 rounded-5 border border-danger col">
+            <h2>user</h2>
+        </div>
+{#        description#}
+        <div class="py-9 rounded-5 border border-danger col">
+            <h2>descritipo,</h2>
+        </div>
+        <div class="py-9 rounded-5 border border-danger col">
+            <h2>categorie</h2>
+        </div>
+
+    </article>
+
+{#    produit simulaire #}
+    <article class="row">
+
+        <div class="py-9 rounded-5 border border-danger col">
+            <h2>produit similaire</h2>
+        </div>
+{#        <div class="py-9 rounded-5 border border-danger col"></div>#}
+
+    </article>
+
+    {#   avis #}
+    <article class="row">
+
+        <div class="py-9 rounded-5 border border-danger col">
+            <h2>avis</h2>
+        </div>
+{#        <div class="py-9 rounded-5 border border-danger col"></div>#}
+
+    </article>
+
+
+
+</section>
+
+<ul>
+    <li>title: {{ device.title }}</li>
+    <li>body: {{ device.body }} </li>
+    <li>price: {{ device.price }} $</li>
+    <li>
+        <ul class="row">
+            {% for subCategory in device.subCategories %}
+                <li>SUB CATEGORIE: {{ subCategory.name }}</li>
+                <li>CATEGORIE: {{ subCategory.category.name }}</li>
+
+            {% endfor %}
+        </ul>
+    </li>
+    <li>
+        <ul class="row">
+{#            {% for picture in device.devicePictures %}#}
+{#                {% if picture.deleted == null or picture.deleted != false %}#}
+{#                    <li class="col-4 mb-3"><img class='col-12'#}
+{#                                                src="{{ asset('upload/devices/' ~ picture.filename ) }}" alt="">#}
+{#                    </li>#}
+{#                {% endif %}#}
+{#            {% endfor %}#}
+        </ul>
+    </li>
+</ul>
 
 {% endblock %}
