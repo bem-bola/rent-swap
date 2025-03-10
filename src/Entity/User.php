@@ -4,18 +4,35 @@ namespace App\Entity;
 
 use App\Repository\UserRepository;
 use DateTimeInterface;
-use Doctrine\Common\Collections\ArrayCollection;
-use Doctrine\Common\Collections\Collection;
-use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
+use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
+use Symfony\Component\Security\Core\User\UserInterface;
 
 #[ORM\Entity(repositoryClass: UserRepository::class)]
-class User implements \Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface
+#[ORM\UniqueConstraint(name: 'UNIQ_IDENTIFIER_EMAIL', fields: ['email'])]
+#[UniqueEntity(fields: ['email'], message: 'There is already an account with this email')]
+class User implements UserInterface, PasswordAuthenticatedUserInterface
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column(type: 'bigint')]
     private ?int $id = null;
+
+    #[ORM\Column(length: 180)]
+    private ?string $email = null;
+
+    /**
+     * @var list<string> The user roles
+     */
+    #[ORM\Column]
+    private array $roles = [];
+
+    /**
+     * @var string The hashed password
+     */
+    #[ORM\Column]
+    private ?string $password = null;
 
     #[ORM\ManyToOne(targetEntity: TypeUser::class)]
     #[ORM\JoinColumn(nullable: false)]
@@ -42,32 +59,85 @@ class User implements \Symfony\Component\Security\Core\User\PasswordAuthenticate
     #[ORM\Column(type: 'string', length: 255, nullable: true)]
     private ?string $lastname = null;
 
-    #[ORM\Column(type: 'string', length: 255)]
-    private string $password;
-
-    #[ORM\Column(type: 'string', length: 255)]
-    private string $email;
-
     #[ORM\Column(type: 'string', length: 255, nullable: true)]
     private ?string $avatar = null;
 
-    #[ORM\Column(type: 'json')]
-    private array $role = [];
+    #[ORM\Column(nullable: true)]
+    private ?\DateTimeImmutable $birthAt = null;
 
-    /**
-     * @return int|null
-     */
     public function getId(): ?int
     {
         return $this->id;
     }
 
-    /**
-     * @param int|null $id
-     */
-    public function setId(?int $id): void
+    public function getEmail(): ?string
     {
-        $this->id = $id;
+        return $this->email;
+    }
+
+    public function setEmail(string $email): static
+    {
+        $this->email = $email;
+
+        return $this;
+    }
+
+    /**
+     * A visual identifier that represents this user.
+     *
+     * @see UserInterface
+     */
+    public function getUserIdentifier(): string
+    {
+        return (string) $this->email;
+    }
+
+    /**
+     * @see UserInterface
+     *
+     * @return list<string>
+     */
+    public function getRoles(): array
+    {
+        $roles = $this->roles;
+        // guarantee every user at least has ROLE_USER
+        $roles[] = 'ROLE_USER';
+
+        return array_unique($roles);
+    }
+
+    /**
+     * @param list<string> $roles
+     */
+    public function setRoles(array $roles): static
+    {
+        $this->roles = $roles;
+
+        return $this;
+    }
+
+    /**
+     * @see PasswordAuthenticatedUserInterface
+     */
+    public function getPassword(): ?string
+    {
+        return $this->password;
+    }
+
+    public function setPassword(string $password): static
+    {
+        $this->password = $password;
+
+        return $this;
+    }
+
+    /**
+     * @see UserInterface
+     */
+    public function eraseCredentials(): void
+    {
+        // If you store any temporary, sensitive data on the user, clear it here
+        // $this->plainPassword = null;
     }
 
     /**
@@ -199,38 +269,6 @@ class User implements \Symfony\Component\Security\Core\User\PasswordAuthenticate
     }
 
     /**
-     * @return string
-     */
-    public function getPassword(): string
-    {
-        return $this->password;
-    }
-
-    /**
-     * @param string $password
-     */
-    public function setPassword(string $password): void
-    {
-        $this->password = $password;
-    }
-
-    /**
-     * @return string
-     */
-    public function getEmail(): string
-    {
-        return $this->email;
-    }
-
-    /**
-     * @param string $email
-     */
-    public function setEmail(string $email): void
-    {
-        $this->email = $email;
-    }
-
-    /**
      * @return string|null
      */
     public function getAvatar(): ?string
@@ -244,22 +282,6 @@ class User implements \Symfony\Component\Security\Core\User\PasswordAuthenticate
     public function setAvatar(?string $avatar): void
     {
         $this->avatar = $avatar;
-    }
-
-    /**
-     * @return array
-     */
-    public function getRole(): array
-    {
-        return $this->role;
-    }
-
-    /**
-     * @param array $role
-     */
-    public function setRole(array $role): void
-    {
-        $this->role = $role;
     }
 
     public function setVerified(bool $isVerified): static
@@ -281,4 +303,15 @@ class User implements \Symfony\Component\Security\Core\User\PasswordAuthenticate
         return $this;
     }
 
+    public function getBirthAt(): ?\DateTimeImmutable
+    {
+        return $this->birthAt;
+    }
+
+    public function setBirthAt(?\DateTimeImmutable $birthAt): static
+    {
+        $this->birthAt = $birthAt;
+
+        return $this;
+    }
 }
