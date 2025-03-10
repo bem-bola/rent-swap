@@ -12,9 +12,17 @@ $input-btn-focus-box-shadow:        none;
 $input-border-radius:               none;
 
 $input-focus-bg:                    none;
-$input-focus-border-color:          none;
+$input-focus-border-color:          $color-theme-dark;
 $input-focus-color:                 none;
 $input-focus-box-shadow:            none;
+$input-focus-width:                 2em;
+$input-placeholder-opacity:         0.3;
+
+// input checkbox boostrap
+$form-check-input-border: $color-theme-dark;
+$form-check-input-checked-bg-color: $color-theme-dark;
+$form-check-input-checked-border-color: $color-theme-dark;
+$form-check-input-border-width: 1.5px;
 
 
 $input-group-addon-color:           red !important;

@@ -1,0 +1,237 @@
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <title>Je m'inscris</title>
+    {% block stylesheets %}
+        {{ encore_entry_link_tags('style') }}
+    {% endblock %}
+
+    {% block javascripts %}
+        {{ encore_entry_script_tags('app') }}
+        {% block importmap %}{{ importmap('app') }}{% endblock %}
+    {% endblock %}
+    {% block head %}
+    {% endblock %}
+    <link rel="icon" href="{{ asset('img/logo/logo-reusiix.png') }}" type="image/svg">
+    <script src="{{ asset('bundles/fosjsrouting/js/router.min.js') }}"></script>
+    <script src="{{ path('fos_js_routing_js', { callback: 'fos.Router.setData' }) }}"></script>
+</head>
+<body class="" id="register">
+<div class="bg-theme-dark d-flex flex-column justify-content-center align-items-center vh-100 col-12">
+
+
+    {{ form_start(registrationForm, {
+        'attr': {
+            'class': 'col-6'
+        }
+    }) }}
+
+
+    <div id="section-register-who" class="col-12 p-5 bg-theme-gray rounded-5 section">
+
+        <h1 class="h3 fw-700 text-center">Je suis</h1>
+
+        <div class="mb-4 sub-section">
+            {{ form_label(registrationForm.firstname, '', {
+                'label_attr': {
+                    'class': 'mb-2 fw-500 col-12'
+                }
+            }) }}
+            {{ form_widget(registrationForm.firstname,{
+                'attr': {
+                    'class': 'form-control rounded-4 py-3 fw-300',
+                    'data-type-pattern': 'name'
+                }
+            }) }}
+
+            <div class="content-error bg-theme-gray bg-opacity-25 px-4 mt-3">
+                <p class="text-danger mb-0 font-size-08 mt-1 fst-italic input-error">{{ form_errors(registrationForm.firstname) }}</p>
+                <p class="text-danger mb-0 font-size-08 mt-1 fst-italic input-error-pattern d-none">Le prénom doit contenir au moins 2 caractères alphabétiques</p>
+            </div>
+        </div>
+
+        <div class="mb-4 sub-section">
+            {{ form_label(registrationForm.lastname, '', {
+                'label_attr': {
+                    'class': 'mb-2 fw-500 col-12'
+                }
+            }) }}
+            {{ form_widget(registrationForm.lastname,{
+                'attr': {
+                    'class': 'form-control rounded-4 py-3 fw-300',
+                    'data-type-pattern': 'name'
+                }
+            }) }}
+
+            <div class="content-error bg-theme-gray bg-opacity-25 px-4 mt-3">
+                <p class="text-danger mb-0 font-size-08 mt-1 fst-italic input-error">{{ form_errors(registrationForm.lastname) }}</p>
+                <p class="text-danger mb-0 font-size-08 mt-1 fst-italic input-error-pattern d-none">Le nom doit contenir au moins 2 caractères alphabétiques</p>
+            </div>
+
+        </div>
+
+        <div class="mb-4  sub-section">
+            {{ form_label(registrationForm.username, '', {
+                'label_attr': {
+                    'class': 'mb-2 fw-500 col-12'
+                }
+            }) }}
+            {{ form_widget(registrationForm.username,{
+                'attr': {
+                    'class': 'form-control rounded-4 py-3 fw-300',
+                    'data-type-pattern': 'name'
+                }
+            }) }}
+
+            <div class="content-error bg-theme-gray bg-opacity-25 px-4 mt-3">
+                <p class="text-danger mb-0 font-size-08 mt-1 fst-italic input-error">{{ form_errors(registrationForm.username) }}</p>
+                <p class="text-danger mb-0 font-size-08 mt-1 fst-italic input-error-pattern d-none">Le pseudo doit contenir au moins 2 caractères alphabétiques</p>
+            </div>
+        </div>
+
+        <div class="mb-4  sub-section">
+            {{ form_label(registrationForm.email, '', {
+                'label_attr': {
+                    'class': 'mb-2 fw-500 col-12'
+                }
+            }) }}
+            {{ form_widget(registrationForm.email,{
+                'attr': {
+                    'class': 'form-control rounded-4 py-3 fw-300',
+                    'data-type-pattern': 'email'
+                }
+            }) }}
+
+            <div class="content-error bg-theme-gray bg-opacity-25 px-4 mt-3">
+                <p class="text-danger mb-0 font-size-08 mt-1 fst-italic input-error">{{ form_errors(registrationForm.email) }}</p>
+                <p class="text-danger mb-0 font-size-08 mt-1 fst-italic input-error-pattern d-none">Adresse e-email invalide</p>
+            </div>
+        </div>
+
+        <div class="d-flex justify-content-center" >
+            <button type="button" class="bg-theme-dark text-white border-0 px-5 py-3 rounded-pill border-0 btn-prev-register"><i class="bi bi-arrow-left"></i> Précédent</button>
+            <button class="bg-theme-dark text-white border-0 px-5 py-3 rounded-pill  btn-next-register disabled" type="button" disabled>Suivant <i class="bi bi-arrow-right"></i></button>
+        </div>
+
+    </div>
+    <div id="section-register-birth" class="col-12 p-5 bg-theme-gray rounded-5 section ">
+        <h2 class="h3 fw-700 text-center">Mon age</h2>
+        <div class="sub-section">
+            {{ form_label(registrationForm.birthAt, '', {
+                'label_attr': {
+                    'class': 'mb-2 fw-500 col-12'
+                }
+            }) }}
+            {{ form_widget(registrationForm.birthAt,{
+                'attr': {
+                    'class': 'form-control rounded-4 py-3 fw-300'
+                }
+            }) }}
+            <div class="content-error bg-theme-gray bg-opacity-25 px-4 mt-3">
+                <p class="text-danger mb-0 font-size-08 mt-1 fst-italic input-error">{{ form_errors(registrationForm.birthAt) }}</p>
+                <p class="text-danger mb-0 font-size-08 mt-1 fst-italic input-error-pattern d-none">Vous devez être majeur</p>
+            </div>
+
+        </div>
+
+        <div class="d-flex justify-content-center" >
+            <button type="button" class="bg-theme-dark text-white border-0 px-5 py-3 rounded-pill border-0 btn-prev-register"><i class="bi bi-arrow-left"></i> Précédent</button>
+            <button class="bg-theme-dark text-white border-0 px-5 py-3 rounded-pill btn-next-register disabled" type="button" disabled>Suivant <i class="bi bi-arrow-right"></i></button>
+        </div>
+
+    </div>
+
+    <div id="section-register-password" class="section col-12 p-5 bg-theme-gray rounded-5 ">
+        <h2 class="h3 fw-700 text-center">Je définis mon mot de passe</h2>
+        <div class='sub-section'>
+            <div class="input-group col-12" >
+                {{ form_label(registrationForm.plainPassword.first, '', {
+                    'label_attr': {
+                        'class': 'mb-2 fw-500 col-12'
+                    }
+                }) }}
+                {{ form_widget(registrationForm.plainPassword.first,{
+                    'attr': {
+                        'class': 'form-control  rounded-start-4 border-end-0 py-3 fw-300 password',
+                        'data-type-pattern': 'password'
+                    }
+                }) }}
+                <button type="button" class="input-group-text rounded-end-4 cursor-pointer toggle-password" id=""><i
+                            class="bi bi-eye fs-4"></i></button>
+
+            </div>
+            <div class="content-error bg-theme-gray bg-opacity-25 px-4 mt-3">
+                <p class="text-danger mb-0 font-size-08 mt-1 fst-italic input-error">{{ form_errors(registrationForm.plainPassword.first) }}</p>
+                <p class="text-danger mb-0 font-size-08 mt-1 fst-italic input-error-pattern d-none">Le mot de passe doit contenir au moins une majuscule, une minuscule, un chiffre et un caractère spécial.</p>
+            </div>
+
+        </div>
+
+        <div class="sub-section">
+            <div class="input-group col-12 " >
+
+                {{ form_label(registrationForm.plainPassword.second, '', {
+                    'label_attr': {
+                        'class': 'mb-2 fw-500 col-12'
+                    }
+                }) }}
+                {{ form_widget(registrationForm.plainPassword.second,{
+                    'attr': {
+                        'class': 'form-control rounded-start-4 border-end-0  py-3 fw-300 password-repeat'
+                    }
+                }) }}
+                <button type="button" class="input-group-text rounded-end-4 cursor-pointer toggle-password" id=""><i class="bi bi-eye fs-4"></i></button>
+            </div>
+
+            <div class="content-error bg-theme-gray bg-opacity-25 px-4 mt-3">
+                <p class="text-danger mb-0 font-size-08 mt-1 fst-italic input-error">{{ form_errors(registrationForm.plainPassword.second) }}</p>
+                <p class="text-danger mb-0 font-size-08 mt-1 fst-italic input-error-pattern d-none">Les mots de passes doivent correspondre</p>
+            </div>
+
+        </div>
+
+        <div class="d-flex justify-content-center" >
+            <button type="button" class="bg-theme-dark text-white border-0 px-5 py-3 rounded-pill border-0 btn-prev-register"><i class="bi bi-arrow-left"></i> Précédent</button>
+            <button class="bg-theme-dark text-white border-0 px-5 py-3 rounded-pill btn-next-register disabled" type="button" disabled>Suivant <i class="bi bi-arrow-right"></i></button>
+        </div>
+
+    </div>
+
+    <div id="section-register-terms" class="section col-12 p-5 bg-theme-gray rounded-5 section">
+        <div class="sub-section">
+            {{ form_widget(registrationForm.agreeTerms,{
+                'attr': {
+                    'class': 'rounded-1 border-theme-dark form-check-input'
+                }
+            }) }}
+            {{ form_label(registrationForm.agreeTerms, '', {
+                'label_attr': {
+                    'class': 'fw-500 mb-2 font-size-08 fst-italic'
+                }
+            }) }}
+
+            <div class="content-error bg-theme-gray bg-opacity-25 px-4 mt-3">
+                <p class="text-danger mb-0 font-size-08 mt-1 fst-italic input-error">{{ form_errors(registrationForm.agreeTerms) }}</p>
+                <p class="text-danger mb-0 font-size-08 mt-1 fst-italic input-error-pattern d-none">Vous devez accepter les conditions</p>
+            </div>
+        </div>
+
+
+        <div id="section-register-submit" class="d-flex justify-content-center" >
+            <button type="button" class="bg-theme-dark text-white border-0 px-5 py-3 rounded-pill border-0 btn-prev-register"><i class="bi bi-arrow-left"></i> Précédent</button>
+
+            <button class="bg-theme-dark text-white border-0 px-5 py-3 rounded-pill  disabled" type="submit" disabled>Valider</button>
+        </div>
+
+    </div>
+
+
+    {{ form_end(registrationForm) }}
+</div>
+
+
+<script type="text/javascript">
+
+</script>
+</body>
+</html>

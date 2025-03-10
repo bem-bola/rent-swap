@@ -4,18 +4,59 @@
 
 @font-face {
   font-family: 'Roboto';
-  src: url('../fonts/RobotoSlab-Regular.ttf') format('truetype');
+  src: url('../fonts/roboto/RobotoSlab-ExtraLight.ttf') format('truetype');
+  font-weight: 200;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'Roboto';
+  src: url('../fonts/roboto/RobotoSlab-Light.ttf') format('truetype');
+  font-weight: 300;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'Roboto';
+  src: url('../fonts/roboto/RobotoSlab-Regular.ttf') format('truetype');
   font-weight: 400;
   font-style: normal;
 }
 
 @font-face {
   font-family: 'Roboto';
-  src: url('../fonts/RobotoSlab-Bold.ttf') format('truetype');
+  src: url('../fonts/roboto/RobotoSlab-Medium.ttf') format('truetype');
+  font-weight: 500;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'Roboto';
+  src: url('../fonts/roboto/RobotoSlab-SemiBold.ttf') format('truetype');
   font-weight: 600;
   font-style: normal;
 }
 
+@font-face {
+  font-family: 'Roboto';
+  src: url('../fonts/roboto/RobotoSlab-Bold.ttf') format('truetype');
+  font-weight: 700;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'Roboto';
+  src: url('../fonts/roboto/RobotoSlab-ExtraBold.ttf') format('truetype');
+  font-weight: 800;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'Roboto';
+  src: url('../fonts/roboto/RobotoSlab-Black.ttf') format('truetype');
+  font-weight: 900;
+  font-style: normal;
+}
 *{
   font-family:  'Helvetica Neue', 'Roboto', sans-serif;
 }
@@ -36,13 +77,55 @@ li{
 .pointer-events-none {
   pointer-events: none;
 }
+.disabled{
+  opacity: 0.50;
+}
+.font-size-05{
+  font-size: 0.5em;
+}
+.font-size-06{
+  font-size: 0.6em;
+}
+.font-size-07{
+  font-size: 0.7em;
+}
+.font-size-08{
+  font-size: 0.8em;
+}
+.font-size-08{
+  font-size: 0.9em;
+}
+
 .font-size-3{
   font-size: 3em;
 }
 .font-size-4{
   font-size: 4em;
 }
-
+.fw-200 {
+  font-weight: 200;
+}
+.fw-300 {
+  font-weight: 300;
+}
+.fw-normal {
+  font-weight: 400;
+}
+.fw-500 {
+  font-weight: 500 !important;
+}
+.fw-600 {
+  font-weight: 600;
+}
+.fw-700 {
+  font-weight: 700;
+}
+.fw-800 {
+  font-weight: 800;
+}
+.fw-900 {
+  font-weight: 900;
+}
 
   // Les couleurs
 .color-theme-white{
@@ -70,6 +153,10 @@ li{
   background-color: $color-theme-yellow-2;
 }
 
+.border-theme-dark{
+  border: 1px solid $color-theme-dark;
+}
+
 .cursor-pointer{
   cursor: pointer;
 }
@@ -85,7 +172,6 @@ li{
   padding-top: 6em;
   padding-bottom: 6em;
 }
-
 
 header{
   box-shadow: rgba(17, 17, 26, 0.05) 0 1px 0, rgba(17, 17, 26, 0.1) 0 0 8px;
@@ -145,13 +231,59 @@ main{
       box-shadow: $color-theme-yellow-2 0px 54px 55px, $color-theme-yellow-2 0px -12px 30px, $color-theme-yellow-2 0px 4px 6px, $color-theme-yellow-2 0px 12px 13px, $color-theme-yellow-2 0px -3px 5px;
     }
   }
-  .tt{
-    border: none;
-  }
-  //#section-show-1{
-  //  height: 50vh;
-  //}
 }
+// Register
+
+
+
+//.section {
+//  opacity: 0;
+//  transform: translateX(100%);
+//  transition: opacity 0.5s ease-in-out, transform 0.5s ease-in-out;
+//  display: none; /* Cache par défaut */
+//}
+//
+//.section.active {
+//  display: block; /* Affiche la section */
+//  opacity: 1;
+//  transform: translateX(0);
+//}
+//
+//.section.exit-left {
+//  transform: translateX(-100%);
+//  opacity: 0;
+//}
+//
+//.section.exit-right {
+//  transform: translateX(100%);
+//  opacity: 0;
+//}
+//.section.enter-left {
+//  transform: translateX(-100%);
+//  opacity: 0;
+//}
+//
+//.section.enter-right {
+//  transform: translateX(100%);
+//  opacity: 0;
+//}
+
+
+//.section {
+//  position: absolute;
+//  top: 0;
+//  left: 0;
+//  opacity: 0;
+//  width: 50%;
+//  display: none;
+//}
+//
+//.section:first-child {
+//  display: block; /* On affiche la première section direct */
+//  opacity: 1;
+//}
+
+
 
 footer {
   box-shadow: rgba(17, 17, 26, 0.05) 0px 1px 0px, rgba(17, 17, 26, 0.1) 0px 0px 8px;
