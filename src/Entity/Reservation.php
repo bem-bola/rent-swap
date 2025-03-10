@@ -19,10 +19,6 @@ class Reservation
     #[ORM\JoinColumn(nullable: false)]
     private ?User $user = null;
 
-    #[ORM\ManyToOne(targetEntity: ReservationStatus::class)]
-    #[ORM\JoinColumn(nullable: false)]
-    private ?ReservationStatus $status = null;
-
     #[ORM\ManyToOne(targetEntity: Device::class)]
     #[ORM\JoinColumn(nullable: false)]
     private ?Device $device = null;
@@ -35,6 +31,12 @@ class Reservation
 
     #[ORM\Column(type: 'datetime', nullable: true)]
     private ?DateTimeInterface $ended = null;
+
+    #[ORM\Column(type: Types::DATETIME_MUTABLE)]
+    private ?\DateTimeInterface $stated = null;
+
+    #[ORM\Column(length: 255)]
+    private ?string $status = null;
 
     /**
      * @return int|null
@@ -58,22 +60,6 @@ class Reservation
     public function setUser(?User $user): void
     {
         $this->user = $user;
-    }
-
-    /**
-     * @return ReservationStatus|null
-     */
-    public function getStatus(): ?ReservationStatus
-    {
-        return $this->status;
-    }
-
-    /**
-     * @param ReservationStatus|null $status
-     */
-    public function setStatus(?ReservationStatus $status): void
-    {
-        $this->status = $status;
     }
 
     /**
@@ -138,6 +124,30 @@ class Reservation
     public function setEnded(?DateTimeInterface $ended): void
     {
         $this->ended = $ended;
+    }
+
+    public function getStated(): ?\DateTimeInterface
+    {
+        return $this->stated;
+    }
+
+    public function setStated(\DateTimeInterface $stated): static
+    {
+        $this->stated = $stated;
+
+        return $this;
+    }
+
+    public function getStatus(): ?string
+    {
+        return $this->status;
+    }
+
+    public function setStatus(string $status): static
+    {
+        $this->status = $status;
+
+        return $this;
     }
 
 

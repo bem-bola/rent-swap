@@ -244,7 +244,6 @@
 // });
 
 
-
 // document.addEventListener('DOMContentLoaded', () => {
 //     const regexMap = {
 //         email: /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/,
@@ -434,7 +433,6 @@ document.addEventListener('DOMContentLoaded', () => {
         const pattern = input.getAttribute('data-type-pattern');
         const regex = regexMap[pattern];
         let isValid = true;
-        const errorPattern = input.closest('.sub-section').querySelector('.input-error-pattern'); // Sélectionner le message d'erreur spécifique
 
         if (pattern && regex) {
             isValid = regex.test(input.value.trim());
@@ -445,11 +443,15 @@ document.addEventListener('DOMContentLoaded', () => {
         isValid = isValid && input.value.trim() !== '';
 
         // Afficher ou masquer le message d'erreur de pattern
-        if (errorPattern) {
-            if (!isValid) {
-                errorPattern.classList.remove('d-none');  // Afficher le message d'erreur si non valide
-            } else {
-                errorPattern.classList.add('d-none');  // Masquer le message d'erreur si valide
+        if (input.closest('.sub-section')) {
+            const errorPattern = input.closest('.sub-section').querySelector('.input-error-pattern'); // Sélectionner le message d'erreur spécifique
+
+            if (errorPattern) {
+                if (!isValid) {
+                    errorPattern.classList.remove('d-none');  // Afficher le message d'erreur si non valide
+                } else {
+                    errorPattern.classList.add('d-none');  // Masquer le message d'erreur si valide
+                }
             }
         }
 
