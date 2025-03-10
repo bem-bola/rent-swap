@@ -2,6 +2,7 @@
 namespace App\Entity;
 
 use App\Repository\DeviceRepository;
+use App\Service\Constances;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
@@ -319,5 +320,8 @@ class Device
             }
         }
         return $this;
+    }
+    public function isStatusValid(): bool{
+        return $this->getStatus() === Constances::VALIDED;
     }
 }

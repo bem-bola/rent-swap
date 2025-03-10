@@ -9,6 +9,7 @@ use Doctrine\ORM\Mapping as ORM;
 #[ORM\Entity(repositoryClass: ReservationStatusRepository::class)]
 class ReservationStatus
 {
+    const LIBELLE = ['pending', 'accepted', 'rejected', 'cancelled'];
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column(type: 'bigint')]
@@ -30,7 +31,7 @@ class ReservationStatus
      */
     public function setName(string $name): void
     {
-        $this->name = $name;
+        if(is_array(self::LIBELLE)) $this->name = $name;
     }
 
     public function getId(): ?int
