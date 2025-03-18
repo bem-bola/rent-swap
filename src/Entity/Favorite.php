@@ -4,6 +4,7 @@ namespace App\Entity;
 use App\Repository\FavoriteRepository;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Security\Core\User\UserInterface;
 
 #[ORM\Entity(repositoryClass: FavoriteRepository::class)]
 class Favorite
@@ -21,6 +22,9 @@ class Favorite
     #[ORM\JoinColumn(nullable: false)]
     private ?Device $device = null;
 
+    #[ORM\Column(nullable: true)]
+    private ?bool $isFavorite = null;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -31,7 +35,7 @@ class Favorite
         return $this->user;
     }
 
-    public function setUser(User $user): self
+    public function setUser(User|UserInterface $user): self
     {
         $this->user = $user;
         return $this;
@@ -46,5 +50,21 @@ class Favorite
     {
         $this->device = $device;
         return $this;
+    }
+
+    public function isFavorite(): ?bool
+    {
+        return $this->isFavorite;
+    }
+
+    public function setIsFavorite(?bool $isFavorite): static
+    {
+        $this->isFavorite = $isFavorite;
+
+        return $this;
+    }
+    public function getIsFavorite(): ?bool
+    {
+        return $this->isFavorite;
     }
 }

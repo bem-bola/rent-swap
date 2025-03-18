@@ -5,11 +5,14 @@
 {% block main %}
 
     {% set imagesDevice = device.devicePictures | length > 0 ? device.devicePictures : null %}
-    {% set user = device.user %}
+    {% set userDevice = device.user %}
     {% set categories = device.subCategories %}
+    {% set user = app.user %}
+    {% set isFavorite = favorite is null ? false : favorite.isFavorite %}
 
     <input type="hidden" value="{{ coordonates.lat }}" id="lat">
     <input type="hidden" value="{{ coordonates.lon }}" id="lon">
+    <input type="hidden" value="{{ device.slug }}" id="id-slug">
 
     <section id="section-show-1" class="mt-5">
 
@@ -28,14 +31,18 @@
 
                     {% endfor %}
                     <div class="col-3 py-3 mx-auto d-flex justify-content-center mt-2 bottom-0 px-5">
-                        <button class="py-3 px-3 me-2 bg-white rounded-4 bg-theme-gray-3 border-0 card-zoom"><i class="text-dark bi bi-heart fs-3"></i></button>
-                        <button class="py-3 px-3 me-2 bg-white rounded-4 bg-theme-gray-3 border-0 card-zoom" title="Contacter {{ user.firstname | capitalize }}"><i class="text-dark bi bi-chat-square fs-3"></i></button>
+                        {% if user %}
+                            <button class="py-3 px-3 me-2 bg-white rounded-4 bg-theme-gray-3 border-0 card-zoom" id="btn-favorite" data-slug="{{ device.slug }}"><i class="bi {{ isFavorite ? 'color-theme-yellow bi-heart-fill' : 'text-dark bi-heart'  }} fs-3"></i></button>
+                            <button class="py-3 px-3 me-2 bg-white rounded-4 bg-theme-gray-3 border-0 card-zoom contact-user" title="Contacter {{ userDevice.firstname | capitalize }}"><i class="text-dark bi bi-chat-square fs-3"></i></button>
+                        {% else %}
+                        <a href="{{ path('app_login') }}" class="py-3 px-3 me-2 bg-white rounded-4 bg-theme-gray-3 border-0 card-zoom"><i class="text-dark bi bi-heart fs-3"></i></a>
+                        <a href="{{ path('app_login') }}" class="py-3 px-3 me-2 bg-white rounded-4 bg-theme-gray-3 border-0 card-zoom contact-user" title="Contacter {{ userDevice.firstname | capitalize }}"><i class="text-dark bi bi-chat-square fs-3"></i></a>
+                        {% endif %}
                     </div>
 
                     <div class="carousel-buttons position-absolute d-flex justify-content-between col-12 top-50 px-5">
                         <button class="width-height-2 carousel-prev border-0 bg-theme-dark text-white rounded-circle">
-                            <i
-                                    class="bi bi-chevron-left fw-bold "></i></button>
+                            <i class="bi bi-chevron-left fw-bold "></i></button>
                         <button class="carousel-next width-height-2 border-0 bg-theme-dark text-white rounded-circle">
                             <i
                                     class="bi bi-chevron-right"></i></button>
@@ -65,10 +72,10 @@
 
                 <div class="rounded-5 col me-3 py-4 bg-white">
                     <div class="d-flex align-items-center">
-                        <div class="col-3 rounded-circle"><img src="{{ asset('/img/avatars/' ~ user.avatar) }}"
+                        <div class="col-3 rounded-circle"><img src="{{ asset('/img/avatars/' ~ userDevice.avatar) }}"
                                                                alt="Avatar utilisateur" class="col-12"></div>
                         <div class="ms-3">
-                            <h2 class="fs-5 fw-400">{{ user.firstname }} {{ user.lastname }}</h2>
+                            <h2 class="fs-5 fw-400">{{ userDevice.firstname }} {{ userDevice.lastname }}</h2>
                             <a href="">{{ devicesUser | length }} annonces</a>
                         </div>
                     </div>
@@ -140,5 +147,6 @@
         </article>
 
     </section>
+
 
 {% endblock %}
