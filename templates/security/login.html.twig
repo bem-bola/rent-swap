@@ -20,6 +20,8 @@
 <div class="col-6 p-5 bg-theme-gray rounded-5">
     <form method="post" class="">
 
+        <input type="hidden" name="_target_path" value="{{ referer }}">
+
         <div class="mb-5">
             <h1 class="h3 fw-700 text-center">Se connecter</h1>
             {% if error %}

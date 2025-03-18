@@ -4,14 +4,6 @@ import { gsap } from "gsap";
 import L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
 
-//
-// import 'ol/ol.css'; // Importer le CSS d'OpenLayers
-// import Map from 'ol/Map';
-// import View from 'ol/View';
-// import TileLayer from 'ol/layer/Tile';
-// import TileJSON from 'ol/source/TileJSON';
-// import { fromLonLat } from 'ol/proj';
-
 import 'ol/ol.css'; // Importer le CSS OpenLayers
 import Map from 'ol/Map';
 import View from 'ol/View';
@@ -25,12 +17,9 @@ import Point from 'ol/geom/Point';
 import Style from 'ol/style/Style';
 import Icon from 'ol/style/Icon';
 
-
-
-
-
 import './js/home.js';
 import './js/form.js';
+import './js/show.js';
 
 // Importer les icônes Leaflet pour corriger un bug avec Webpack
 import markerIcon from 'leaflet/dist/images/marker-icon.png';
