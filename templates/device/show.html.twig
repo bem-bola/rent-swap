@@ -5,105 +5,140 @@
 {% block main %}
 
     {% set imagesDevice = device.devicePictures | length > 0 ? device.devicePictures : null %}
-<section id="section-show-1" class="mt-5" >
+    {% set user = device.user %}
+    {% set categories = device.subCategories %}
 
-    <article class="position-relative">
+    <input type="hidden" value="{{ coordonates.lat }}" id="lat">
+    <input type="hidden" value="{{ coordonates.lon }}" id="lon">
+
+    <section id="section-show-1" class="mt-5">
+
+        <article class="position-relative">
+
+            {% if imagesDevice is not null %}
+                <div class="position-relative overflow-hidden carousel-container col-12 py-5 rounded-3 mx-auto">
+                    {% for picture in imagesDevice %}
+                        <div class="carousel-slide px-auto col-10 mx-auto h-50 rounded-5 ">
+                            <div class="col-12 h-100 d-flex justify-content-center">
+                                <img class='h-auto object-fit-contain rounded-5 mw-100 mh-100 w-auto'
+                                     src="{{ asset('upload/devices/' ~ picture.filename ) }}"
+                                     alt="{{ picture.alt }}" title="{{ picture.title }}">
+                            </div>
+                        </div>
+
+                    {% endfor %}
+                    <div class="col-3 py-3 mx-auto d-flex justify-content-center mt-2 bottom-0 px-5">
+                        <button class="py-3 px-3 me-2 bg-white rounded-4 bg-theme-gray-3 border-0 card-zoom"><i class="text-dark bi bi-heart fs-3"></i></button>
+                        <button class="py-3 px-3 me-2 bg-white rounded-4 bg-theme-gray-3 border-0 card-zoom" title="Contacter {{ user.firstname | capitalize }}"><i class="text-dark bi bi-chat-square fs-3"></i></button>
+                    </div>
+
+                    <div class="carousel-buttons position-absolute d-flex justify-content-between col-12 top-50 px-5">
+                        <button class="width-height-2 carousel-prev border-0 bg-theme-dark text-white rounded-circle">
+                            <i
+                                    class="bi bi-chevron-left fw-bold "></i></button>
+                        <button class="carousel-next width-height-2 border-0 bg-theme-dark text-white rounded-circle">
+                            <i
+                                    class="bi bi-chevron-right"></i></button>
+                    </div>
+                </div>
+
+            {% endif %}
+
+            <div class="mb-4 col-6 mx-auto">
+                <h1 class="fs-2 fw-600 text-capitalize">{{ device.title }}</h1>
+                <div class="fs-5 fw-500">{{ device.price|number_format(2, ',', ' ') }} €</div>
+            </div>
+
+            <div class="mb-4 col-6 mx-auto">
+                <h2 class="fs-5 fw-400 color-theme-gray-4">Description</h2>
+                <div class="mx-auto">{{ device.body }}</div>
+            </div>
 
 
+        </article>
+        {#    description #}
+        <article class="d-flex flex-wrap col-6 mx-auto">
+            {#        user contact #}
+            <div class="col-12 mb-3">
+                <hr>
+                <h2 class="fs-5 fw-400 color-theme-gray-4 mb-3">Propriétaire</h2>
 
-        {% if imagesDevice is not null %}
-            <div class="position-relative overflow-hidden carousel-container col-12 py-5 rounded-3 mx-auto">
-                {% for picture in imagesDevice %}
-                    <div class="carousel-slide px-auto col-10 mx-auto h-50 rounded-5 ">
-                        <div class="col-12 h-100 d-flex justify-content-center">
-                            <img class='h-auto object-fit-contain rounded-5 mw-100 mh-100 w-auto' src="{{ asset('upload/devices/' ~ picture.filename ) }}" alt="{{ picture.alt }}" title="{{ picture.title }}">
+                <div class="rounded-5 col me-3 py-4 bg-white">
+                    <div class="d-flex align-items-center">
+                        <div class="col-3 rounded-circle"><img src="{{ asset('/img/avatars/' ~ user.avatar) }}"
+                                                               alt="Avatar utilisateur" class="col-12"></div>
+                        <div class="ms-3">
+                            <h2 class="fs-5 fw-400">{{ user.firstname }} {{ user.lastname }}</h2>
+                            <a href="">{{ devicesUser | length }} annonces</a>
                         </div>
                     </div>
 
-                {% endfor %}
-                <div class="col-8 mx-auto d-flex justify-content-end mt-2 position-absolute col-12 bottom-0 px-5">
-                    <button class="bg-theme-dark text-white py-1 px-3 rounded-pill border-0 shadow-sm ">Voir toutes les photos </button>
-                </div>
-
-                <div class="carousel-buttons position-absolute d-flex justify-content-between col-12 top-50 px-5">
-                    <button class="width-height-2 carousel-prev border-0 bg-theme-dark text-white rounded-circle"><i
-                                class="bi bi-chevron-left fw-bold "></i></button>
-                    <button class="carousel-next width-height-2 border-0 bg-theme-dark text-white rounded-circle"><i
-                                class="bi bi-chevron-right"></i></button>
+                    <div class="d-flex justify-content-center mt-3">
+                        <button class="bg-theme-dark text-white border-0 px-3 py-2 rounded-pill col-10">Message
+                        </button>
+                    </div>
                 </div>
             </div>
+            {#        description #}
+            <div class="rounded-5 col-12">
+                <hr>
+                <h2 class="fs-5 fw-400 color-theme-gray-4 mb-3">Catégories</h2>
+                <ul class="row ps-0">
+                    {% for category in categories %}
+                        <a href="#"
+                           class="bg-danger col rounded-4 m-1 p-5 text-white card-zoom shadow-sm">{{ category.name }}</a>
+                        <a href="#"
+                           class="bg-danger col rounded-4 m-1 p-5 text-white card-zoom shadow-sm">{{ category.category.name }}</a>
 
-        {% endif %}
+                    {% endfor %}
+                </ul>
 
-        <h1 class="fs-3 fw-bold text-capitalize">{{ device.title }}</h1>
+            </div>
 
+        </article>
 
+        {#    produit simulaire #}
+        <article class="row">
+            <div class="mt-5 col-6 mx-auto">
+                <hr>
+                <h2 class="fs-5 fw-400 color-theme-gray-4 mb-3"><i class="bi bi-geo-alt-fill"></i> {{ device.location }}
+                </h2>
+                <div id="map" class="rounded-5 col-12"></div>
+            </div>
+        </article>
 
-    </article>
-{#    description #}
-    <article class="row">
-{#        user contact#}
-        <div class="py-9 rounded-5 border border-danger col">
-            <h2>user</h2>
-        </div>
-{#        description#}
-        <div class="py-9 rounded-5 border border-danger col">
-            <h2>descritipo,</h2>
-        </div>
-        <div class="py-9 rounded-5 border border-danger col">
-            <h2>categorie</h2>
-        </div>
+        <article class="col-6 mx-auto">
+            <div class="container mx-auto">
+                <hr>
+                <h2 class="fs-5 fw-400 color-theme-gray-4 mt-3 mb-3">Ces annonces peuvent vous intéresser</h2>
 
-    </article>
+                <div class="product-slider position-relative overflow-hidden col-12 ">
+                    <div class="product-list-wrapper col-12 overflow-hidden">
+                        <div class="product-list d-flex">
+                            {% for deviceSimilar in devicesSimilar %}
+                                <a href="#"
+                                   class="product-card rounded-4 px-4 py-4 bg-white card-zoom shadow-sm col-3">
+                                    <h3 class="fw-500 fs-5 text-capitalize">{{ deviceSimilar.title | length > 15 ?  deviceSimilar.title | slice(0,15) ~ '...': deviceSimilar.title }}</h3>
+                                    <img class='rounded-4'
+                                         src="{{ asset('/upload/devices/67b0ad9c4463c1739632028d8c585d98b94b0bef4d8127377f7e1beae5cd125f16c12b14f8d950eb60e5aab7fb3ecc2633a71c33aebc6b8737216ab087773696e74.jpg') }}"
+                                         alt="{{ deviceSimilar.title }}">
+                                    <p class="mb-0 mt-3">{{ deviceSimilar.price|number_format(2, ',', ' ') }} €</p>
+                                </a>
+                            {% endfor %}
+                        </div>
+                    </div>
 
-{#    produit simulaire #}
-    <article class="row">
+                    <div class="carousel-buttons position-absolute d-flex justify-content-between col-12 top-50 px-5">
+                        <button class="slider-btn prev-btn border-0 bg-white text-white rounded-circle p-3"><i
+                                    class="bi bi-chevron-left text-dark"></i></button>
+                        <button class="slider-btn next-btn border-0 bg-white text-white rounded-circle p-3"><i
+                                    class="bi bi-chevron-right text-dark"></i></button>
+                    </div>
 
-        <div class="py-9 rounded-5 border border-danger col">
-            <h2>produit similaire</h2>
-        </div>
-{#        <div class="py-9 rounded-5 border border-danger col"></div>#}
+                </div>
+            </div>
+        </article>
 
-    </article>
-
-    {#   avis #}
-    <article class="row">
-
-        <div class="py-9 rounded-5 border border-danger col">
-            <h2>avis</h2>
-        </div>
-{#        <div class="py-9 rounded-5 border border-danger col"></div>#}
-
-    </article>
-
-
-
-</section>
-
-<ul>
-    <li>title: {{ device.title }}</li>
-    <li>body: {{ device.body }} </li>
-    <li>price: {{ device.price }} $</li>
-    <li>
-        <ul class="row">
-            {% for subCategory in device.subCategories %}
-                <li>SUB CATEGORIE: {{ subCategory.name }}</li>
-                <li>CATEGORIE: {{ subCategory.category.name }}</li>
-
-            {% endfor %}
-        </ul>
-    </li>
-    <li>
-        <ul class="row">
-{#            {% for picture in device.devicePictures %}#}
-{#                {% if picture.deleted == null or picture.deleted != false %}#}
-{#                    <li class="col-4 mb-3"><img class='col-12'#}
-{#                                                src="{{ asset('upload/devices/' ~ picture.filename ) }}" alt="">#}
-{#                    </li>#}
-{#                {% endif %}#}
-{#            {% endfor %}#}
-        </ul>
-    </li>
-</ul>
+    </section>
 
 {% endblock %}
