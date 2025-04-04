@@ -33,7 +33,7 @@
                     <div class="col-3 py-3 mx-auto d-flex justify-content-center mt-2 bottom-0 px-5">
                         {% if user %}
                             <button class="py-3 px-3 me-2 bg-white rounded-4 bg-theme-gray-3 border-0 card-zoom" id="btn-favorite" data-slug="{{ device.slug }}"><i class="bi {{ isFavorite ? 'color-theme-yellow bi-heart-fill' : 'text-dark bi-heart'  }} fs-3"></i></button>
-                            <button class="py-3 px-3 me-2 bg-white rounded-4 bg-theme-gray-3 border-0 card-zoom contact-user" title="Contacter {{ userDevice.firstname | capitalize }}"><i class="text-dark bi bi-chat-square fs-3"></i></button>
+                            <a href="{{ path('app_conversation_send_new', { slugDevice: device.slug }) }}" class="py-3 px-3 me-2 bg-white rounded-4 bg-theme-gray-3 border-0 card-zoom contact-user" title="Contacter {{ userDevice.firstname | capitalize }}"><i class="text-dark bi bi-chat-square fs-3"></i></a>
                         {% else %}
                         <a href="{{ path('app_login') }}" class="py-3 px-3 me-2 bg-white rounded-4 bg-theme-gray-3 border-0 card-zoom"><i class="text-dark bi bi-heart fs-3"></i></a>
                         <a href="{{ path('app_login') }}" class="py-3 px-3 me-2 bg-white rounded-4 bg-theme-gray-3 border-0 card-zoom contact-user" title="Contacter {{ userDevice.firstname | capitalize }}"><i class="text-dark bi bi-chat-square fs-3"></i></a>
@@ -49,6 +49,14 @@
                     </div>
                 </div>
 
+            {% endif %}
+
+            {% if user %}
+                <button class="py-3 px-3 me-2 bg-white rounded-4 bg-theme-gray-3 border-0 card-zoom" id="btn-favorite" data-slug="{{ device.slug }}"><i class="bi {{ isFavorite ? 'color-theme-yellow bi-heart-fill' : 'text-dark bi-heart'  }} fs-3"></i></button>
+                <a href="{{ path('app_conversation_send_new', { slugDevice: device.slug }) }}" class="py-3 px-3 me-2 bg-white rounded-4 bg-theme-gray-3 border-0 card-zoom contact-user" title="Contacter {{ userDevice.firstname | capitalize }}"><i class="text-dark bi bi-chat-square fs-3"></i></a>
+            {% else %}
+                <a href="{{ path('app_login') }}" class="py-3 px-3 me-2 bg-white rounded-4 bg-theme-gray-3 border-0 card-zoom"><i class="text-dark bi bi-heart fs-3"></i></a>
+                <a href="{{ path('app_login') }}" class="py-3 px-3 me-2 bg-white rounded-4 bg-theme-gray-3 border-0 card-zoom contact-user" title="Contacter {{ userDevice.firstname | capitalize }}"><i class="text-dark bi bi-chat-square fs-3"></i></a>
             {% endif %}
 
             <div class="mb-4 col-6 mx-auto">

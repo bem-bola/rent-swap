@@ -19,10 +19,6 @@ class Alert
     #[ORM\JoinColumn(nullable: false)]
     private ?User $author = null;
 
-    #[ORM\ManyToOne(targetEntity: Message::class)]
-    #[ORM\JoinColumn(nullable: true)]
-    private ?Message $message = null;
-
     #[ORM\ManyToOne(targetEntity: Notice::class)]
     #[ORM\JoinColumn(nullable: true)]
     private ?Notice $notice = null;
@@ -59,22 +55,6 @@ class Alert
     public function setAuthor(?User $author): void
     {
         $this->author = $author;
-    }
-
-    /**
-     * @return Message|null
-     */
-    public function getMessage(): ?Message
-    {
-        return $this->message;
-    }
-
-    /**
-     * @param Message|null $message
-     */
-    public function setMessage(?Message $message): void
-    {
-        $this->message = $message;
     }
 
     /**
