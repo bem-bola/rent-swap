@@ -16,7 +16,9 @@ import Feature from 'ol/Feature';
 import Point from 'ol/geom/Point';
 import Style from 'ol/style/Style';
 import Icon from 'ol/style/Icon';
+import 'htmx.org';
 
+// window.htmx = require('htmx.org');
 import './js/home.js';
 import './js/form.js';
 import './js/show.js';

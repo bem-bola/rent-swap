@@ -22,7 +22,7 @@
             {% if app.user %}
                 <li class="me-2"><a href="#" class="btn box-shadow-sm fw-bolder border-dark py-2"><i class="bi bi-person-gear fs-5"></i><br><span class="me-2 d-xs-none d-sm-none d-md-none d-lg-inline">{{ app.user.firstname | capitalize }} {{ app.user.lastname | capitalize }}</span></a></li>
                 <li class="me-2"><a href="#" class="btn box-shadow-sm fw-bolder border-dark py-2"><i class="bi bi-heart fs-5"></i><br><span class="mx-2 d-xs-none d-sm-none d-md-none d-lg-inline">Favoris</span></a></li>
-                <li class="me-2"><a href="#" class="btn box-shadow-sm fw-bolder border-dark py-2"><i class="bi bi-chat-square-text fs-5"></i><br><span class="mx-2 d-xs-none d-sm-none d-md-none d-lg-inline">Messages</span></a></li>
+                <li class="me-2"><a href="{{ path('app_conversation_show_all') }}" class="btn box-shadow-sm fw-bolder border-dark py-2"><i class="bi bi-chat-square-text fs-5"></i><br><span class="mx-2 d-xs-none d-sm-none d-md-none d-lg-inline">Messages</span></a></li>
 {#                <li class="me-2"><a href="{{ path('app_logout') }}" class="btn box-shadow-sm fw-bolder border-dark py-2"><i class="bi bi-box-arrow-right"></i><br><span class="mx-2 d-xs-none d-sm-none d-md-none d-lg-inline">Deconnexion</span></a></li>#}
             {% else %}
 
