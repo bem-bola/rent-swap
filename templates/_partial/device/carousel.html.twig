@@ -1,0 +1,22 @@
+<div class="carousel-img d-flex position-relative justify-content-center col-12">
+    <button class="btn border-theme-dark-olive-green rounded-3 top-50 position-absolute" id="prev-btn">
+        <i class="bi bi-arrow-left"></i>
+    </button>
+    <div class="carousel-images d-flex col-4" id="carousel-images">
+        {% for index, data in datas %}
+            <img src="{{ data.image }}" alt="{{ data.title }}" class="carousel-image col-12 {{ index == 0 ? 'img-active' : 'img-hide' }}">
+        {% endfor %}
+    </div>
+    <button class="btn border-theme-dark-olive-green rounded-3 top-50 position-absolute" id="next-btn">
+        <i class="bi bi-arrow-right"></i>
+    </button>
+</div>
+
+<div class="thumbnails d-flex justify-content-center flex-wrap col-3 mx-auto" id="thumbnails">
+    <div class="d-flex justify-content-start mt-4">
+        {% for index, data in datas %}
+            <img src="{{ data.image }}" alt="{{ data.title }}" class="thumbnail col-2 mb-0 me-2 {{ index == 0 ? 'active' : '' }}" data-index="{{ index }}">
+        {% endfor %}
+    </div>
+</div>
+

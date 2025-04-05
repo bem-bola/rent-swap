@@ -1,0 +1,69 @@
+<section class="container col-8 col-xs-12 col-md-12 col-sm-12 col-lg-8 px-3 result" id="result">
+    {% set urlRequete = app.request.uri %}
+    {% set pagination = datas.pagination %}
+    {% set sort = sortPrice is defined ? sortPrice : '' %}
+
+    <div class="bg-white rounded-pill d-flex justify-content-between align-items-center px-4 py-2 mb-3">
+        <p class="m-0 text-black-50">Nombre de résultats: {{ pagination.total }}</p>
+
+        <div class="dropdown">
+            <span class="btn text-black-50 cursor-pointer dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                Trier le prix par
+                {% if sortPrice is defined and sortPrice == 'asc' %} croissant {% endif %}
+                {% if sortPrice is defined and sortPrice == 'desc' %} decroissant {% endif %}
+
+            </span>
+            <ul class="dropdown-menu">
+                <li hx-get="{{ path('app_device_search_by_form') ~ urlRequete|replacePage() }}"
+                    hx-target="#result"
+                    hx-swap="outerHTML"><span class="dropdown-item" type="button">Action</span></li>
+                <li
+                        hx-get="{{ path('app_device_search_by_form') ~ urlRequete|replacePage(null, null, 'asc') }}"
+                        hx-target="#result"
+                        hx-swap="outerHTML"><span class="dropdown-item" type="button">Croissant</span></li>
+                <li hx-get="{{ path('app_device_search_by_form') ~ urlRequete|replacePage(null, null, 'desc') }}"
+                    hx-target="#result"
+                    hx-swap="outerHTML"><span class="dropdown-item" type="button">Decroissant</span></li>
+            </ul>
+        </div>
+    </div>
+    <div class="card-content">
+
+        <ul class="rounded-3 p-0">
+            {% for device in datas.items %}
+                {% set filename = device.devicePictures|firstFilename %}
+
+                <li class="col-12 rounded-3 mb-3 item-card bg-white">
+                    <a href="{{ path('app_device_show' , {slug: device.slug}) }}" class="d-flex" style="height: 15rem">
+                        <div class="img-card-search col-4  rounded-start-3">
+                            <img src="{{ asset('/upload/devices/' ~ filename) }}"
+                                 alt="{{ device.title }}"
+                                 class="object-fit-cover col-12 rounded-start-3 h-100">
+                        </div>
+
+                        <div class="ms-3 pt-4">
+                            <h3 class="fs-6 fw-bolder title-card ">{{ device.title }}</h3>
+                            <p class="fw-bold">{{ device.price|number_format(2, ',', ' ') }} €</p>
+                            <span class="border-theme-dark-olive-green p-2 rounded-3 text-capitalize">{{ device.user.type|typeUserFrench }}</span>
+                            <div class="d-flex flex-column col-12 text-black-50 mt-3">
+                                <small class="category">{{ device.categories|map((category) => "#{category.name}")|join(', ') }}</small>
+                                <small class="city">{{ device.location }}</small>
+                                <small class="date">Publié le {{ device.created|formatDateFr }}</small>
+                            </div>
+                        </div>
+
+                    </a>
+                </li>
+            {% endfor %}
+        </ul>
+
+        {% include '_partial/pagination.html.twig' with {
+            nbPage:      pagination.total_pages,
+            currentPage: pagination.page,
+            url:         urlRequete,
+            sort: sort
+        } %}
+
+    </div>
+
+</section>

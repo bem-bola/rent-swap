@@ -26,7 +26,7 @@
             <div class="carousel-wrapper overflow-hidden position-relative col-12">
                 <div class="carousel-track d-flex">
                     {% for category in categories %}
-                        <a href="{{ path('app_device_search', {category: category.slug})}}" class="carousel-card text-white mx-2 col-xs-6 col-sm-6 col-xs-6 col-lg-3 rounded-4 d-block">
+                        <a href="{{ path('app_device_search', {filters: {category: category.slug}})}}" class="carousel-card text-white mx-2 col-xs-6 col-sm-6 col-xs-6 col-lg-3 rounded-4 d-block">
                             <div class="bg-danger py-6 rounded-4 mb-3 h-100">
                                 <h3 class="fs-4 text-wrap text-xs-center text-sm-center text-md-center text-lg-start
                                  px-5 col-12">{{ category.name }}</h3>

@@ -57,8 +57,8 @@ class Device
     #[ORM\Column(type: 'string', length: 20, nullable: true)]
     private ?string $phoneNumber = null;
 
-    #[ORM\ManyToMany(targetEntity: SubCategory::class, mappedBy: 'devices')]
-    private Collection $subCategories;
+    #[ORM\ManyToMany(targetEntity: Category::class, mappedBy: 'devices')]
+    private Collection $categories;
 
     #[ORM\Column(nullable: true)]
     private ?int $quantity = null;
@@ -68,7 +68,7 @@ class Device
 
     public function __construct()
     {
-        $this->subCategories = new ArrayCollection();
+        $this->categories = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -225,33 +225,6 @@ class Device
         $this->type = $type;
     }
 
-    /**
-     * @return Collection<int, City>
-     */
-    public function getCities(): Collection
-    {
-        return $this->subCategories;
-    }
-
-    public function addCategorie(SubCategory $subCategory): static
-    {
-        if (!$this->subCategories->contains($subCategory)) {
-            $this->subCategories->add($subCategory);
-            $subCategory->addDevice($this);
-        }
-
-        return $this;
-    }
-
-    public function removeCity(SubCategory $subCategory): static
-    {
-        if ($this->subCategories->removeElement($subCategory)) {
-            $subCategory->removeDevice($this);
-        }
-
-        return $this;
-    }
-
     public function getQuantity(): ?int
     {
         return $this->quantity;
@@ -270,27 +243,27 @@ class Device
     }
 
     /**
-     * @return Collection<int, SubCategory>
+     * @return Collection<int, Category>
      */
-    public function getSubCategories(): Collection
+    public function getCategories(): Collection
     {
-        return $this->subCategories;
+        return $this->categories;
     }
 
-    public function addSubCategory(SubCategory $subCategory): static
+    public function addCategory(Category $category): static
     {
-        if (!$this->subCategories->contains($subCategory)) {
-            $this->subCategories->add($subCategory);
-            $subCategory->addDevice($this);
+        if (!$this->categories->contains($category)) {
+            $this->categories->add($category);
+            $category->addDevice($this);
         }
 
         return $this;
     }
 
-    public function removeSubCategory(SubCategory $subCategory): static
+    public function removeSubCategory(Category $category): static
     {
-        if ($this->subCategories->removeElement($subCategory)) {
-            $subCategory->removeDevice($this);
+        if ($this->categories->removeElement($category)) {
+            $category->removeDevice($this);
         }
 
         return $this;

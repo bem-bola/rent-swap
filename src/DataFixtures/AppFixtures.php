@@ -5,13 +5,13 @@ namespace App\DataFixtures;
 use App\Entity\Category;
 use App\Entity\Device;
 use App\Entity\DevicePicture;
-use App\Entity\SubCategory;
 use App\Entity\TypeDevice;
 use App\Entity\TypeUser;
 use App\Entity\User;
 use App\Service\HttpClientService;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Persistence\ObjectManager;
+use Exception;
 use Random\RandomException;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use Symfony\Contracts\HttpClient\Exception\ClientExceptionInterface;
@@ -31,7 +31,9 @@ class AppFixtures extends Fixture
 
     /**
      * @param string $dataFixture
+     * @param string $uploadFileDevice
      * @param UserPasswordHasherInterface $passwordHasher
+     * @param HttpClientService $httpClientService
      */
     public function __construct(
         string $dataFixture,
@@ -52,32 +54,42 @@ class AppFixtures extends Fixture
 
     private function pushCatergories(ObjectManager $manager): array {
 
-        $categories = ['Appareils informatiques', 'Téléphones et tablettes', 'Appareils photo et caméras', 'Équipements audio et vidéo'];
-        $subCategories = [
-            ['Ordinateurs portables', 'Ordinateurs de bureau', 'Moniteurs', 'Claviers et souris', 'Disques durs externes', 'Accessoires informatiques'],
-            ['Smartphones', 'Tablettes', "Accessoires mobiles"],
-            ['Appareils photo numériques', 'Caméra', "Accessoires mobiles", 'Trépieds et supports'],
-            ['Casques et écouteurs', 'Enceintes Bluetooth', "Microphones", 'Projecteurs', 'Systèmes de son surround', 'Home cinéma'],
+        $categories = [
+            'Ordinateurs portables',
+            'Ordinateurs de bureau',
+            'Moniteurs',
+            'Claviers et souris',
+            'Disques durs externes',
+            'Accessoires informatiques',
+            'Appareils informatiques',
+            'Téléphones et tablettes',
+            'Appareils photo et caméras',
+            'Équipements audio et vidéo',
+            'Smartphones',
+            'Tablettes',
+            "Accessoires mobiles",
+            'Appareils photo numériques',
+            'Caméra',
+            "Accessoires mobiles",
+            'Trépieds et supports',
+            'Casques et écouteurs',
+            'Enceintes Bluetooth',
+            "Microphones",
+            'Projecteurs',
+            'Systèmes de son surround',
+            'Home cinéma'
         ];
 
         $results = [];
-        $tag = 0;
-        foreach ($categories as $key => $categoryData) {
+
+        foreach ($categories as $key => $name) {
             $category = new Category();
-            $category->setName($categoryData);
+            $category->setName($name);
             $manager->persist($category);
 
-            foreach ($subCategories[$key] as $subCategoryData){
-                $subCategory = new SubCategory();
-                $subCategory->setName($subCategoryData);
-                $subCategory->setCategory($category);
-                $manager->persist($subCategory);
+            $this->addReference("tag_$key", $category);
 
-                $this->addReference("tag_$tag", $subCategory);
-                $tag++;
-                $results[] = $subCategory;
-            }
-
+            $results[] = $category;
         }
 
         $manager->flush();
@@ -121,7 +133,7 @@ class AppFixtures extends Fixture
     }
 
     /**
-     * @throws \Exception
+     * @throws Exception
      */
     private function pushUser(ObjectManager $manager, array $typesUser): array{
 
@@ -155,14 +167,14 @@ class AppFixtures extends Fixture
     /**
      * @throws RandomException
      */
-    private function pushDevice(ObjectManager $manager, array $users, $typesDevice, $subCategories): array{
+    private function pushDevice(ObjectManager $manager, array $users, $typesDevice): array{
 
         $devicesData =  $this->getDataFile('device');
 
         $results = [];
         foreach ($devicesData as $deviceData) {
             $device = new Device();
-            $device->setUser($users[0]);
+            $device->setUser($users[rand(0,22)]);
             $device->setBody($deviceData->body);
             $device->setPrice($deviceData->price);
             $device->setTitle($deviceData->title);
@@ -172,11 +184,12 @@ class AppFixtures extends Fixture
             $device->setLocation($deviceData->location);
             $device->setPhoneNumber($deviceData->phoneNumber);
             $device->setQuantity($deviceData->quantity);
-            $device->setType($typesDevice[$deviceData->type]);
+            $device->setType($typesDevice[rand(0,2)]);
             $device->setSlug(uniqid().time().uniqid().bin2hex(random_bytes(50)).bin2hex($deviceData->price));
 
-            $device->addSubCategory($this->getReference('tag_'.rand(0,9), SubCategory::class));
-            $device->addSubCategory($this->getReference('tag_'.rand(10,18), SubCategory::class));
+            $device->addCategory($this->getReference('tag_'.rand(0,10), Category::class));
+            $device->addCategory($this->getReference('tag_'.rand(11,15), Category::class));
+            $device->addCategory($this->getReference('tag_'.rand(16,22), Category::class));
 
             $results[] = $device;
         }
@@ -188,43 +201,30 @@ class AppFixtures extends Fixture
 
 
     /**
-     * @throws \Exception
+     * @throws Exception
      */
-    private function pushPictureUser(ObjectManager $manager, array $devices): array{
+    private function pushPictureUser(ObjectManager $manager, array $devices): void{
 
-        $devicesPicture =  $this->getDataFile('devicePicture');
-
-        $results = [];
-        foreach ($devicesPicture as $picture) {
+        foreach (scandir($this->uploadFileDevice) as $key => $picture) {
+            if($key < 2) continue;
             $devicePicture = new DevicePicture();
-            $devicePicture->setCreated(new \DateTime($picture->created));
-            $devicePicture->setDevice($devices[$picture->device]);
-
-            try {
-                $filename = uniqid().time().bin2hex(random_bytes(50)).bin2hex($devices[$picture->device]->getTitle()) . '.jpg';
-                $targetPath = $this->uploadFileDevice . $filename;
-
-                $this->httpClientService->downloadAndSaveImageUnsPlash($targetPath);
-
-                $devicePicture->setFilename($filename);
-
-            } catch (\Exception|DecodingExceptionInterface|TransportExceptionInterface $e) {
-                $devicePicture->setFilename('https://picsum.photos/700/300');
-            }
+            $devicePicture->setCreated(new \DateTime());
+            $devicePicture->setDevice($devices[rand(0,99)]);
+            $devicePicture->setFilename($picture);
 
             $manager->persist($devicePicture);
         }
 
         $manager->flush();
 
-        return $results;
     }
     /**
-     * @throws \Exception
+     * @throws Exception
      */
     public function load(ObjectManager $manager): void
     {
-        $subCategories = $this->pushCatergories($manager);
+
+        $this->pushCatergories($manager);
 
         $typesDevice = $this->pushTypeDevice($manager);
 
@@ -232,7 +232,7 @@ class AppFixtures extends Fixture
 
         $users = $this->pushUser($manager, $typesUser);
 
-        $device = $this->pushDevice($manager, $users, $typesDevice, $subCategories);
+        $device = $this->pushDevice($manager, $users, $typesDevice);
 
         $this->pushPictureUser($manager, $device);
 

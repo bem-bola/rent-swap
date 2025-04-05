@@ -6,7 +6,7 @@
 
     {% set imagesDevice = device.devicePictures | length > 0 ? device.devicePictures : null %}
     {% set userDevice = device.user %}
-    {% set categories = device.subCategories %}
+    {% set categories = device.categories %}
     {% set user = app.user %}
     {% set isFavorite = favorite is null ? false : favorite.isFavorite %}
 
@@ -17,47 +17,41 @@
     <section id="section-show-1" class="mt-5">
 
         <article class="position-relative">
-
-            {% if imagesDevice is not null %}
                 <div class="position-relative overflow-hidden carousel-container col-12 py-5 rounded-3 mx-auto">
-                    {% for picture in imagesDevice %}
-                        <div class="carousel-slide px-auto col-10 mx-auto h-50 rounded-5 ">
-                            <div class="col-12 h-100 d-flex justify-content-center">
-                                <img class='h-auto object-fit-contain rounded-5 mw-100 mh-100 w-auto'
-                                     src="{{ asset('upload/devices/' ~ picture.filename ) }}"
-                                     alt="{{ picture.alt }}" title="{{ picture.title }}">
+                    {% if imagesDevice is not null %}
+                        {% for picture in imagesDevice %}
+                            <div class="carousel-slide px-auto col-10 mx-auto h-50 rounded-5 ">
+                                <div class="col-12 h-100 d-flex justify-content-center">
+                                    <img class='h-auto object-fit-contain rounded-5 mw-100 mh-100 w-auto'
+                                         src="{{ asset('upload/devices/' ~ picture.filename ) }}"
+                                         alt="{{ picture.alt }}" title="{{ picture.title }}">
+                                </div>
                             </div>
-                        </div>
 
-                    {% endfor %}
+                        {% endfor %}
+                    {% endif %}
+
                     <div class="col-3 py-3 mx-auto d-flex justify-content-center mt-2 bottom-0 px-5">
                         {% if user %}
-                            <button class="py-3 px-3 me-2 bg-white rounded-4 bg-theme-gray-3 border-0 card-zoom" id="btn-favorite" data-slug="{{ device.slug }}"><i class="bi {{ isFavorite ? 'color-theme-yellow bi-heart-fill' : 'text-dark bi-heart'  }} fs-3"></i></button>
+                            <button class="py-3 px-3 me-2 bg-white rounded-4 bg-theme-gray-3 border-0 card-zoom"
+                                    id="btn-favorite" data-slug="{{ device.slug }}">
+                                <i class="bi {{ isFavorite ? 'color-theme-yellow bi-heart-fill' : 'text-dark bi-heart'  }} fs-3"></i>
+                            </button>
                             <a href="{{ path('app_conversation_send_new', { slugDevice: device.slug }) }}" class="py-3 px-3 me-2 bg-white rounded-4 bg-theme-gray-3 border-0 card-zoom contact-user" title="Contacter {{ userDevice.firstname | capitalize }}"><i class="text-dark bi bi-chat-square fs-3"></i></a>
                         {% else %}
-                        <a href="{{ path('app_login') }}" class="py-3 px-3 me-2 bg-white rounded-4 bg-theme-gray-3 border-0 card-zoom"><i class="text-dark bi bi-heart fs-3"></i></a>
-                        <a href="{{ path('app_login') }}" class="py-3 px-3 me-2 bg-white rounded-4 bg-theme-gray-3 border-0 card-zoom contact-user" title="Contacter {{ userDevice.firstname | capitalize }}"><i class="text-dark bi bi-chat-square fs-3"></i></a>
+                            <a href="{{ path('app_login') }}" class="py-3 px-3 me-2 bg-white rounded-4 bg-theme-gray-3 border-0 card-zoom"><i class="text-dark bi bi-heart fs-3"></i></a>
+                            <a href="{{ path('app_login') }}" class="py-3 px-3 me-2 bg-white rounded-4 bg-theme-gray-3 border-0 card-zoom contact-user" title="Contacter {{ userDevice.firstname | capitalize }}"><i class="text-dark bi bi-chat-square fs-3"></i></a>
                         {% endif %}
                     </div>
-
-                    <div class="carousel-buttons position-absolute d-flex justify-content-between col-12 top-50 px-5">
-                        <button class="width-height-2 carousel-prev border-0 bg-theme-dark text-white rounded-circle">
-                            <i class="bi bi-chevron-left fw-bold "></i></button>
-                        <button class="carousel-next width-height-2 border-0 bg-theme-dark text-white rounded-circle">
-                            <i
-                                    class="bi bi-chevron-right"></i></button>
-                    </div>
+                    {% if imagesDevice is not null %}
+                        <div class="carousel-buttons position-absolute d-flex justify-content-between col-12 top-50 px-5">
+                            <button class="width-height-2 carousel-prev border-0 bg-theme-dark text-white rounded-circle">
+                                <i class="bi bi-chevron-left fw-bold "></i></button>
+                            <button class="carousel-next width-height-2 border-0 bg-theme-dark text-white rounded-circle">
+                                <i class="bi bi-chevron-right"></i></button>
+                        </div>
+                    {% endif %}
                 </div>
-
-            {% endif %}
-
-            {% if user %}
-                <button class="py-3 px-3 me-2 bg-white rounded-4 bg-theme-gray-3 border-0 card-zoom" id="btn-favorite" data-slug="{{ device.slug }}"><i class="bi {{ isFavorite ? 'color-theme-yellow bi-heart-fill' : 'text-dark bi-heart'  }} fs-3"></i></button>
-                <a href="{{ path('app_conversation_send_new', { slugDevice: device.slug }) }}" class="py-3 px-3 me-2 bg-white rounded-4 bg-theme-gray-3 border-0 card-zoom contact-user" title="Contacter {{ userDevice.firstname | capitalize }}"><i class="text-dark bi bi-chat-square fs-3"></i></a>
-            {% else %}
-                <a href="{{ path('app_login') }}" class="py-3 px-3 me-2 bg-white rounded-4 bg-theme-gray-3 border-0 card-zoom"><i class="text-dark bi bi-heart fs-3"></i></a>
-                <a href="{{ path('app_login') }}" class="py-3 px-3 me-2 bg-white rounded-4 bg-theme-gray-3 border-0 card-zoom contact-user" title="Contacter {{ userDevice.firstname | capitalize }}"><i class="text-dark bi bi-chat-square fs-3"></i></a>
-            {% endif %}
 
             <div class="mb-4 col-6 mx-auto">
                 <h1 class="fs-2 fw-600 text-capitalize">{{ device.title }}</h1>
@@ -89,8 +83,12 @@
                     </div>
 
                     <div class="d-flex justify-content-center mt-3">
-                        <button class="bg-theme-dark text-white border-0 px-3 py-2 rounded-pill col-10">Message
-                        </button>
+                        <a
+                                {% if user %} href="{{ path('app_conversation_send_new', { slugDevice: device.slug }) }}"
+                                    {% else %} href="{{ path('app_login') }}"
+                                {% endif %}
+                           class="bg-theme-dark text-white border-0 px-3 py-2 rounded-pill text-center col-10">Message
+                        </a>
                     </div>
                 </div>
             </div>
@@ -100,11 +98,7 @@
                 <h2 class="fs-5 fw-400 color-theme-gray-4 mb-3">Catégories</h2>
                 <ul class="row ps-0">
                     {% for category in categories %}
-                        <a href="#"
-                           class="bg-danger col rounded-4 m-1 p-5 text-white card-zoom shadow-sm">{{ category.name }}</a>
-                        <a href="#"
-                           class="bg-danger col rounded-4 m-1 p-5 text-white card-zoom shadow-sm">{{ category.category.name }}</a>
-
+                        <a href="{{ path('app_device_search', {slug_category: category.slug})}}" class="bg-danger col-3 rounded-4 m-1 p-5 text-white card-zoom shadow-sm">{{ category.name }}</a>
                     {% endfor %}
                 </ul>
 
@@ -131,12 +125,20 @@
                     <div class="product-list-wrapper col-12 overflow-hidden">
                         <div class="product-list d-flex">
                             {% for deviceSimilar in devicesSimilar %}
-                                <a href="#"
+                                {% set picture = deviceSimilar.devicePictures|length > 0 ? deviceSimilar.devicePictures|first : null %}
+
+                                <a href="{{ path('app_device_show' , {slug: deviceSimilar.slug}) }}"
                                    class="product-card rounded-4 px-4 py-4 bg-white card-zoom shadow-sm col-3">
                                     <h3 class="fw-500 fs-5 text-capitalize">{{ deviceSimilar.title | length > 15 ?  deviceSimilar.title | slice(0,15) ~ '...': deviceSimilar.title }}</h3>
-                                    <img class='rounded-4'
-                                         src="{{ asset('/upload/devices/67b0ad9c4463c1739632028d8c585d98b94b0bef4d8127377f7e1beae5cd125f16c12b14f8d950eb60e5aab7fb3ecc2633a71c33aebc6b8737216ab087773696e74.jpg') }}"
-                                         alt="{{ deviceSimilar.title }}">
+                                    {% if picture is not null %}
+                                        <img class='rounded-4'
+                                             src="{{ asset('/upload/devices/' ~ picture.filename) }}"
+                                             alt="{{ deviceSimilar.title }}">
+                                        {% else %}
+                                            <img class='rounded-4'
+                                                 src="{{ asset('/img/logo/logo-reusiix.png') }}"
+                                                 alt="{{ deviceSimilar.title }}">
+                                    {% endif %}
                                     <p class="mb-0 mt-3">{{ deviceSimilar.price|number_format(2, ',', ' ') }} €</p>
                                 </a>
                             {% endfor %}
