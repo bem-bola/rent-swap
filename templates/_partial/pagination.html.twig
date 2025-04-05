@@ -1,0 +1,54 @@
+<div class="pagination-content col-auto mx-auto bg-white rounded-pill">
+
+    <ul class="pagination d-flex justify-content-center mt-5">
+
+        {% if nbPage > 1 %}
+
+            {# Bouton "Précédent" #}
+            <li class="{{ currentPage == 1 ? 'pointer-events-none' : 'cursor-pointer' }} rounded-3 p-2"
+                hx-get="{{ path('app_device_search_by_form') ~ url|replacePage(currentPage, currentPage-1, sort) }}"
+                hx-target="#result"
+                hx-swap="outerHTML"
+            >
+                <i class="bi bi-chevron-left"></i>
+            </li>
+
+            {# Définition des limites de la pagination #}
+            {% set startPage = 1 %}
+            {% set endPage = nbPage %}
+
+            {% if nbPage > 10 %}
+                {% if currentPage <= 5 %}
+                    {% set startPage = 1 %}
+                    {% set endPage = 10 %}
+                {% elseif currentPage >= nbPage - 4 %}
+                    {% set startPage = nbPage - 9 %}
+                    {% set endPage = nbPage %}
+                {% else %}
+                    {% set startPage = currentPage - 4 %}
+                    {% set endPage = currentPage + 5 %}
+                {% endif %}
+            {% endif %}
+
+            {# Affichage des boutons de pagination #}
+            {% for page in startPage..endPage %}
+                <li  class="{{ page == currentPage ? 'bg-theme-dark color-theme-white-2 active pointer-events-none': 'cursor-pointer' }} rounded-pill p-2"
+                     hx-get="{{ path('app_device_search_by_form') ~ url|replacePage(currentPage, page, sort) }}"
+                     hx-target="#result"
+                     hx-swap="outerHTML">
+                        {{ page }}
+                </li>
+            {% endfor %}
+
+            {# Bouton "Suivant" #}
+            <li class="{{ currentPage == nbPage ? 'pointer-events-none' : 'cursor-pointer' }} rounded-3 p-2"
+                hx-get="{{ path('app_device_search_by_form') ~ url|replacePage(currentPage, currentPage+1, sort) }}"
+                hx-target="#result"
+                hx-swap="outerHTML">
+                    <i class="bi bi-chevron-right"></i>
+            </li>
+
+        {% endif %}
+    </ul>
+
+</div>

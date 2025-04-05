@@ -7,6 +7,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Uid\Uuid;
 
 #[ORM\Entity(repositoryClass: CategoryRepository::class)]
 class Category
@@ -19,18 +20,16 @@ class Category
     #[ORM\Column(type: 'string', length: 150)]
     private string $name;
 
-    /**
-     * @var Collection<int, SubCategory>
-     */
-    #[ORM\OneToMany(targetEntity: SubCategory::class, mappedBy: 'category')]
-    private Collection $subCategories;
-
-    #[ORM\Column(type: Types::TEXT, nullable: true)]
+    #[ORM\Column(type: Types::GUID)]
     private ?string $slug = null;
+
+    #[ORM\ManyToMany(targetEntity: Device::class, inversedBy: 'devices', cascade: ['persist'])]
+    private Collection $devices;
 
     public function __construct()
     {
-        $this->subCategories = new ArrayCollection();
+        $this->devices = new ArrayCollection();
+        $this->slug = Uuid::v1();
     }
 
     public function getId(): ?int
@@ -49,44 +48,37 @@ class Category
         return $this;
     }
 
-    /**
-     * @return Collection<int, SubCategory>
-     */
-    public function getSubCategories(): Collection
-    {
-        return $this->subCategories;
-    }
-
-    public function addSubCategory(SubCategory $subCategory): static
-    {
-        if (!$this->subCategories->contains($subCategory)) {
-            $this->subCategories->add($subCategory);
-            $subCategory->setCategory($this);
-        }
-
-        return $this;
-    }
-
-    public function removeSubCategory(SubCategory $subCategory): static
-    {
-        if ($this->subCategories->removeElement($subCategory)) {
-            // set the owning side to null (unless already changed)
-            if ($subCategory->getCategory() === $this) {
-                $subCategory->setCategory(null);
-            }
-        }
-
-        return $this;
-    }
-
-    public function getSlug(): ?string
+    public function getSlug(): string
     {
         return $this->slug;
     }
 
-    public function setSlug(?string $slug): static
+    public function setSlug(string $slug): self
     {
         $this->slug = $slug;
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Device>
+     */
+    public function getDevices(): Collection
+    {
+        return $this->devices;
+    }
+
+    public function addDevice(Device $device): static
+    {
+        if (!$this->devices->contains($device)) {
+            $this->devices->add($device);
+        }
+
+        return $this;
+    }
+
+    public function removeDevice(Device $device): static
+    {
+        $this->devices->removeElement($device);
 
         return $this;
     }
