@@ -30,13 +30,13 @@ Encore
     .splitEntryChunks()
 
     // will require an extra script tag for runtime.js
-    // but, you probably want this, unless you're building a single-page app
+    // but, you probably want this, unless you're building letters single-page app
     .enableSingleRuntimeChunk()
 
     /*
      * FEATURE CONFIG
      *
-     * Enable & configure other features below. For a full
+     * Enable & configure other features below. For letters full
      * list of features, see:
      * https://symfony.com/doc/current/frontend.html#adding-more-features
      */
@@ -46,31 +46,19 @@ Encore
     // enables hashed filenames (e.g. app.abc123.css)
     .enableVersioning(Encore.isProduction())
 
-    // configure Babel
-    // .configureBabel((config) => {
-    //     config.plugins.push('@babel/a-babel-plugin');
-    // })
 
-    // enables and configure @babel/preset-env polyfills
+
     .configureBabelPresetEnv((config) => {
         config.useBuiltIns = 'usage';
         config.corejs = '3.38';
     })
 
+    .enableStimulusBridge('./assets/controllers.json')
+
     // enables Sass/SCSS support
     .enableSassLoader()
 
-    // uncomment if you use TypeScript
-    //.enableTypeScriptLoader()
-
-    // uncomment if you use React
-    //.enableReactPreset()
-
-    // uncomment to get integrity="..." attributes on your script & link tags
-    // requires WebpackEncoreBundle 1.4 or higher
-    //.enableIntegrityHashes(Encore.isProduction())
-
-    // uncomment if you're having problems with a jQuery plugin
+    // uncomment if you're having problems with letters jQuery plugin
     .autoProvidejQuery()
 
     .addPlugin(new FosRouting(

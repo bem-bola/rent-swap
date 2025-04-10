@@ -1,22 +1,32 @@
-<div class="carousel-img d-flex position-relative justify-content-center col-12">
-    <button class="btn border-theme-dark-olive-green rounded-3 top-50 position-absolute" id="prev-btn">
-        <i class="bi bi-arrow-left"></i>
-    </button>
-    <div class="carousel-images d-flex col-4" id="carousel-images">
-        {% for index, data in datas %}
-            <img src="{{ data.image }}" alt="{{ data.title }}" class="carousel-image col-12 {{ index == 0 ? 'img-active' : 'img-hide' }}">
-        {% endfor %}
-    </div>
-    <button class="btn border-theme-dark-olive-green rounded-3 top-50 position-absolute" id="next-btn">
-        <i class="bi bi-arrow-right"></i>
-    </button>
-</div>
+<div class="product-slider position-relative overflow-hidden col-12">
+    <div class="product-list-wrapper col-12 overflow-hidden">
+        <div class="product-list d-flex">
+            {% for device in devices %}
+                {% set picture = device.devicePictures|length > 0 ? device.devicePictures|first : null %}
 
-<div class="thumbnails d-flex justify-content-center flex-wrap col-3 mx-auto" id="thumbnails">
-    <div class="d-flex justify-content-start mt-4">
-        {% for index, data in datas %}
-            <img src="{{ data.image }}" alt="{{ data.title }}" class="thumbnail col-2 mb-0 me-2 {{ index == 0 ? 'active' : '' }}" data-index="{{ index }}">
-        {% endfor %}
+                <a href="{{ path('app_device_show' , {slug: device.slug}) }}"
+                   class="product-card rounded-4 px-4 py-4 bg-white card-zoom shadow-sm col-3">
+                    <h3 class="fw-500 fs-5 text-capitalize">{{ device.title | length > 15 ?  device.title | slice(0,15) ~ '...': device.title }}</h3>
+                    {% if picture is not null %}
+                        <img class='rounded-4'
+                             src="{{ asset('/upload/devices/' ~ picture.filename) }}"
+                             alt="{{ device.title }}">
+                    {% else %}
+                        <img class='rounded-4'
+                             src="{{ asset('/img/logo/logo-reusiix.png') }}"
+                             alt="{{ device.title }}">
+                    {% endif %}
+                    <p class="mb-0 mt-3">{{ device.price|number_format(2, ',', ' ') }} €</p>
+                </a>
+            {% endfor %}
+        </div>
     </div>
-</div>
 
+    <div class="carousel-buttons position-absolute d-flex justify-content-between col-12 top-50 px-5">
+        <button class="slider-btn prev-btn border-0 bg-white text-white rounded-circle p-3"><i
+                    class="bi bi-chevron-left text-dark"></i></button>
+        <button class="slider-btn next-btn border-0 bg-white text-white rounded-circle p-3"><i
+                    class="bi bi-chevron-right text-dark"></i></button>
+    </div>
+
+</div>

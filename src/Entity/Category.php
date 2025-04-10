@@ -32,6 +32,11 @@ class Category
         $this->slug = Uuid::v1();
     }
 
+//    public function __toString(): string
+//    {
+//        return $this->getName(); // ou autre champ que tu veux afficher dans le select
+//    }
+
     public function getId(): ?int
     {
         return $this->id;

@@ -9,4 +9,5 @@ class Constances {
     const ACCEPTED = 'accepted';
     const CANCELLED = 'cancelled';
     const VALIDED = 'validated';
+    const DRAFT = 'draft';
 }
