@@ -95,4 +95,36 @@ class DeviceRepository extends ServiceEntityRepository
 
         return $this->paginatorService->getDatas($query, $params['pagination'] ?? []);
     }
+
+    public function findByUser(array $params, User $user): array
+    {
+        $filters = $params['filters'] ?? [];
+
+        $sort = $params['orderby'] ?? [];
+
+        $query = $this->createQueryBuilder('d')
+                    ->join('d.user', 'u')
+                    ->andWhere('u.id = :user')
+                    ->setParameter('user', $user);
+
+        if(isset($filters['status']) && $filters['status'] != null) {
+            $query->andWhere('d.status = :status')
+                ->setParameter('status', $filters['status']);
+        }
+        if(isset($filters['deleted']) && $filters['deleted'] != null) {
+            $query->andWhere('d.deleted is not null');
+        }
+
+        if(isset($filters['title']) && $filters['title'] != null) {
+            $query->andWhere('LOWER(d.title) LIKE :title')
+                ->setParameter('title', '%'.strtolower($filters['title']).'%');
+        }
+        if(isset($sort['price']) && $sort['price'] != null) {
+            $query->orderBy('d.price', $sort['price']);
+        }
+
+        return $this->paginatorService->getDatas($query, $params['pagination'] ?? []);
+    }
+
+
 }

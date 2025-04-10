@@ -1,0 +1,113 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}RentSwap - Profile{% endblock %}
+
+{% block main %}
+    {% set user = app.user %}
+
+
+    <section class="container mt-5">
+        <!-- Profile -->
+        <div class="rounded-4 shadow-sm d-flex flex-wrap bg-white justify-content-between align-items-center p-4">
+            <div class="col-4 row align-items-center">
+                <div class="col-3"><img src="{{ asset(user|pathAvatarUser) }}" alt="" class="col-12 rounded-circle"></div>
+                <h1 class="col fs-5">{{ user.firstname ~ ' ' ~  user.lastname }}</h1>
+            </div>
+
+            <a href="#" class="bg-theme-dark text-white px-3 py-2 rounded-3">Modifier</a>
+        </div>
+        <!-- Fin Profile -->
+
+
+        <!-- Messages -->
+        <div class="mt-4 d-flex gap-3">
+
+            <a href="{{ path('app_user_devices') }}" class="col bg-white py-5 px-4 rounded-4">
+                <span class="fs-5 fw-500 color-theme-gray-4 mb-3">Tous mes appareils</span>
+            </a>
+
+            <a href="{{ path('app_user_favorites') }}" class="col bg-white py-5 px-4 rounded-4">
+                <span class="fs-5 fw-500 color-theme-gray-4 mb-3">Mes favoris</span>
+            </a>
+
+            <a href="{{ path('app_conversation_show_all') }}" class="col bg-white py-5 px-4 rounded-4">
+                <span class="fs-5 fw-500 color-theme-gray-4 mb-3">Mes messages</span>
+            </a>
+
+
+        </div>
+        <!-- Fin Messages -->
+
+
+        <!-- Les annonces -->
+        <div class="mt-4">
+            <h2 class="fs-5 fw-400 color-theme-gray-4 mb-3">Mes derniers appareils</h2>
+            <div class="product-slider position-relative overflow-hidden col-12">
+                <div class="product-list-wrapper col-12 overflow-hidden">
+                    <div class="product-list d-flex">
+                        {% for device in devices %}
+
+                            {% set picture = device.devicePictures|length > 0 ? device.devicePictures|first : null %}
+
+                            <div href="{{ path('app_device_show' , {slug: device.slug}) }}"
+                                 class="product-card rounded-4 px-4 py-4 bg-white shadow-sm col-3">
+                                <h3 class="fw-500 fs-5 text-capitalize">{{ device.title | length > 15 ?  device.title | slice(0,15) ~ '...': device.title }}</h3>
+                                {% if picture is not null %}
+                                    <img class='rounded-4'
+                                         src="{{ asset('/upload/devices/' ~ picture.filename) }}"
+                                         alt="{{ device.title }}">
+                                {% else %}
+                                    <img class='rounded-4'
+                                         src="{{ asset('/img/logo/logo-reusiix.png') }}"
+                                         alt="{{ device.title }}">
+                                {% endif %}
+
+                                <div class="d-flex justify-content-between mt-3 flex-wrap">
+                                    <p class="mb-0 col">{{ device.price|number_format(2, ',', ' ') }} €</p>
+                                    {% if device.deleted is null %} <a href="#" title="Supprimer"><i class="bi bi-trash text-danger fs-4"></i></a>
+                                    {% endif %}
+
+                                </div>
+                                {% if device.status == 'pending' %}
+                                    <div class="col-12 text-warning mt-2 fs-5">En attente de validation <i class="bi bi-hourglass-split "></i></div>
+                                {% elseif device.status == 'rejected' %}
+                                    <div class="col-12 text-danger mt-2 fs-5">Rejeté <i class="bi bi-x-lg "></i></div>
+                                {% elseif device.status == 'validated' %}
+                                    <div class="col-12 text-success mt-2 fs-5">Validé <i class="bi bi-check"></i></div>
+                                {% endif %}
+                                <div class="mt-3 d-flex gap-2">
+
+                                    <a href="#" class="col py-2 px-2 border-1 border-theme-dark rounded-3 text-center card-zoom fs-5">Modifier <i class="bi bi-pencil-square"></i></a>
+                                    <a href="{{ path('app_device_show' , {slug: device.slug}) }}"
+                                       class="col py-2 px-2 border-1 border-theme-dark rounded-3 text-center card-zoom fs-5">Voir <i class="bi bi-eye"></i></a>
+
+                                </div>
+
+                                {% if device.deleted is not null %}
+                                    <div class="col-12 text-danger font-size-08 mt-2">Supprimé le {{ device.deleted|formatDateFr }}</div>
+                                {% endif %}
+
+
+                            </div>
+                        {% endfor %}
+                    </div>
+                </div>
+
+                <div class="carousel-buttons position-absolute d-flex justify-content-between col-12 top-50 px-5">
+                    <button class="slider-btn prev-btn border-0 bg-white text-white rounded-circle p-3 shadow-lg"><i
+                                class="bi bi-chevron-left text-dark"></i></button>
+                    <button class="slider-btn next-btn border-0 bg-white text-white rounded-circle p-3 shadow-lg"><i
+                                class="bi bi-chevron-right text-dark"></i></button>
+                </div>
+
+            </div>
+        </div>
+        <!-- Fin annonces -->
+    </section>
+
+{% endblock %}
+
+
+
+
+

@@ -7,6 +7,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Uid\Uuid;
 
 #[ORM\Entity(repositoryClass: DeviceRepository::class)]
 class Device
@@ -69,11 +70,19 @@ class Device
     public function __construct()
     {
         $this->categories = new ArrayCollection();
+        $this->devicePictures = new ArrayCollection();
+        $this->slug = Uuid::v1().time().uniqid();
     }
 
     public function getId(): ?int
     {
         return $this->id;
+    }
+
+    public function setId(): self
+    {
+        $this->id = null;
+        return $this;
     }
 
     public function getUser(): ?User
@@ -297,4 +306,5 @@ class Device
     public function isStatusValid(): bool{
         return $this->getStatus() === Constances::VALIDED;
     }
+
 }

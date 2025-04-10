@@ -8,6 +8,8 @@
     <div class="container d-flex search-item flex-column flex-lg-row mt-5">
         {% include('_partial/device/form_search.html.twig') %}
 
-        {% include('_partial/device/results_search.html.twig') %}
+        {% include '_partial/device/results_search.html.twig' with {
+            routeSearchName: 'app_device_search_by_form'
+        } %}
     </div>
 {% endblock %}

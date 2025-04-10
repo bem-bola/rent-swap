@@ -4,11 +4,18 @@
 
         {% if nbPage > 1 %}
 
+            {% set routeName = 
+                app.request.get('_route') == 'app_user_devices' ? 
+                'app_user_devices' : 
+                'app_device_search_by_form'
+            %}
+
             {# Bouton "Précédent" #}
             <li class="{{ currentPage == 1 ? 'pointer-events-none' : 'cursor-pointer' }} rounded-3 p-2"
-                hx-get="{{ path('app_device_search_by_form') ~ url|replacePage(currentPage, currentPage-1, sort) }}"
+                hx-get="{{ path(routeName) ~ url|replacePage(currentPage-1, sort, status, title) }}"
                 hx-target="#result"
                 hx-swap="outerHTML"
+                hx-push-url="true"
             >
                 <i class="bi bi-chevron-left"></i>
             </li>
@@ -33,18 +40,21 @@
             {# Affichage des boutons de pagination #}
             {% for page in startPage..endPage %}
                 <li  class="{{ page == currentPage ? 'bg-theme-dark color-theme-white-2 active pointer-events-none': 'cursor-pointer' }} rounded-pill p-2"
-                     hx-get="{{ path('app_device_search_by_form') ~ url|replacePage(currentPage, page, sort) }}"
+                     hx-get="{{ path(routeName) ~ url|replacePage(page, sort, status, title) }}"
                      hx-target="#result"
-                     hx-swap="outerHTML">
+                     hx-swap="outerHTML"
+                     hx-push-url="true">
                         {{ page }}
                 </li>
             {% endfor %}
 
             {# Bouton "Suivant" #}
             <li class="{{ currentPage == nbPage ? 'pointer-events-none' : 'cursor-pointer' }} rounded-3 p-2"
-                hx-get="{{ path('app_device_search_by_form') ~ url|replacePage(currentPage, currentPage+1, sort) }}"
+                hx-get="{{ path(routeName) ~ url|replacePage(currentPage+1, sort, status, title) }}"
                 hx-target="#result"
-                hx-swap="outerHTML">
+                hx-swap="outerHTML"
+                hx-push-url="true"
+            >
                     <i class="bi bi-chevron-right"></i>
             </li>
 
