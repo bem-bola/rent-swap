@@ -56,24 +56,19 @@ class DeviceType extends AbstractType
                 'multiple' => false,
                 'expanded' => false,
             ])
-            ->add('categories', EntityType::class, [
-                'class' => Category::class,
-                'choice_label' => 'name',
-                'multiple' => true,
-                'expanded' => true,
-            ])
 
             ->add('pictures', FileType::class, [
                 'label' => 'Ajouter des images',
                 'multiple' => true,
                 'mapped' => false,
+                'required' => false,
                 'attr'     => [
                     'accept' => 'image/*',
                     'multiple' => 'multiple'
                 ]
             ])
-            ->add('eee', SubmitType::class, [
-                'label' => 'Publier'
+            ->add('save', SubmitType::class, [
+                'label' => 'Publier',
             ])
         ;
 

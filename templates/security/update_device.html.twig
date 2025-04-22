@@ -12,8 +12,14 @@
             }
         }) }}
 
+
+        <div class="my-custom-class-for-errors">
+            {{ form_errors(form) }}
+        </div>
+
+
         <!-- Inputs titre, prix, quantité -->
-        <div class="d-flex gap-4 bg-theme-gray px-5 py-5 rounded-5 col-12 mb-3 shadow-sm">
+        <div class="d-flex gap-4 bg-white px-5 py-5 rounded-5 col-12 mb-3 shadow-sm">
             <div class="col-6">
                 {{ form_label(form.title, '', {
                     'label_attr': {
@@ -58,7 +64,7 @@
         <!-- Fin Inputs titre, prix, quantité -->
 
         <!-- Inputs télephone, type, ville -->
-        <div class="d-flex gap-4 bg-theme-gray px-5 py-4 rounded-5 col-12 mb-3 shadow-sm">
+        <div class="d-flex gap-4 bg-white px-5 py-4 rounded-5 col-12 mb-3 shadow-sm">
             <div class="col">
                 {{ form_label(form.type, '', {
                     'label_attr': {
@@ -117,7 +123,7 @@
         <!-- Fin Inputs télephone, type, ville -->
 
         <!-- Inputs description, categories -->
-        <div class="d-flex gap-4 bg-theme-gray px-4 py-4 rounded-5 col-12 mb-3 shadow-sm">
+        <div class="d-flex gap-4 bg-white px-4 py-4 rounded-5 col-12 mb-3 shadow-sm">
             <div class="col">
                 {{ form_label(form.body, '', {
                     'label_attr': {
@@ -131,17 +137,21 @@
                 }) }}
             </div>
             <div class="col">
-                {{ form_label(form.categories, '', {
-                    'label_attr': {
-                        'class': 'mb-2 fw-500'
-                    }
-                }) }}
+                <label class="mb-2 fw-500" for="select-category">Catégories</label>
+                <select id="select-category"
+                        class="form-control rounded-4 fw-300"
+                        name="categories[]"
+                        placeholder="Choisir les catégories" multiple>
+                </select>
+                <input
+                        type="hidden"
+                        id="default-categories"
+                        data-categories='{{ device.categories|map(cat => {
+                            id: cat.id,
+                            name: cat.name
+                        })|json_encode|raw }}'
+                >
 
-                {{ form_widget(form.categories, {
-                    'attr': {
-                        'class': 'form-control rounded-4 py-3 fw-300'
-                    }
-                }) }}
             </div>
 
         </div>

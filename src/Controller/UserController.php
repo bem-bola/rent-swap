@@ -6,9 +6,9 @@ use App\Entity\Device;
 use App\Entity\User;
 use App\Factory\DeviceFactory;
 use App\Form\DeviceType;
-use App\Form\TeteType;
 use App\Repository\DeviceRepository;
 use App\Repository\FavoriteRepository;
+use App\Service\DeviceService;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -25,9 +25,10 @@ class UserController extends AbstractController
 {
 
     public function __construct(
-        private readonly DeviceFactory $deviceFactory,
-        private readonly DeviceRepository $deviceRepository,
+        private readonly DeviceFactory      $deviceFactory,
+        private readonly DeviceRepository   $deviceRepository,
         private readonly FavoriteRepository $favoriteRepository,
+        private readonly DeviceService      $deviceService,
     )
     {}
 
@@ -75,18 +76,25 @@ class UserController extends AbstractController
     {
         try{
             $this->denyAccessUnlessGranted('edit', $device);
+             // Recuperer le dernier parent enreigistre
+            $lastVersionDevice = $this->deviceRepository->findLatestVersionByParent($device);
 
-            $newDevice = $this->deviceFactory->initDeviceByDeviceId($device);
+            $newDevice = $this->deviceFactory->initDeviceByDeviceId($lastVersionDevice);
 
             $form = $this->createForm(DeviceType::class, $newDevice);
             $form->handleRequest($request);
 
             if($form->isSubmitted() && $form->isValid()) {
 
-                $parent = $device->getParent() ?? $device;
-                $device->setParent($parent);
-
-                $newDevice->setParent($parent);
+                $parent = $lastVersionDevice->getParent() ?? $lastVersionDevice;
+                // On modifie le parent
+                $this->deviceFactory->updateByDevice($lastVersionDevice);
+                // récuperation des catégorie
+                $categories = $request->get('categories');
+                // Verifie s'il y a des modification ou pas en cas de modificatioin un nouveau device est créé sinon rien
+                $diff = $this->deviceService->isEquivalentTo($lastVersionDevice, $newDevice, $categories);
+                // Enregister ou pas nouveau device
+                $this->deviceFactory->createWithCategory($newDevice, $parent, $categories, $diff);
 
             }
         }catch (AccessDeniedHttpException|\Exception $e){
@@ -96,8 +104,16 @@ class UserController extends AbstractController
 
 
         return $this->render('security/update_device.html.twig', [
-           'device' => $device,
+           'device' => $lastVersionDevice,
             'form' => $form->createView()
         ]);
     }
+
+    #[Route(path: '/device/category/{slug}', name: 'category_device')]
+    #[Route(path: '/device/category', name: 'category_device')]
+    public function categoriesDevices(Request $request, ?Device $device): Response{
+
+        return $this->render('_partial/device/category.html.twig', []);
+    }
+
 }
