@@ -130,7 +130,8 @@ class DeviceRepository extends ServiceEntityRepository
                 ) latest ON d.parent_id = latest.parent_id AND d.created = latest.max_created
                 WHERE (d.parent_id IS NULL OR d.created = latest.max_created) 
                     AND d.user_id = :userId
-                    AND d.deleted IS NULL
+                    AND (d.deleted IS NULL)
+                ORDER BY d.deleted DESC
                 ";
 
         $parameters = ['userId' => $user->getId()];
@@ -154,5 +155,17 @@ class DeviceRepository extends ServiceEntityRepository
             $parameters,
             $params['pagination'] ?? []
         );
+    }
+
+
+    public function findLastByUser(User $user){
+        return $this->createQueryBuilder('d')
+            ->where('d.user = :user')
+            ->andWhere('d.deleted IS NULL')
+            ->setParameter('user', $user)
+            ->orderBy('d.created', 'DESC')
+            ->setMaxResults(10)
+            ->getQuery()
+            ->getResult();
     }
 }

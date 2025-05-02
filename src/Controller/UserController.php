@@ -45,14 +45,21 @@ class UserController extends AbstractController
     )
     {}
 
+    /**
+     * @return Response
+     */
     #[Route(path: '/', name: 'home')]
     public function profile(): Response
     {
         return $this->render('security/profile.html.twig', [
-            'devices' => $this->deviceRepository->findBy(['user' => $this->getUser()]),
+            'data' => $this->deviceRepository->findByUser([], $this->getUser()),
         ]);
     }
 
+    /**
+     * @param Request $request
+     * @return Response
+     */
     #[Route(path: '/devices', name: 'devices')]
     public function devices(Request $request): Response
     {
@@ -68,6 +75,10 @@ class UserController extends AbstractController
         ]);
     }
 
+    /**
+     * @param Request $request
+     * @return Response
+     */
     #[Route(path: '/favorites', name: 'favorites')]
     public function favorite(Request $request): Response
     {
@@ -85,7 +96,9 @@ class UserController extends AbstractController
     }
 
     /**
-     * @throws \Exception
+     * @param Request $request
+     * @param Device $device
+     * @return Response
      */
     #[Route(path: '/device/update/{slug}', name: 'update_device')]
     public function updateDevice(Request $request, Device $device): Response
@@ -107,16 +120,18 @@ class UserController extends AbstractController
                 $this->deviceFactory->updateByDevice($lastVersionDevice);
                 // récuperation des catégorie
                 $categories = $request->get('categories');
+
                 $newDevice->setLocation($request->get('location'));
+
+               $status = $this->deviceService->handleFormStatus($newDevice, $form);
+
+               $newDevice->setStatus($status);
 
                 // Verifie s'il y a des modification ou pas en cas de modificatioin un nouveau device est créé sinon rien
                 $diff = $this->deviceService->isEquivalentTo($lastVersionDevice, $newDevice, $categories);
 
-                $status = $this->deviceService->handleFormStatus($newDevice, $form);
                 // Enregister ou pas nouveau device
                 $this->deviceFactory->createWithCategory($newDevice, $parent, $status, $categories, $diff);
-
-                $this->devicePictureFactory->dateByDevice($newDevice);
 
                 return $this->deviceService->redirect($form, ['slug' => $device->getSlug()], $this->getUser());
            }
@@ -135,10 +150,42 @@ class UserController extends AbstractController
             'form' => $form->createView(),
         ]);
     }
+
+    /**
+     * @param Request $request
+     * @return Response
+     * @throws \Exception
+     */
+    #[Route(path: '/device/create', name: 'create_device')]
+    public function createDevice(Request $request): Response{
+
+        $device = new Device();
+
+        $form = $this->createForm(DeviceType::class, $device, ['create' => true]);
+        $form->handleRequest($request);
+
+        if($form->isSubmitted() && $form->isValid()) {
+
+            $categories = $request->get('categories');
+
+            $location = $request->get('location');
+
+            $status = $this->deviceService->handleFormStatus($device, $form);
+
+            $this->deviceFactory->createWithCategory($device, null, $status, $categories, false, $location, $this->getUser());
+
+            return $this->deviceService->redirect($form, ['slug' => $device->getSlug()], $this->getUser());
+        }
+
+        return $this->render('security/update_device.html.twig', [
+            'form' => $form->createView(),
+        ]);
+    }
     #[Route(path: '/device/update/status/{slug}/{status}', name: 'device_set_status')]
     public function setStatus(string $slug, string $status): Response{
         try{
             $device = $this->deviceRepository->findOneBy(['slug' => $slug]);
+
             $this->denyAccessUnlessGranted('edit', $device);
 
             $this->deviceFactory->setStatus($device, $status);
@@ -155,6 +202,11 @@ class UserController extends AbstractController
         }
     }
 
+    /**
+     * @param Request $request
+     * @param Device $device
+     * @return Response
+     */
     #[Route(path: '/device/images/upload/{slug}', name: 'upload_image_device', options: ["expose" => true])]
     public function categoriesDevices(Request $request, Device $device): Response{
 
@@ -198,8 +250,11 @@ class UserController extends AbstractController
         ]);
     }
 
-
     /**
+     * Get images by device
+     * @param Request $request
+     * @param string $slugDevice
+     * @return Response
      * @throws \Exception
      */
     #[Route(path: '/device/images/{slugDevice}', name: 'devices_images', options: ["expose" => true])]
@@ -231,7 +286,13 @@ class UserController extends AbstractController
     }
 
 
+
     /**
+     * Upload image
+     * @param Request $request
+     * @param int $id
+     * @param string $slugDevice
+     * @return Response
      * @throws \Exception
      */
     #[Route(path: '/device/images/delete/{id}/{slugDevice}', name: 'device_image_delete', options: ["expose" => true])]
@@ -248,7 +309,6 @@ class UserController extends AbstractController
                 $picture = $this->devicePictureRepository->find($id);
 
                 $this->denyAccessUnlessGranted('edit', $picture->getDevice());
-
 
                 $this->devicePictureFactory->delete($picture);
 
@@ -271,31 +331,6 @@ class UserController extends AbstractController
         return throw new \Exception('Page 404',Response::HTTP_NOT_FOUND);
     }
 
-    #[Route(path: '/devices/delete/{slug}', name: 'device_delete', options: ["expose" => true])]
-    public function deleteDevice(Request $request, string $slug): Response
-    {
 
-        try {
 
-            $device = $this->deviceRepository->findOneBy(['slug' => $slug]);
-
-            $this->denyAccessUnlessGranted('edit', $device);
-
-            $this->deviceFactory->delete($device);
-
-            $this->loggerService->write(Constances::LEVEL_INFO, "Suppression de l'appareil $slug", null, $this->getUser());
-
-            $this->addFlash('success', "Annonce supprimé avec succès");
-
-        } catch (AccessDeniedHttpException $e){
-            $this->loggerService->write(Constances::LEVEL_ERROR, $e->getMessage(), Response::HTTP_UNAUTHORIZED, $this->getUser());
-            throw new AccessDeniedHttpException('page 404', null, Response::HTTP_NOT_FOUND);
-        }catch (\Exception $e) {
-            $this->loggerService->write(Constances::LEVEL_ERROR, $e->getMessage(), null, $this->getUser());
-            throw new \Exception('Page 404',Response::HTTP_NOT_FOUND);
-        }
-
-        return $this->redirectToRoute('app_user_devices');
-
-    }
 }

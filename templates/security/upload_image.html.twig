@@ -15,9 +15,13 @@
 
         </div>
 
-        <div class="col" id="result">
-            {% include '_partial/device/picture_device.html.twig' %}
-        </div>
+        {% if data.pagination.total > 0  %}
+
+            <div class="col" id="result">
+                {% include '_partial/device/picture_device.html.twig' %}
+            </div>
+
+        {% endif %}
 
 
         <div class="d-flex justify-content-center gap-2 col-12">

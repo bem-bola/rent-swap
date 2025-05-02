@@ -12,7 +12,7 @@ class Constances {
     const VALIDED = 'validated';
     const DRAFT = 'draft';
 
-    const ARRAY_STATUS = ['pending', 'rejected', 'accepted', 'cancelled', 'deleted'];
+    const ARRAY_STATUS = ['pending', 'rejected', 'accepted', 'cancelled', 'deleted', 'draft'];
 
     const ARRAY_LEVEL_LOG = ['error', 'info', 'debug', 'warning'];
 

@@ -7,7 +7,9 @@ const selectCategory = () => {
 
     if (selectElement) {
 
-        const defaultSelectedCategories = categoriesDefault ? JSON.parse(categoriesDefault.dataset.categories) : [];
+        console.log(categoriesDefault)
+
+        const defaultSelectedCategories = categoriesDefault !== null ? JSON.parse(categoriesDefault.dataset.categories) : [];
 
         new TomSelect('#select-category', {
             valueField: 'id',

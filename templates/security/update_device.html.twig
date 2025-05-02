@@ -112,7 +112,19 @@
                         class="form-control rounded-4 py-3 fw-300"
                         name="location"
                         placeholder="Choisir une ville" autocomplete="off">
-                    <option value="{{ device.location }}" selected></option>
+                    {% if device is defined %}
+                        <option value="{{ device.location }}" selected></option>
+                        <input
+                                type="hidden"
+                                id="default-categories"
+
+                                data-categories='{{ device.categories|map(cat => {
+                                    id: cat.id,
+                                    name: cat.name
+                                })|json_encode|raw }}'
+
+                        >
+                    {% endif %}
                 </select>
             </div>
 
@@ -134,20 +146,13 @@
                 }) }}
             </div>
             <div class="col">
-                <label class="mb-2 fw-500" for="select-category">Catégories</label>
+                <label class="mb-2 fw-500" for="select-category">Catégories <span class="text-danger">*</span></label>
                 <select id="select-category"
                         class="form-control rounded-4 fw-300"
                         name="categories[]"
+                        required
                         placeholder="Choisir les catégories" multiple>
                 </select>
-                <input
-                        type="hidden"
-                        id="default-categories"
-                        data-categories='{{ device.categories|map(cat => {
-                            id: cat.id,
-                            name: cat.name
-                        })|json_encode|raw }}'
-                >
 
             </div>
 
@@ -172,11 +177,16 @@
                     'class': 'bg-theme-dark text-white border-0 px-auto py-2 rounded-pill col-2'
                 }
             }) }}
-            {{ form_widget(form.delete, {
-                'attr': {
-                    'class': 'bg-danger text-white border-0 px-auto py-2 rounded-pill col-2 shadow-sm'
-                }
-            }) }}
+
+            {% if device is defined %}
+
+                {{ form_widget(form.delete, {
+                    'attr': {
+                        'class': 'bg-danger text-white border-0 px-auto py-2 rounded-pill col-2 shadow-sm'
+                    }
+                }) }}
+
+            {% endif %}
         </div>
 
         {{ form_end(form) }}
