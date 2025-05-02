@@ -130,6 +130,7 @@ class DeviceRepository extends ServiceEntityRepository
                 ) latest ON d.parent_id = latest.parent_id AND d.created = latest.max_created
                 WHERE (d.parent_id IS NULL OR d.created = latest.max_created) 
                     AND d.user_id = :userId
+                    AND d.deleted IS NULL
                 ";
 
         $parameters = ['userId' => $user->getId()];

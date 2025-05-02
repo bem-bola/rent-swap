@@ -5,6 +5,7 @@ namespace App\Factory;
 use App\Entity\Device;
 use App\Repository\CategoryRepository;
 use App\Repository\DeviceRepository;
+use App\Service\Constances;
 use Psr\Log\LoggerInterface;
 
 readonly class DeviceFactory
@@ -18,20 +19,24 @@ readonly class DeviceFactory
     /**
      * @param Device $device
      * @param Device $parent
+     * @param string $status
      * @param array $categories
      * @param bool $isDiff
      * @return Device|null
      */
-    public function createWithCategory(Device $device, Device $parent, array $categories = [], bool $isDiff = false): ?Device
+    public function createWithCategory(Device $device, Device $parent, string $status = Constances::PENDING, array $categories = [], bool $isDiff = false): ?Device
     {
         // On enregistre que s'il y a difference
-        if($isDiff) return null;
+        if($isDiff && $status !== Constances::DELETED) return null;
 
         foreach ($this->convertIdToCategoryEntity($categories) as $category) {
             $device->addCategory($category);
         }
-
+        $device->setStatus($status);
         $device->setParent($parent);
+
+        if($status === Constances::DELETED) $device->setDeleted(new \DateTime());
+
         $device->setCreated(new \DateTime());
 
         $this->deviceRepository->save($device);
@@ -41,7 +46,7 @@ readonly class DeviceFactory
         return $device;
     }
 
-    public function updateByDevice(Device $device): Device
+    public function updateByDevice(Device $device, string $status = null): Device
     {
         $device->setUpdated(new \DateTime());
         if($device->getParent() == null) $device->setParent($device);
@@ -85,10 +90,25 @@ readonly class DeviceFactory
         $newDevice->setQuantity($device->getQuantity());
         $newDevice->setLocation($device->getLocation());
         $newDevice->setLocation($device->getLocation());
-        foreach ($device->getDevicePictures() as $picture){
-            $newDevice->addDevicePicture($picture);
-        }
+
         return $newDevice;
+    }
+
+    public function setStatus(Device $device, string $status): Device{
+        if(in_array($status, Constances::ARRAY_STATUS)){
+            $device->setStatus($status);
+            $this->deviceRepository->save($device);
+        }
+
+        return $device;
+    }
+
+    public function delete(Device $device): Device{
+
+        $device->setDeleted(new \DateTime());
+        $this->deviceRepository->save($device);
+
+        return $device;
     }
 
 }

@@ -1,0 +1,52 @@
+.uppy-Dashboard-inner{
+  width: 100% !important;
+  background-color: #fff !important;
+  border-radius: 15px !important;
+  padding: 1rem !important;
+}
+.uppy-Dashboard-innerWrap{
+  border-radius: 15px !important;
+}
+.uppy-Dashboard-AddFiles-title{
+  font-size: 1rem !important;
+  .uppy-u-reset {
+    display: none !important;
+  }
+}
+.uppy-Dashboard-AddFiles-list{
+  span {
+    display: flex !important;
+    gap: 0.6rem;
+  }
+}
+.uppy-Dashboard-Item-actionWrapper{
+  .uppy-u-reset{
+    border: none !important;
+  }
+}
+
+.uppy-Dashboard-AddFiles-list{
+
+  .uppy-DashboardTab{
+    button{
+      border: solid #F2F2F2 0.1rem;
+    }
+  }
+  .uppy-u-reset{
+    display: flex !important;
+    padding: 2rem 5rem!important;
+  }
+}
+.uppy-Dashboard-AddFiles-info, .uppy-Dashboard-brows{
+  display: none !important;
+}
+.uppy-StatusBar-actions{
+  display: flex !important;
+  justify-content: center;
+
+  .uppy-u-reset{
+    border: none !important;
+    border-radius: 10px !important;
+    background-color: #131313 !important;
+  }
+}

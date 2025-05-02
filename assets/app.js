@@ -23,6 +23,7 @@ import './js/home.js';
 import './js/form.js';
 import './js/show.js';
 import  './js/tom-select.js';
+import  './js/uppy.js';
 
 // Importer les icônes Leaflet pour corriger un bug avec Webpack
 import markerIcon from 'leaflet/dist/images/marker-icon.png';

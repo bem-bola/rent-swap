@@ -107,16 +107,13 @@
             </div>
 
             <div class="col">
-                {{ form_label(form.location, '', {
-                    'label_attr': {
-                        'class': 'mb-2 fw-500'
-                    }
-                }) }}
-                {{ form_widget(form.location, {
-                    'attr': {
-                        'class': 'form-control rounded-4 py-3 fw-300'
-                    }
-                }) }}
+                <label class="mb-2 fw-500" for="select-location">Ville</label>
+                <select id="select-location"
+                        class="form-control rounded-4 py-3 fw-300"
+                        name="location"
+                        placeholder="Choisir une ville" autocomplete="off">
+                    <option value="{{ device.location }}" selected></option>
+                </select>
             </div>
 
         </div>
@@ -157,15 +154,30 @@
         </div>
         <!-- Fin Inputs télephone, type, ville -->
 
+        <div class="row justify-content-center gap-2 py-4 rounded-5 col-12 mb-3">
+            {{ form_widget(form.draft, {
+                'attr': {
+                    'class': 'bg-theme-dark text-white border-0 text-center py-2 rounded-pill col-2 shadow-sm'
+                }
+            }) }}
 
+            {{ form_widget(form.next, {
+                'attr': {
+                    'class': 'bg-theme-dark text-white border-0 px-auto py-2 rounded-pill col-2'
+                }
+            }) }}
 
-
-
-        {% for picture in device.devicePictures %}
-            <li>
-{#               {{ dump(picture.filename) }}#}
-            </li>
-        {% endfor %}
+            {{ form_widget(form.publish, {
+                'attr': {
+                    'class': 'bg-theme-dark text-white border-0 px-auto py-2 rounded-pill col-2'
+                }
+            }) }}
+            {{ form_widget(form.delete, {
+                'attr': {
+                    'class': 'bg-danger text-white border-0 px-auto py-2 rounded-pill col-2 shadow-sm'
+                }
+            }) }}
+        </div>
 
         {{ form_end(form) }}
     </div>

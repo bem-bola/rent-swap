@@ -19,7 +19,10 @@ use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Component\Validator\Constraints\File;
 use Symfony\Component\OptionsResolver\OptionsResolver;
+use Symfony\Component\Validator\Constraints\NotBlank;
+use Symfony\Component\Validator\Constraints\Regex;
 
 class DeviceType extends AbstractType
 {
@@ -28,26 +31,50 @@ class DeviceType extends AbstractType
 
         $builder
             ->add('body', TextareaType::class, [
-                'label' => 'Description'
+                'label' => 'Description',
+//                'constraints' => [
+//                    new NotBlank([
+//                        'message' => 'La description est obligatoire',
+//                    ]),
+//                    new Regex([
+//                        'pattern' => '/^[A-Za-zÀ-ÖØ-öø-ÿ-0-9]$/',
+//                        'message' => 'La description est obligatoire',
+//                    ]),
+//                ],
+
             ])
             ->add('price', NumberType::class, [
-                'label' => 'Prix'
+                'label' => 'Prix',
+                'required' => false,
             ])
             ->add('showPhone', CheckboxType::class, [
-                'label' => 'Afficher son numéro de télephone ?'
+                'label' => 'Afficher son numéro de télephone ?',
+                'required' => false
             ])
 
             ->add('title', TextType::class, [
-                'label' => 'Titre'
-            ])
-            ->add('location', TextType::class, [
-                'label' => 'Ville'
+                'label' => 'Titre',
+//                'constraints' => [
+//                    new NotBlank([
+//                        'message' => 'Le titre est obligatoire',
+//                    ]),
+//                    new Regex([
+//                        'pattern' => '/^[A-Za-zÀ-ÖØ-öø-ÿ-0-9]$/',
+//                        'message' => 'Le titre ne contient de caractères non autorisés',
+//                    ]),
+//                ],
             ])
             ->add('phoneNumber', TextType::class, [
-                'label' => 'N° téléphone'
+                'label' => 'N° téléphone',
+//                'constraints' => [
+//                    new Regex([
+//                        'pattern' => '/^[0-9 ]$/',
+//                        'message' => 'Le télephone contient des caractères non autorisés',
+//                    ]),
+//                ],
             ])
             ->add('quantity', IntegerType::class, [
-                'label' => 'Quantité'
+                'label' => 'Quantité',
             ])
 
             ->add('type', EntityType::class, [
@@ -57,17 +84,42 @@ class DeviceType extends AbstractType
                 'expanded' => false,
             ])
 
-            ->add('pictures', FileType::class, [
-                'label' => 'Ajouter des images',
-                'multiple' => true,
-                'mapped' => false,
-                'required' => false,
-                'attr'     => [
-                    'accept' => 'image/*',
-                    'multiple' => 'multiple'
-                ]
+//            ->add('pictures', DropzoneType::class, [
+//                'label' => 'Ajouter des images',
+//
+////                'mapped' => false,
+//                'attr'     => [
+//                    'accept' => 'image/*',
+//                    'multiple' => 'multiple',
+//                    'placeholder' => 'Cliquez-déposez des images ou cliquez pour pour parcourir',
+//                    'data-dropzone-action' => 'uploadFiles',
+//                    'data-dropzone-auto-upload' => 'true',
+//
+//                ],
+//                'constraints' => [
+//                    new File([
+//                        'mimeTypes' => ['image/jpeg', 'image/png'],
+//                        'maxSize' => '2M',
+//                        'mimeTypesMessage' => 'Veuillez charger des images au format JPEG ou PNG',
+//                    ])
+//                ]
+//            ])
+//
+//            ->add('devicePictures', FileType::class, [
+//                'label' => 'Image',
+//                'mapped' => false,
+//                'required' => true,
+//            ])
+            ->add('draft', SubmitType::class, [
+                'label' => 'Sauvegarder',
             ])
-            ->add('save', SubmitType::class, [
+            ->add('next', SubmitType::class, [
+                'label' => 'Suivant',
+            ])
+            ->add('delete', SubmitType::class, [
+                'label' => 'Supprimer',
+            ])
+            ->add('publish', SubmitType::class, [
                 'label' => 'Publier',
             ])
         ;

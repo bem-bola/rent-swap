@@ -23,7 +23,6 @@ use Symfony\Contracts\HttpClient\Exception\TransportExceptionInterface;
 #[Route('/device', name: 'app_device_')]
 class DeviceController extends AbstractController
 {
-
     public function __construct(
         private readonly CategoryRepository     $categoryRepository,
         private readonly DeviceRepository       $deviceRepository,

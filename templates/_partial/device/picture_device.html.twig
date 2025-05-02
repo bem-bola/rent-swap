@@ -1,0 +1,91 @@
+<h2 class="col-12 bg-white rounded-3 fs-5 text-center py-2 color-theme-gray-4">Les photos déjà enregistrées</h2>
+{% if data.pagination.total > 0  %}
+     <ul id="result" class="d-flex flex-wrap align-items-center gap-2 bg-white rounded-3 px-auto pt-5">
+         {% for picture in data.items %}
+                <li class="col-2 position-relative">
+                    <img src="{{ asset('upload/devices/' ~ picture.filename ) }}" alt="" class="col-12 rounded-3">
+                    <span class="cursor-pointer text-danger p-2 bg-white rounded-end-3 rounded-bottom-0 position-absolute top-0 end-0"
+                          title="Supprimer cette images"
+                          hx-get="{{ path('app_user_device_image_delete', {
+                              id: picture.id,
+                              slugDevice: device.slug
+                          }) }}"
+                          hx-target="#result"
+                          hx-swap="innerHTML"
+                          hx-confirm="Es-tu sûr de vouloir supprimer cette image ?"
+                    ><i class="bi bi-trash"></i></span>
+                </li>
+            {% endfor  %}
+
+
+         <ul class="pagination col-12 d-flex justify-content-center mt-5 mb-2">
+
+             {% set pagination = data.pagination %}
+
+             {% if pagination.total_pages > 1 %}
+
+                {# Bouton "Précédent"#}
+                 <li class="{{ pagination.page == 1 ? 'pointer-events-none' : 'cursor-pointer' }} rounded-3 p-2"
+                     hx-get="{{ path('app_user_devices_images', {
+                         slugDevice: device.slug,
+                         'pagination[page]': (pagination.page-1)
+                     }) }}"
+                     hx-target="#result"
+                     hx-swap="innerHTML"
+                 >
+                     <i class="bi bi-chevron-left"></i>
+                 </li>
+
+                {# Définition des limites de la pagination#}
+                 {% set startPage = 1 %}
+                 {% set endPage = pagination.total_pages %}
+
+                 {% if pagination.total_pages > 10 %}
+                     {% if currentPage <= 5 %}
+                         {% set startPage = 1 %}
+                         {% set endPage = 10 %}
+                     {% elseif currentPage >= nbPage - 4 %}
+                         {% set startPage = nbPage - 9 %}
+                         {% set endPage = nbPage %}
+                     {% else %}
+                         {% set startPage = currentPage - 4 %}
+                         {% set endPage = currentPage + 5 %}
+                     {% endif %}
+                 {% endif %}
+
+                 {# Affichage des boutons de pagination#}
+                 {% for page in startPage..endPage %}
+                     <li  class="{{ page == pagination.page ? 'bg-theme-dark color-theme-white-2 active pointer-events-none': 'cursor-pointer' }} rounded-pill p-2"
+                          hx-get="{{ path('app_user_devices_images', {
+                              slugDevice: device.slug,
+                              'pagination[page]': page
+                          }) }}"
+                          hx-target="#result"
+                          hx-swap="innerHTML">
+                         {{ page }}
+                     </li>
+                 {% endfor %}
+
+                {# Bouton "Suivant"#}
+                 <li class="{{ pagination.page == pagination.total_pages ? 'pointer-events-none' : 'cursor-pointer' }} rounded-3 p-2"
+                     hx-get="{{ path('app_user_devices_images', {
+                         slugDevice: device.slug,
+                         'pagination[page]': (pagination.page+1)
+                     }) }}"
+                     hx-target="#result"
+                     hx-swap="innerHTML"
+                 >
+                     <i class="bi bi-chevron-right"></i>
+                 </li>
+
+             {% endif %}
+         </ul>
+
+     </ul>
+
+     {% else %}
+     <div class="bg-white rounded-3 px-auto py-6">
+         <div class="text-center color-theme-gray-4">Aucune image</div>
+     </div>
+
+ {% endif %}

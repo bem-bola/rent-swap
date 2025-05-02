@@ -3,22 +3,19 @@
 namespace App\Service;
 
 use App\Entity\Category;
-use App\Entity\Reservation;
 use App\Entity\Device;
-use App\Entity\ReservationStatus;
 use App\Entity\User;
-use Doctrine\ORM\EntityManagerInterface;
-use PhpParser\Node\Expr\Array_;
-use Psr\Log\LoggerInterface;
-use Symfony\Component\HttpFoundation\JsonResponse;
-use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Security\Core\User\UserInterface;
 
 class DeviceService
 {
 
-    public function __construct(private readonly LoggerInterface $logger)
+    public function __construct(
+        private readonly LoggerService  $loggerService,
+        private readonly SessionService $sessionService
+    )
     {
 
     }
@@ -66,6 +63,42 @@ class DeviceService
         sort($idsB);
 
         return $idsA === $idsB;
+    }
+
+    public function handleFormStatus(Device $device, $form): string
+    {
+        if($form->get('draft')->isClicked()) return Constances::DRAFT;
+        if($form->get('delete')->isClicked()) return Constances::DELETED;
+        return Constances::PENDING;
+    }
+
+    /**
+     * @param $form
+     * @param array $params
+     * @param User|null $user
+     * @return RedirectResponse
+     * @throws \Exception
+     */
+    public function redirect($form, array $params = [], ?User $user = null): RedirectResponse{
+        if($form->get('draft')->isClicked()){
+            $message = 'Votre annonce a été sauvergardée';
+            $this->loggerService->write(Constances::LEVEL_INFO, $message, Response::HTTP_CREATED, $user);
+            return $this->sessionService->redirectWithFlash('app_user_devices', 'success', $message);
+        }
+
+        if($form->get('delete')->isClicked()) {
+            $message = 'Votre annonce a été supprimée';
+            $this->loggerService->write(Constances::LEVEL_INFO, $message, Response::HTTP_CREATED, $user);
+            return $this->sessionService->redirectWithFlash('app_user_devices', 'success', $message);
+        }
+
+        if($form->get('next')->isClicked()) {
+            $message = 'Votre annonce a été sauvergardée';
+            $this->loggerService->write(Constances::LEVEL_INFO, $message, Response::HTTP_CREATED, $user);
+            return $this->sessionService->redirectWithFlash('app_user_upload_image_device', 'success', $message, $params);
+        }
+
+        return $this->sessionService->redirectWithFlash('app_user_devices', 'success', 'Votre annonce a été prise en compte et sera validée par notre équipe');
     }
 
 }

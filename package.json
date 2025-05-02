@@ -4,6 +4,11 @@
         "@babel/preset-env": "^7.16.0",
         "@popperjs/core": "^2.11.8",
         "@symfony/webpack-encore": "^5.0.1",
+        "@uppy/core": "^4.4.4",
+        "@uppy/dashboard": "^4.3.3",
+        "@uppy/drag-drop": "^4.1.2",
+        "@uppy/drop-target": "^3.1.1",
+        "@uppy/webcam": "^4.1.2",
         "bootstrap": "^5.3.3",
         "core-js": "^3.38.0",
         "file-loader": "^6.0.0",
@@ -26,6 +31,11 @@
         "build": "encore production --progress"
     },
     "dependencies": {
+        "@uppy/drop-target": "^3.1.1",
+        "@uppy/form": "^4.1.1",
+        "@uppy/golden-retriever": "^4.1.1",
+        "@uppy/locales": "^4.5.2",
+        "@uppy/xhr-upload": "^4.3.3",
         "bootstrap-datetime-picker": "^2.4.4",
         "bootstrap-icons": "^1.11.3",
         "gsap": "^3.12.7",

@@ -34,7 +34,36 @@ const selectCategory = () => {
     }
 }
 
+const selectCity = () => {
+    const selectElement = document.querySelector('#select-location');
+
+    if (selectElement) {
+
+        new TomSelect('#select-location', {
+            valueField: 'name',
+            labelField: 'name',
+            searchField: 'name',
+            create: false,
+            persist: true,
+            dropdownParent: 'body',
+            hideSelected: true,
+            closeAfterSelect: true,
+            openOnFocus: true,
+            load: (query, callback) => {
+                if (!query.length) return callback();
+
+                fetch(Routing.generate("app_api_city", { name: encodeURIComponent(query)}))
+                    .then(response => response.json())
+                    .then(data => callback(data))
+                    .catch(() => callback());
+            },
+            plugins: ['remove_button']
+        });
+    }
+}
+
 document.addEventListener("DOMContentLoaded", () => {
     selectCategory()
+    selectCity()
 })
 

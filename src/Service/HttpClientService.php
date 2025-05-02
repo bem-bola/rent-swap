@@ -16,21 +16,12 @@ use Symfony\Contracts\HttpClient\ResponseInterface;
 
 class HttpClientService
 {
-    private HttpClientInterface $httpClient;
-
-    private EntityManagerInterface $em;
-
-    private string $unsplashAccessKey;
-
-    private string $urlApiGeoGouv;
-
-    public function __construct(HttpClientInterface $httpClient, EntityManagerInterface $em, string $urlApiGeoGouv, string $unsplashAccessKey)
-    {
-        $this->httpClient = $httpClient;
-        $this->em =$em;
-        $this->urlApiGeoGouv = $urlApiGeoGouv;
-        $this->unsplashAccessKey = $unsplashAccessKey;
-    }
+    public function __construct(
+        private readonly EntityManagerInterface $em,
+        private readonly HttpClientInterface $httpClient,
+        private readonly string $unsplashAccessKey,
+        private readonly string $urlApiGeoGouv)
+    {}
 
     /**
      * @param string $url
@@ -94,49 +85,39 @@ class HttpClientService
     }
 
 
-    public function getCities($dep): array
+    /**
+     * @throws TransportExceptionInterface
+     * @throws ServerExceptionInterface
+     * @throws RedirectionExceptionInterface
+     * @throws DecodingExceptionInterface
+     * @throws ClientExceptionInterface
+     */
+    public function getCities($name): array
     {
-
-        https://geo.api.gouv.fr/departements/972/communes?fields=codesPostaux,nom&limit=2
         $response = $this->httpClient->request(
             'GET',
-            "https://geo.api.gouv.fr/departements/$dep/communes",
+            $this->urlApiGeoGouv,
             [
                 'query' => [
                     'fields' => 'nom,code,codesPostaux',
-                    'limit' => 10
+                    'nom' => $name,
                 ]
             ]
         );
 
+
+        $results = [];
+
         foreach ($response->toArray() as $data){
-
             if(count($data['codesPostaux']) > 1) {
-
-                foreach ($data['codesPostaux'] as $cc){
-                    $city = new City();
-                    $city->setName($data['nom']);
-                    $city->setCodePostal($cc);
-
-                    $this->em->persist($city);
+                foreach ($data['codesPostaux'] as $codePostal){
+                    $results[]['name'] = sprintf("%s - %s", $data['nom'], $codePostal);
                 }
-
             }else{
-
-                $city = new City();
-                $city->setName($data['nom']);
-                $city->setCodePostal(empty($data['codesPostaux']) ? null: $data['codesPostaux'][0]);
-                $this->em->persist($city);
-
+                $results[]['name'] = sprintf("%s - %s", $data['nom'], empty($data['codesPostaux']) ? null: $data['codesPostaux'][0]);
             }
-
-    }
-
-        $this->em->flush();
-
-
-
-        return $response->toArray();
+        }
+        return $results;
     }
 }
 

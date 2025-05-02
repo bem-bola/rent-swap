@@ -6,6 +6,8 @@ use App\Entity\Device;
 use App\Entity\Favorite;
 use App\Entity\TypeUser;
 use App\Entity\User;
+use App\Repository\DevicePictureRepository;
+use App\Repository\DeviceRepository;
 use IntlDateFormatter;
 use NumberFormatter;
 use Twig\Extension\AbstractExtension;
@@ -13,6 +15,13 @@ use Twig\TwigFilter;
 
 class AppExtension extends AbstractExtension
 {
+
+    public function __construct(
+        private readonly DeviceRepository $deviceRepository,
+        private readonly DevicePictureRepository $devicePictureRepository)
+    {
+
+    }
 public function getFilters(): array
 {
     return [
@@ -33,9 +42,13 @@ public function getFilters(): array
         return $filterUser == [] ? null : array_pop($filterUser);
     }
 
-    public function firstFilename(iterable $pictures): ?string
+    public function firstFilename(string $slug): ?string
     {
-        if($pictures->toArray()) return $pictures[0]->getFilename();
+        $device = $this->deviceRepository->findOneBy(['slug' => $slug]);
+        $picture = $this->devicePictureRepository->findByParentFirst($device);
+
+        if($picture) return $picture->getFilename();
+
         return 'logo-reusiix.svg';
     }
 
