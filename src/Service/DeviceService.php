@@ -68,7 +68,7 @@ class DeviceService
     public function handleFormStatus(Device $device, $form): string
     {
         if($form->get('draft')->isClicked()) return Constances::DRAFT;
-        if($form->get('delete')->isClicked()) return Constances::DELETED;
+        if($form->has('delete') && $form->get('delete')->isClicked()) return Constances::DELETED;
         return Constances::PENDING;
     }
 
@@ -86,7 +86,7 @@ class DeviceService
             return $this->sessionService->redirectWithFlash('app_user_devices', 'success', $message);
         }
 
-        if($form->get('delete')->isClicked()) {
+        if($form->has('delete') && $form->get('delete')->isClicked()) {
             $message = 'Votre annonce a été supprimée';
             $this->loggerService->write(Constances::LEVEL_INFO, $message, Response::HTTP_CREATED, $user);
             return $this->sessionService->redirectWithFlash('app_user_devices', 'success', $message);

@@ -116,7 +116,6 @@
 
         <ul class="rounded-3 p-0">
             {% for data in datas.items %}
-                {{ dump(data.id) }}
                 {% set device = data|getDevice %}
                 {% set filename = device.slug|firstFilename %}
                 {% set isUserDevicesRoute = app.request.attributes.get('_route') == 'app_user_devices' %}
@@ -173,9 +172,9 @@
                                         <a href="{{ path('app_device_show', { slug: device.slug }) }}" class="btn btn-sm btn-outline-secondary">Voir <i class="bi bi-eye"></i></a>
                                         <a href="{{ path('app_user_update_device', {slug: device.slug}) }}" class="btn btn-sm btn-outline-secondary">Modifier <i class="bi bi-pencil-square"></i></a>
                                         {% if device.status == 'draft' %}
-                                            <a href="#" class="btn btn-sm btn-outline-secondary">Publier <i class="bi bi-trash"></i></a>
+                                            <a href="{{ path('app_user_device_set_status', {slug: device.slug, status: 'pending'}) }}" class="btn btn-sm btn-outline-secondary">Publier <i class="bi bi-check-all"></i></a>
                                         {% endif %}
-                                        <a href="{{ path('app_user_device_delete', {slug: device.slug}) }}" class="btn btn-sm btn-outline-secondary">Supprimer <i class="bi bi-trash"></i></a>
+                                        <a href="{{ path('app_user_device_set_status', {slug: device.slug, status: 'deleted'}) }}" class="btn btn-sm btn-outline-secondary">Supprimer <i class="bi bi-trash"></i></a>
                                     </div>
                                 {% endif %}
                             </div>

@@ -84,45 +84,20 @@ class DeviceType extends AbstractType
                 'expanded' => false,
             ])
 
-//            ->add('pictures', DropzoneType::class, [
-//                'label' => 'Ajouter des images',
-//
-////                'mapped' => false,
-//                'attr'     => [
-//                    'accept' => 'image/*',
-//                    'multiple' => 'multiple',
-//                    'placeholder' => 'Cliquez-déposez des images ou cliquez pour pour parcourir',
-//                    'data-dropzone-action' => 'uploadFiles',
-//                    'data-dropzone-auto-upload' => 'true',
-//
-//                ],
-//                'constraints' => [
-//                    new File([
-//                        'mimeTypes' => ['image/jpeg', 'image/png'],
-//                        'maxSize' => '2M',
-//                        'mimeTypesMessage' => 'Veuillez charger des images au format JPEG ou PNG',
-//                    ])
-//                ]
-//            ])
-//
-//            ->add('devicePictures', FileType::class, [
-//                'label' => 'Image',
-//                'mapped' => false,
-//                'required' => true,
-//            ])
             ->add('draft', SubmitType::class, [
                 'label' => 'Sauvegarder',
             ])
             ->add('next', SubmitType::class, [
                 'label' => 'Suivant',
             ])
-            ->add('delete', SubmitType::class, [
-                'label' => 'Supprimer',
-            ])
             ->add('publish', SubmitType::class, [
                 'label' => 'Publier',
-            ])
-        ;
+            ]);
+
+        if($options['create'] === false)
+            $builder->add('delete', SubmitType::class, [
+                'label' => 'Supprimer',
+            ]);
 
     }
 
@@ -130,6 +105,7 @@ class DeviceType extends AbstractType
     {
         $resolver->setDefaults([
             'data_class' => Device::class,
+            'create'     => false
         ]);
     }
 }
