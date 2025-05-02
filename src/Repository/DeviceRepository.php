@@ -5,6 +5,7 @@ namespace App\Repository;
 use App\Entity\Device;
 use App\Entity\DevicePicture;
 use App\Entity\User;
+use App\Mapping\DeviceMapping;
 use App\Service\PaginatorService;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
@@ -17,10 +18,15 @@ class DeviceRepository extends ServiceEntityRepository
 
     public function __construct(
         ManagerRegistry          $registry,
-        private PaginatorService $paginatorService
+        private PaginatorService $paginatorService,
+        private DeviceMapping     $deviceMapping
     )
     {
         parent::__construct($registry, Device::class);
+    }
+    public function save(Device $device): void{
+        $this->getEntityManager()->persist($device);
+        $this->getEntityManager()->flush();
     }
 
     public function getDeviceBySlug(string $slug)
@@ -94,5 +100,59 @@ class DeviceRepository extends ServiceEntityRepository
         }
 
         return $this->paginatorService->getDatas($query, $params['pagination'] ?? []);
+    }
+    public function findLatestVersionByParent(Device $device): ?Device
+    {
+
+        if(!$device->getParent()) return $device;
+        return $this->createQueryBuilder('d')
+            ->where('d.parent = :parent')
+            ->setParameter('parent', $device->getParent())
+            ->orderBy('d.created', 'DESC')
+            ->setMaxResults(1)
+            ->getQuery()
+            ->getOneOrNullResult();
+    }
+
+    public function findByUser(array $params, User $user)
+    {
+        $filters = $params['filters'] ?? [];
+
+        $sort = $params['orderby'] ?? [];
+
+        $sql = "SELECT d.*
+                FROM device d
+                LEFT JOIN (
+                    SELECT parent_id, MAX(created) AS max_created
+                    FROM device
+                    WHERE parent_id IS NOT NULL
+                    GROUP BY parent_id
+                ) latest ON d.parent_id = latest.parent_id AND d.created = latest.max_created
+                WHERE (d.parent_id IS NULL OR d.created = latest.max_created) 
+                    AND d.user_id = :userId
+                    AND d.deleted IS NULL
+                ";
+
+        $parameters = ['userId' => $user->getId()];
+
+        if(isset($filters['status']) && $filters['status'] != null) {
+            $sql .= " AND d.status = :status";
+            $parameters['status'] = $filters['status'];
+        }
+        if(isset($filters['deleted']) && $filters['deleted'] != null) {
+            $sql .= " AND d.deleted IS NOT NULL";
+        }
+
+        if(isset($filters['title']) && $filters['title'] != null) {
+            $sql .= " AND LOWER(d.title) LIKE :title";
+            $parameters['title'] = '%'.strtolower($filters['title']).'%';
+        }
+
+        return $this->paginatorService->getDatasPaginator(
+            $this->deviceMapping->createMapping(),
+            $sql,
+            $parameters,
+            $params['pagination'] ?? []
+        );
     }
 }

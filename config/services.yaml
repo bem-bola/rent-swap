@@ -12,7 +12,7 @@ services:
         autoconfigure: true # Automatically registers your services as commands, event subscribers, etc.
 
 
-    # this creates a service per class whose id is the fully-qualified class name
+    # this creates letters service per class whose id is the fully-qualified class name
     App\:
         resource: '../src/'
         exclude:
@@ -24,6 +24,10 @@ services:
         arguments:
             $urlApiGeoGouv: '%env(URL_API_GEO_GOUV)%'
             $unsplashAccessKey: '%env(KEY_SECRET_API_UNSPLASH)%'
+
+    App\Service\UploadFileService:
+        arguments:
+            $dirnameUpload: '%kernel.project_dir%/public/upload/'
 
     App\DataFixtures\AppFixtures:
         arguments:

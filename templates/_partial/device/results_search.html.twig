@@ -2,68 +2,205 @@
     {% set urlRequete = app.request.uri %}
     {% set pagination = datas.pagination %}
     {% set sort = sortPrice is defined ? sortPrice : '' %}
+    {% set status = filters.status is defined ? filters.status : '' %}
+    {% set title = filters.title is defined ? filters.title : '' %}
 
     <div class="bg-white rounded-pill d-flex justify-content-between align-items-center px-4 py-2 mb-3">
         <p class="m-0 text-black-50">Nombre de résultats: {{ pagination.total }}</p>
 
+        <div>
+            <input class="form-control rounded-3"
+                   placeholder="Rechercher"
+                   type="text"
+                   name="filters[title]"
+                   hx-get="{{ path(routeSearchName) ~ urlRequete|replacePage(null, sort, status, title) }}"
+                   hx-trigger="keyup changed delay:1s"
+                   hx-target="#result"
+                   hx-swap="outerHTML"
+                   hx-push-url="true"
+                   value="{{ filters.title is defined ? filters.title : '' }}"
+                   autofocus
+            />
+        </div>
+
         <div class="dropdown">
             <span class="btn text-black-50 cursor-pointer dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
-                Trier le prix par
-                {% if sortPrice is defined and sortPrice == 'asc' %} croissant {% endif %}
-                {% if sortPrice is defined and sortPrice == 'desc' %} decroissant {% endif %}
+
+                {% if sortPrice is defined  %}
+                    {% if sortPrice == 'asc' %}Prix croissant
+                    {% elseif sortPrice == 'desc' %}Prix decroissant
+                    {% else %} Trier le prix par
+                    {% endif %}
+                {% else %} Trier le prix par
+
+                {% endif %}
 
             </span>
             <ul class="dropdown-menu">
-                <li hx-get="{{ path('app_device_search_by_form') ~ urlRequete|replacePage() }}"
+
+                <li hx-get="{{ path(routeSearchName) ~ urlRequete|replacePage(null, sort, status, title) }}"
                     hx-target="#result"
-                    hx-swap="outerHTML"><span class="dropdown-item" type="button">Action</span></li>
+                    hx-swap="outerHTML"
+                    hx-push-url="true"
+                ><span class="dropdown-item" type="button">Par défaut</span></li>
                 <li
-                        hx-get="{{ path('app_device_search_by_form') ~ urlRequete|replacePage(null, null, 'asc') }}"
-                        hx-target="#result"
-                        hx-swap="outerHTML"><span class="dropdown-item" type="button">Croissant</span></li>
-                <li hx-get="{{ path('app_device_search_by_form') ~ urlRequete|replacePage(null, null, 'desc') }}"
+                    hx-get="{{ path(routeSearchName) ~ urlRequete|replacePage(null, 'asc', status, title) }}"
                     hx-target="#result"
-                    hx-swap="outerHTML"><span class="dropdown-item" type="button">Decroissant</span></li>
+                    hx-swap="outerHTML"
+                    hx-push-url="true"
+                ><span class="dropdown-item" type="button">Croissant</span></li>
+                <li hx-get="{{ path(routeSearchName) ~ urlRequete|replacePage(null, 'desc', status, title) }}"
+                    hx-target="#result"
+                    hx-swap="outerHTML"
+                    hx-push-url="true"
+                ><span class="dropdown-item" type="button">Decroissant</span></li>
             </ul>
         </div>
+
+
     </div>
+
+
+    {% if routeSearchName == 'app_user_devices' %}
+
+        <ul class="bg-white d-flex gap-4 text-black-50 rounded-3 py-3">
+            <li class="{{ status == '' ? 'fw-bold text-decoration-underline' : '' }}"
+                hx-get="{{ path(routeSearchName) ~ urlRequete|replacePage(null, sort, null, title) }}"
+                hx-target="#result"
+                hx-swap="outerHTML"
+                hx-push-url="true"
+            >
+                <span class="" type="button">Par défaut</span>
+            </li>
+            <li class="{{ status == 'validated' ? 'fw-bold text-decoration-underline' : '' }} routeSearchName"
+                    hx-get="{{ path(routeSearchName) ~ urlRequete|replacePage(null, sort, 'validated', title) }}"
+                    hx-target="#result"
+                    hx-swap="outerHTML"
+                    hx-push-url="true"
+            >
+                <span class="" type="button">Validé</span>
+            </li>
+            <li class="{{ status == 'rejected' ? 'fw-bold text-decoration-underline' : '' }} routeSearchName"
+                hx-get="{{ path(routeSearchName) ~ urlRequete|replacePage(null, sort, 'rejected', title) }}"
+                hx-target="#result"
+                hx-swap="outerHTML"
+                hx-push-url="true"
+            >
+                <span class="" type="button">Rejeté</span>
+            </li>
+
+            <li class="{{ status == 'pending' ? 'fw-bold text-decoration-underline' : '' }} routeSearchName"
+                hx-get="{{ path(routeSearchName) ~ urlRequete|replacePage(null, sort, 'pending', title) }}"
+                hx-target="#result"
+                hx-swap="outerHTML"
+                hx-push-url="true"
+            >
+                <span class="" type="button">En attente de validation</span>
+            </li>
+
+            <li class="{{ status == 'draft' ? 'fw-bold text-decoration-underline' : '' }} routeSearchName"
+                hx-get="{{ path(routeSearchName) ~ urlRequete|replacePage(null, sort, 'draft', title) }}"
+                hx-target="#result"
+                hx-swap="outerHTML"
+                hx-push-url="true"
+            >
+                <span class="" type="button">Brouillon</span>
+            </li>
+
+        </ul>
+
+    {% endif %}
+
+    <!-- Les cards -->
     <div class="card-content">
 
         <ul class="rounded-3 p-0">
-            {% for device in datas.items %}
-                {% set filename = device.devicePictures|firstFilename %}
+            {% for data in datas.items %}
+                {{ dump(data.id) }}
+                {% set device = data|getDevice %}
+                {% set filename = device.slug|firstFilename %}
+                {% set isUserDevicesRoute = app.request.attributes.get('_route') == 'app_user_devices' %}
 
                 <li class="col-12 rounded-3 mb-3 item-card bg-white">
-                    <a href="{{ path('app_device_show' , {slug: device.slug}) }}" class="d-flex" style="height: 15rem">
-                        <div class="img-card-search col-4  rounded-start-3">
-                            <img src="{{ asset('/upload/devices/' ~ filename) }}"
-                                 alt="{{ device.title }}"
-                                 class="object-fit-cover col-12 rounded-start-3 h-100">
-                        </div>
+                    {% if isUserDevicesRoute %}
+                    <div class="d-flex" style="height: 19rem">
+                        {% else %}
+                        <a href="{{ path('app_device_show', {slug: device.slug}) }}" class="d-flex" style="height: 15rem">
+                            {% endif %}
 
-                        <div class="ms-3 pt-4">
-                            <h3 class="fs-6 fw-bolder title-card ">{{ device.title }}</h3>
-                            <p class="fw-bold">{{ device.price|number_format(2, ',', ' ') }} €</p>
-                            <span class="border-theme-dark-olive-green p-2 rounded-3 text-capitalize">{{ device.user.type|typeUserFrench }}</span>
-                            <div class="d-flex flex-column col-12 text-black-50 mt-3">
-                                <small class="category">{{ device.categories|map((category) => "#{category.name}")|join(', ') }}</small>
-                                <small class="city">{{ device.location }}</small>
-                                <small class="date">Publié le {{ device.created|formatDateFr }}</small>
+                            <div class="img-card-search col-4 rounded-start-3 position-relative">
+                                <img src="{{ asset('/upload/devices/' ~ filename) }}"
+                                     alt="{{ device.title }}"
+                                     class="object-fit-cover col-12 rounded-start-3 h-100">
+                                {% if routeSearchName == 'app_user_favorite' %}
+                                    <span class="position-absolute start-0 ps-3 pt-2"><i class="bi bi-heart-fill color-theme-yellow fs-3"></i></span>
+                                {% endif %}
                             </div>
-                        </div>
 
+                            <div class="ms-3 pt-4">
+                                <h3 class="fs-6 fw-bolder title-card">{{ device.title }}</h3>
+                                <p class="fw-bold">{{ device.price|number_format(2, ',', ' ') }} €</p>
+                                <span class="border-theme-dark-olive-green p-2 rounded-3 text-capitalize">{{ device.user.type|typeUserFrench }}</span>
+
+                                <div class="d-flex flex-column col-12 text-black-50 mt-3">
+                                    <small class="category">
+                                        {{ device.categories|map((category) => "#{category.name}")|join(', ') }}
+                                    </small>
+                                    <small class="city">{{ device.location }}</small>
+                                    <small class="date">Publié le {{ device.created|formatDateFr }}</small>
+
+                                    {% if routeSearchName == 'app_user_devices' %}
+                                        {% if device.deleted is not null %}
+                                            <small class="date text-danger">Supprimé le {{ device.deleted|formatDateFr }}</small>
+                                        {% endif %}
+
+                                        {% if device.status == 'pending' %}
+                                            <small class="date text-warning">En attente de validation</small>
+                                            {% elseif device.status == 'rejected' %}
+                                                <small class="date text-danger">Rejeté</small>
+                                            {% elseif device.status == 'validated' %}
+                                                <small class="date text-success">Validé</small>
+                                            {% elseif device.status == 'draft' %}
+                                                <small class="date text-info">Brouillon</small>
+                                        {% endif %}
+
+
+                                    {% endif %}
+                                </div>
+
+                                {% if routeSearchName == 'app_user_devices' %}
+                                    <div class="col-12 gap-1 d-flex mt-2">
+                                        <a href="{{ path('app_device_show', { slug: device.slug }) }}" class="btn btn-sm btn-outline-secondary">Voir <i class="bi bi-eye"></i></a>
+                                        <a href="{{ path('app_user_update_device', {slug: device.slug}) }}" class="btn btn-sm btn-outline-secondary">Modifier <i class="bi bi-pencil-square"></i></a>
+                                        {% if device.status == 'draft' %}
+                                            <a href="#" class="btn btn-sm btn-outline-secondary">Publier <i class="bi bi-trash"></i></a>
+                                        {% endif %}
+                                        <a href="{{ path('app_user_device_delete', {slug: device.slug}) }}" class="btn btn-sm btn-outline-secondary">Supprimer <i class="bi bi-trash"></i></a>
+                                    </div>
+                                {% endif %}
+                            </div>
+
+                            {% if isUserDevicesRoute %}
+                    </div>
+                {% else %}
                     </a>
+                    {% endif %}
                 </li>
             {% endfor %}
         </ul>
+
 
         {% include '_partial/pagination.html.twig' with {
             nbPage:      pagination.total_pages,
             currentPage: pagination.page,
             url:         urlRequete,
-            sort: sort
+            sort:        sort,
+            title:       title,
+            status:      status
         } %}
 
     </div>
+    <!-- Fin des cards -->
+
 
 </section>

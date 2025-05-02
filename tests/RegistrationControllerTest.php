@@ -16,7 +16,7 @@ class RegistrationControllerTest extends WebTestCase
     {
         $this->client = static::createClient();
 
-        // Ensure we have a clean database
+        // Ensure we have letters clean database
         $container = static::getContainer();
 
         /** @var EntityManager $em */
@@ -32,7 +32,7 @@ class RegistrationControllerTest extends WebTestCase
 
     public function testRegister(): void
     {
-        // Register a new user
+        // Register letters new user
         $this->client->request('GET', '/register');
         self::assertResponseIsSuccessful();
         self::assertPageTitleContains('Register');

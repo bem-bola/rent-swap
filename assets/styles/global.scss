@@ -1,6 +1,8 @@
 @import "_variables.scss";
 @import "~bootstrap/scss/bootstrap";
 @import "~bootstrap-icons/font/bootstrap-icons.css";
+@import "form.scss";
+@import "packages/upp.scss";
 
 @font-face {
   font-family: 'Roboto';
@@ -185,15 +187,25 @@ li{
 .pointer-events-none {
   pointer-events: none;
 }
+@for $i from 6 through 10 {
+  .py-#{$i} {
+    padding-top: $i * 1rem;
+    padding-bottom: $i * 1rem;
+  }
+}
 
-.py-9 {
-  padding-top: 9rem;
-  padding-bottom: 9rem;
+@for $i from 1 through 50 {
+  .bottom-#{$i} {
+    bottom: $i * 1%;
+  }
+  .top-#{$i} {
+    top: $i * 1%;
+  }
+  .end-#{$i} {
+    right: $i * 1%;
+  }
 }
-.py-6 {
-  padding-top: 6em;
-  padding-bottom: 6em;
-}
+
 .resize-none{
   resize: none;
 }

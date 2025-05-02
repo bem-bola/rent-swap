@@ -1,0 +1,189 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}RentSwap - Device{% endblock %}
+
+{% block main %}
+
+    <div class="container d-flex search-item flex-column flex-lg-row mt-5 ">
+
+        {{ form_start(form, {
+            'attr': {
+                'class': 'col-12'
+            }
+        }) }}
+
+
+        <div class="my-custom-class-for-errors">
+            {{ form_errors(form) }}
+        </div>
+
+
+        <!-- Inputs titre, prix, quantité -->
+        <div class="d-flex gap-4 bg-white px-5 py-5 rounded-5 col-12 mb-3 shadow-sm">
+            <div class="col-6">
+                {{ form_label(form.title, '', {
+                    'label_attr': {
+                        'class': 'mb-2 fw-500'
+                    }
+                }) }}
+                <span class="text-danger">*</span>
+                {{ form_widget(form.title, {
+                    'attr': {
+                        'class': 'form-control rounded-4 py-3 fw-300'
+                    }
+                }) }}
+            </div>
+            <div class="col">
+                {{ form_label(form.price, '', {
+                    'label_attr': {
+                        'class': 'mb-2 fw-500'
+                    }
+                }) }}
+                <span class="text-danger">*</span>
+                {{ form_widget(form.price, {
+                    'attr': {
+                        'class': 'form-control rounded-4 py-3 fw-300'
+                    }
+                }) }}
+            </div>
+            <div class="col">
+                {{ form_label(form.quantity, '', {
+                    'label_attr': {
+                        'class': 'mb-2 fw-500'
+                    }
+                }) }}
+                <span class="text-danger">*</span>
+
+                {{ form_widget(form.quantity, {
+                    'attr': {
+                        'class': 'form-control rounded-4 py-3 fw-300'
+                    }
+                }) }}
+            </div>
+        </div>
+        <!-- Fin Inputs titre, prix, quantité -->
+
+        <!-- Inputs télephone, type, ville -->
+        <div class="d-flex gap-4 bg-white px-5 py-4 rounded-5 col-12 mb-3 shadow-sm">
+            <div class="col">
+                {{ form_label(form.type, '', {
+                    'label_attr': {
+                        'class': 'mb-2 fw-500'
+                    }
+                }) }}
+                <span class="text-danger">*</span>
+                {{ form_widget(form.type, {
+                    'attr': {
+                        'class': 'form-control rounded-4 py-3 fw-300'
+                    }
+                }) }}
+            </div>
+            <div class="col">
+                {{ form_label(form.phoneNumber, '', {
+                    'label_attr': {
+                        'class': 'mb-2 fw-500'
+                    }
+                }) }}
+
+                {{ form_widget(form.phoneNumber, {
+                    'attr': {
+                        'class': 'form-control rounded-4 py-3 fw-300'
+                    }
+                }) }}
+
+
+
+                {{ form_label(form.showPhone, '', {
+                    'label_attr': {
+                        'class': 'mb-2 fw-500 fst-italic font-size-08 pe-1'
+                    }
+                }) }}
+
+                {{ form_widget(form.showPhone, {
+                    'attr': {
+                        'class': 'rounded-1 border-theme-dark form-check-input'
+                    }
+                }) }}
+            </div>
+
+            <div class="col">
+                <label class="mb-2 fw-500" for="select-location">Ville</label>
+                <select id="select-location"
+                        class="form-control rounded-4 py-3 fw-300"
+                        name="location"
+                        placeholder="Choisir une ville" autocomplete="off">
+                    <option value="{{ device.location }}" selected></option>
+                </select>
+            </div>
+
+        </div>
+        <!-- Fin Inputs télephone, type, ville -->
+
+        <!-- Inputs description, categories -->
+        <div class="d-flex gap-4 bg-white px-4 py-4 rounded-5 col-12 mb-3 shadow-sm">
+            <div class="col">
+                {{ form_label(form.body, '', {
+                    'label_attr': {
+                        'class': 'mb-2 fw-500'
+                    }
+                }) }}
+                {{ form_widget(form.body, {
+                    'attr': {
+                        'class': 'form-control rounded-4 py-3 fw-300'
+                    }
+                }) }}
+            </div>
+            <div class="col">
+                <label class="mb-2 fw-500" for="select-category">Catégories</label>
+                <select id="select-category"
+                        class="form-control rounded-4 fw-300"
+                        name="categories[]"
+                        placeholder="Choisir les catégories" multiple>
+                </select>
+                <input
+                        type="hidden"
+                        id="default-categories"
+                        data-categories='{{ device.categories|map(cat => {
+                            id: cat.id,
+                            name: cat.name
+                        })|json_encode|raw }}'
+                >
+
+            </div>
+
+        </div>
+        <!-- Fin Inputs télephone, type, ville -->
+
+        <div class="row justify-content-center gap-2 py-4 rounded-5 col-12 mb-3">
+            {{ form_widget(form.draft, {
+                'attr': {
+                    'class': 'bg-theme-dark text-white border-0 text-center py-2 rounded-pill col-2 shadow-sm'
+                }
+            }) }}
+
+            {{ form_widget(form.next, {
+                'attr': {
+                    'class': 'bg-theme-dark text-white border-0 px-auto py-2 rounded-pill col-2'
+                }
+            }) }}
+
+            {{ form_widget(form.publish, {
+                'attr': {
+                    'class': 'bg-theme-dark text-white border-0 px-auto py-2 rounded-pill col-2'
+                }
+            }) }}
+            {{ form_widget(form.delete, {
+                'attr': {
+                    'class': 'bg-danger text-white border-0 px-auto py-2 rounded-pill col-2 shadow-sm'
+                }
+            }) }}
+        </div>
+
+        {{ form_end(form) }}
+    </div>
+{% endblock %}
+
+
+
+
+

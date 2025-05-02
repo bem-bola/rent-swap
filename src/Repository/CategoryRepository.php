@@ -19,11 +19,13 @@ class CategoryRepository extends ServiceEntityRepository
     /**
      * @return Category[] Returns an array of Category objects
      */
-    public function findByName(string $name): array
+    public function findByLikeByName(string $name): array
     {
         return $this->createQueryBuilder('c')
-            ->andWhere('c.name = :name')
-            ->setParameter('name', $name)
+            ->select('c.id, c.name')
+            ->andWhere('LOWER(c.name) LIKE :name')
+            ->setParameter('name', '%' . strtolower($name) .'%')
+            ->orderBy('c.name', 'ASC')
             ->getQuery()
             ->getResult();
     }

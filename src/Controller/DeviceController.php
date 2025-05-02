@@ -2,23 +2,17 @@
 
 namespace App\Controller;
 
-use App\DTO\SearchDevice;
 use App\Entity\Device;
-use App\Entity\DevicePicture;
 use App\Entity\Favorite;
 use App\Repository\CategoryRepository;
 use App\Repository\DeviceRepository;
 use App\Service\HttpClientService;
-use App\Service\PaginatorService;
 use Doctrine\ORM\EntityManagerInterface;
 use Exception;
-use JetBrains\PhpStorm\NoReturn;
-use phpDocumentor\Reflection\DocBlock\Tags\Throws;
 use Psr\Log\LoggerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\HttpKernel\Attribute\MapRequestPayload;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Contracts\HttpClient\Exception\ClientExceptionInterface;
 use Symfony\Contracts\HttpClient\Exception\DecodingExceptionInterface;
@@ -29,7 +23,6 @@ use Symfony\Contracts\HttpClient\Exception\TransportExceptionInterface;
 #[Route('/device', name: 'app_device_')]
 class DeviceController extends AbstractController
 {
-
     public function __construct(
         private readonly CategoryRepository     $categoryRepository,
         private readonly DeviceRepository       $deviceRepository,
@@ -57,7 +50,8 @@ class DeviceController extends AbstractController
         return $this->render('_partial/device/results_search.html.twig', [
             'datas' => $this->deviceRepository->findByFilters($request->query->all()),
             'sortPrice' => $request->get('orderby') != null ? $request->get('orderby')['price'] : null,
-            'filters' => $request->get('filters', [])
+            'filters' => $request->get('filters', []),
+            'routeSearchName' => 'app_device_search_by_form'
         ]);
     }
     /**
@@ -69,7 +63,7 @@ class DeviceController extends AbstractController
      * @throws Exception
      */
     #[Route('/show/{slug}', name: 'show')]
-    public function view(Request $request, string $slug, EntityManagerInterface $entityManager, HttpClientService $httpClientService): Response
+    public function view(string $slug, EntityManagerInterface $entityManager, HttpClientService $httpClientService): Response
     {
 
         $device = $entityManager->getRepository(Device::class)->findOneBy(['slug' => $slug]);

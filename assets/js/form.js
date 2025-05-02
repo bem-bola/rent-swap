@@ -1,8 +1,8 @@
 // document.addEventListener('DOMContentLoaded', () => {
 //     // Mapping des regex pour valider les champs email et mot de passe
 //     const regexMap = {
-//         email: /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/,
-//         password: /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@#$%^&*!])[A-Za-z\d@#$%^&*!]{8,}$/,
+//         email: /^[letters-zA-Z0-9._%+-]+@[letters-zA-Z0-9.-]+\.[letters-zA-Z]{2,}$/,
+//         password: /^(?=.*[letters-z])(?=.*[A-Z])(?=.*\d)(?=.*[@#$%^&*!])[A-Za-z\d@#$%^&*!]{8,}$/,
 //         name: /^[A-Za-zÀ-ÖØ-öø-ÿ]{2,}$/
 //     };
 //
@@ -79,8 +79,8 @@
 
 // document.addEventListener('DOMContentLoaded', () => {
 //     const regexMap = {
-//         email: /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/,
-//         password: /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@#$%^&*!])[A-Za-z\d@#$%^&*!]{8,}$/,
+//         email: /^[letters-zA-Z0-9._%+-]+@[letters-zA-Z0-9.-]+\.[letters-zA-Z]{2,}$/,
+//         password: /^(?=.*[letters-z])(?=.*[A-Z])(?=.*\d)(?=.*[@#$%^&*!])[A-Za-z\d@#$%^&*!]{8,}$/,
 //         name: /^[A-Za-zÀ-ÖØ-öø-ÿ]{2,}$/
 //     };
 //
@@ -137,8 +137,8 @@
 //
 // document.addEventListener('DOMContentLoaded', () => {
 //     const regexMap = {
-//         email: /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/,
-//         password: /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@#$%^&*!])[A-Za-z\d@#$%^&*!]{8,}$/,
+//         email: /^[letters-zA-Z0-9._%+-]+@[letters-zA-Z0-9.-]+\.[letters-zA-Z]{2,}$/,
+//         password: /^(?=.*[letters-z])(?=.*[A-Z])(?=.*\d)(?=.*[@#$%^&*!])[A-Za-z\d@#$%^&*!]{8,}$/,
 //         name: /^[A-Za-zÀ-ÖØ-öø-ÿ\s'-]{2,}$/, // Ajout des espaces et apostrophes
 //     };
 //
@@ -185,8 +185,8 @@
 
 // document.addEventListener('DOMContentLoaded', () => {
 //     const regexMap = {
-//         email: /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/,
-//         password: /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@#$%^&*!])[A-Za-z\d@#$%^&*!]{8,}$/,
+//         email: /^[letters-zA-Z0-9._%+-]+@[letters-zA-Z0-9.-]+\.[letters-zA-Z]{2,}$/,
+//         password: /^(?=.*[letters-z])(?=.*[A-Z])(?=.*\d)(?=.*[@#$%^&*!])[A-Za-z\d@#$%^&*!]{8,}$/,
 //         name: /^[A-Za-zÀ-ÖØ-öø-ÿ\s'-]{2,}$/, // Supporte les espaces et apostrophes
 //     };
 //
@@ -246,8 +246,8 @@
 
 // document.addEventListener('DOMContentLoaded', () => {
 //     const regexMap = {
-//         email: /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/,
-//         password: /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@#$%^&*!])[A-Za-z\d@#$%^&*!]{8,}$/,
+//         email: /^[letters-zA-Z0-9._%+-]+@[letters-zA-Z0-9.-]+\.[letters-zA-Z]{2,}$/,
+//         password: /^(?=.*[letters-z])(?=.*[A-Z])(?=.*\d)(?=.*[@#$%^&*!])[A-Za-z\d@#$%^&*!]{8,}$/,
 //         name: /^[A-Za-zÀ-ÖØ-öø-ÿ\s'-]{2,}$/, // Supporte les espaces et apostrophes
 //     };
 //
@@ -354,7 +354,6 @@
 //
 //     togglePassword()
 // });
-
 
 document.addEventListener('DOMContentLoaded', () => {
     const regexMap = {
@@ -515,14 +514,15 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     togglePassword();
+
 });
 
 //
 //
 // document.addEventListener('DOMContentLoaded', () => {
 //     const regexMap = {
-//         email: /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/,
-//         password: /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@#$%^&*!])[A-Za-z\d@#$%^&*!]{8,}$/,
+//         email: /^[letters-zA-Z0-9._%+-]+@[letters-zA-Z0-9.-]+\.[letters-zA-Z]{2,}$/,
+//         password: /^(?=.*[letters-z])(?=.*[A-Z])(?=.*\d)(?=.*[@#$%^&*!])[A-Za-z\d@#$%^&*!]{8,}$/,
 //         name: /^[A-Za-zÀ-ÖØ-öø-ÿ\s'-]{2,}$/, // Supporte les espaces et apostrophes
 //     };
 //
