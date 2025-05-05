@@ -1,0 +1,24 @@
+
+
+<!-- Modal -->
+<div class="modal fade col-10" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered col-10 ">
+        <div class="modal-content position-relative py-4">
+            <button type="button" class="btn-close position-absolute" data-bs-dismiss="modal" aria-label="Close"></button>
+
+            <div class="col-3 mx-auto">
+                <img src="{{ asset(user|pathAvatarUser) }}" alt="" class="col-12 rounded-circle">
+            </div>
+
+            <div class="col-10 mx-auto">
+                <div id="uppy-dashboard"
+                     class="col-12"
+                     data-param='{{ {user: user.id}|json_encode|raw }}'
+                     data-route="app_user_home"
+                     data-name="file"
+                >
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

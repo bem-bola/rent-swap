@@ -61,9 +61,6 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column(type: 'string', length: 255, nullable: true)]
     private ?string $lastname = null;
 
-    #[ORM\Column(type: 'string', length: 255, nullable: true)]
-    private ?string $avatar = null;
-
     #[ORM\Column(nullable: true)]
     private ?\DateTimeImmutable $birthAt = null;
 
@@ -78,6 +75,9 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
      */
     #[ORM\OneToMany(targetEntity: Message::class, mappedBy: 'author')]
     private Collection $messages;
+
+    #[ORM\ManyToOne]
+    private ?Media $avatar = null;
 
     public function __construct()
     {
@@ -185,6 +185,11 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         $this->created = $created;
     }
 
+    public function getCreated(): ?DateTimeInterface
+    {
+        return $this->created;
+    }
+
     /**
      * @return string|null
      */
@@ -281,22 +286,6 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         $this->lastname = $lastname;
     }
 
-    /**
-     * @return string|null
-     */
-    public function getAvatar(): ?string
-    {
-        return $this->avatar;
-    }
-
-    /**
-     * @param string|null $avatar
-     */
-    public function setAvatar(?string $avatar): void
-    {
-        $this->avatar = $avatar;
-    }
-
     public function setVerified(bool $isVerified): static
     {
         $this->isVerified = $isVerified;
@@ -381,6 +370,18 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
                 $message->setAuthor(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getAvatar(): ?Media
+    {
+        return $this->avatar;
+    }
+
+    public function setAvatar(?Media $avatar): static
+    {
+        $this->avatar = $avatar;
 
         return $this;
     }

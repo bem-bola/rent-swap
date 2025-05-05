@@ -11,14 +11,33 @@
         <!-- Profile -->
         <div class="rounded-4 shadow-sm d-flex flex-wrap bg-white justify-content-between align-items-center p-4">
             <div class="col-4 row align-items-center">
-                <div class="col-3"><img src="{{ asset(user|pathAvatarUser) }}" alt="" class="col-12 rounded-circle"></div>
+                <div class="col-3 position-relative">
+                    <img src="{{ asset(user|pathAvatarUser) }}" alt="" class="col-12 rounded-circle">
+                    <button href="#"
+                            class="border-0 p-0 bg-white rounded-circle shadow-lg position-absolute bottom-0 end-10 col-1 col-3 color-theme-gray-4 fs-3"
+                            title="Ajouter une photo"
+                            data-bs-toggle="modal" data-bs-target="#staticBackdrop"
+                    ><i class="bi bi-plus-circle-dotted"></i></button>
+                </div>
                 <h1 class="col fs-5">{{ user.firstname ~ ' ' ~  user.lastname }}</h1>
+
             </div>
 
-            <a href="#" class="bg-theme-dark text-white px-3 py-2 rounded-3">Modifier</a>
+            <div>
+                <div>
+                    <span class="font-size-09 color-theme-gray-4"><i class="bi bi-calendar-week"></i> Membre depuis {{ user.created|formatDateFr }}</span>
+                </div>
+                <div class="col-12 d-flex justify-content-end mt-1">
+                    <button
+                            class="bg-theme-dark border-0 text-white px-3 py-2 rounded-3 text-end"
+                            data-bs-toggle="modal" data-bs-target="#form-user"
+                    ><i class="bi bi-pencil"></i> Modifier mon profil</button>
+                </div>
+            </div>
+
+
         </div>
         <!-- Fin Profile -->
-
 
         <!-- Messages -->
         <div class="mt-4 d-flex gap-3">
@@ -107,6 +126,12 @@
             </div>
         </div>
         <!-- Fin annonces -->
+
+
+        <!-- Modal avatar -->
+        {% include '_partial/user/upload_avatar.html.twig' %}
+        <!-- Modal user form -->
+        {% include '_partial/user/update_user.html.twig' %}
     </section>
 
 {% endblock %}
