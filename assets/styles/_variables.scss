@@ -36,4 +36,8 @@ $input-group-addon-bg:              #ffffff !important;
 $input-group-addon-color:           $color-theme-dark  !important;
 $input-group-background:            green !important;
 
+$dropdown-link-active-bg:           $color-theme-dark;
 
+.dropdown-toggle::after {
+  display: none !important;
+}

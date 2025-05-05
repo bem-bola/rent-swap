@@ -17,7 +17,9 @@
     <script src="{{ path('fos_js_routing_js', { callback: 'fos.Router.setData' }) }}"></script>
 </head>
 <body class="" id="register">
-<div class="bg-theme-dark d-flex flex-column justify-content-center align-items-center vh-100 col-12">
+
+
+<div class="bg-theme-dark d-flex flex-column justify-content-center align-items-center vh-100 col-12 overflow-x-hidden position-relative">
 
 
     {{ form_start(registrationForm, {
@@ -27,7 +29,10 @@
     }) }}
 
 
-    <div id="section-register-who" class="col-12 p-5 bg-theme-gray rounded-5 section">
+    <div class="bg-white">{{ form_errors(registrationForm) }}</div>
+
+
+    <div id="section-register-who" class="col-12 p-5 bg-theme-gray rounded-5 section ">
 
         <h1 class="h3 fw-700 text-center">Je suis</h1>
 
@@ -114,7 +119,7 @@
         </div>
 
     </div>
-    <div id="section-register-birth" class="col-12 p-5 bg-theme-gray rounded-5 section ">
+    <div id="section-register-birth" class="col-12 p-5 bg-theme-gray rounded-5 section">
         <h2 class="h3 fw-700 text-center">Mon age</h2>
         <div class="sub-section">
             {{ form_label(registrationForm.birthAt, '', {
@@ -140,8 +145,7 @@
         </div>
 
     </div>
-
-    <div id="section-register-password" class="section col-12 p-5 bg-theme-gray rounded-5 ">
+    <div id="section-register-password" class="col-12 p-5 bg-theme-gray rounded-5 section">
         <h2 class="h3 fw-700 text-center">Je définis mon mot de passe</h2>
         <div class='sub-section'>
             <div class="input-group col-12" >
@@ -150,14 +154,18 @@
                         'class': 'mb-2 fw-500 col-12'
                     }
                 }) }}
-                {{ form_widget(registrationForm.plainPassword.first,{
-                    'attr': {
-                        'class': 'form-control  rounded-start-4 border-end-0 py-3 fw-300 password',
-                        'data-type-pattern': 'password'
-                    }
-                }) }}
-                <button type="button" class="input-group-text rounded-end-4 cursor-pointer toggle-password" id=""><i
-                            class="bi bi-eye fs-4"></i></button>
+                <div class="col-12 position-relative content-password">
+                    {{ form_widget(registrationForm.plainPassword.first,{
+                        'attr': {
+                            'class': 'form-control  rounded-4 py-3 fw-300 password',
+                            'data-type-pattern': 'password'
+                        }
+                    }) }}
+                    <span type="button" class="rounded-4 cursor-pointer position-absolute bottom-28 end-2 toggle-password" id="">
+                        <i class="bi bi-eye fs-4"></i>
+                    </span>
+                </div>
+
 
             </div>
             <div class="content-error bg-theme-gray bg-opacity-25 px-4 mt-3">
@@ -175,12 +183,16 @@
                         'class': 'mb-2 fw-500 col-12'
                     }
                 }) }}
-                {{ form_widget(registrationForm.plainPassword.second,{
-                    'attr': {
-                        'class': 'form-control rounded-start-4 border-end-0  py-3 fw-300 password-repeat'
-                    }
-                }) }}
-                <button type="button" class="input-group-text rounded-end-4 cursor-pointer toggle-password" id=""><i class="bi bi-eye fs-4"></i></button>
+                <div class="col-12 position-relative content-password">
+                    {{ form_widget(registrationForm.plainPassword.second,{
+                        'attr': {
+                            'class': 'form-control rounded-4  py-3 fw-300 password-repeat'
+                        }
+                    }) }}
+                    <span type="button" class="rounded-4 cursor-pointer position-absolute bottom-28 end-2 toggle-password" id="">
+                        <i class="bi bi-eye fs-4"></i>
+                    </span>
+                </div>
             </div>
 
             <div class="content-error bg-theme-gray bg-opacity-25 px-4 mt-3">
@@ -190,14 +202,6 @@
 
         </div>
 
-        <div class="d-flex justify-content-center" >
-            <button type="button" class="bg-theme-dark text-white border-0 px-5 py-3 rounded-pill border-0 btn-prev-register"><i class="bi bi-arrow-left"></i> Précédent</button>
-            <button class="bg-theme-dark text-white border-0 px-5 py-3 rounded-pill btn-next-register disabled" type="button" disabled>Suivant <i class="bi bi-arrow-right"></i></button>
-        </div>
-
-    </div>
-
-    <div id="section-register-terms" class="section col-12 p-5 bg-theme-gray rounded-5 section">
         <div class="sub-section">
             {{ form_widget(registrationForm.agreeTerms,{
                 'attr': {
