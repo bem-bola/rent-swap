@@ -99,7 +99,7 @@ public function getFilters(): array
 
     public function pathAvatarUser(User $user): string
     {
-        if($user->getAvatar()) return '/img/avatars/' . $user->getAvatar();
+        if($user->getAvatar()) return '/upload/avatars/' . $user->getAvatar()->getFilename();
         else return sprintf("/img/letters/%s.png", substr($user->getFirstname(), 0, 1));
     }
 

@@ -82,28 +82,16 @@ li{
 .disabled{
   opacity: 0.50;
 }
-.font-size-05{
-  font-size: 0.5em;
-}
-.font-size-06{
-  font-size: 0.6em;
-}
-.font-size-07{
-  font-size: 0.7em;
-}
-.font-size-08{
-  font-size: 0.8em;
-}
-.font-size-08{
-  font-size: 0.9em;
+
+@for $i from 5 through 9 {
+  .font-size-0#{$i} {
+    font-size: $i * 0.1rem;
+  }
+  .font-size-#{$i}{
+    font-size: $i * 1rem;
+  }
 }
 
-.font-size-3{
-  font-size: 3em;
-}
-.font-size-4{
-  font-size: 4em;
-}
 .fw-200 {
   font-weight: 200;
 }

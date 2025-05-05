@@ -11,17 +11,20 @@ import '@uppy/webcam/dist/style.min.css';
 import "../styles/packages/upp.scss";
 
 
-const uploadXHR = (route) => {
+const uploadXHR = () => {
 
-    let paramUrl =  document.getElementById('uppy-dashboard')
+    let dashbordElement =  document.getElementById('uppy-dashboard')
 
-    if(!paramUrl) return;
+    if(!dashbordElement) return;
 
-    let param = paramUrl ? JSON.parse(paramUrl.dataset.param) : null ;
+    let param = dashbordElement ? JSON.parse(dashbordElement.dataset.param) : null ;
+    const routeName = dashbordElement ? dashbordElement.dataset.route : null;
+    const name = dashbordElement ? dashbordElement.dataset.name : null;
 
     const uppy = new Uppy({
         autoProceed: false,
-        locale: French
+        locale: French,
+        allowedFileTypes: ['image/*', '.jpg', '.jpeg', '.png']
     })
 
     uppy.use(Dashboard, {
@@ -31,8 +34,8 @@ const uploadXHR = (route) => {
     })
 
     uppy.use(XHRUpload, {
-        endpoint: Routing.generate(route, param),
-        fieldName: 'files[]',
+        endpoint: Routing.generate(routeName, param),
+        fieldName: name,
         formData: true,
         bundle: true,
         headers: {
@@ -54,7 +57,6 @@ const uploadXHR = (route) => {
     }
 
     const uploadButton = document.querySelector('.uppy-StatusBar-actionBtn--upload')
-    // const uploadButton = document.getElementById('submit-upload-file')
 
     if (uploadButton) {
 
@@ -75,9 +77,7 @@ const uploadXHR = (route) => {
                 if (result.failed.length > 0) {
                     alert("Une erreur s'est produite")
                 } else {
-                    // window.location.href(Routing.generate(result.url))
-
-                    console.log(result.successful)
+                    window.location.reload()
                 }
             })
         })
@@ -87,5 +87,5 @@ const uploadXHR = (route) => {
     return uppy
 }
 
-uploadXHR('app_user_upload_image_device')
+uploadXHR()
 

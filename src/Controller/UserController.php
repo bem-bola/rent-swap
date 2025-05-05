@@ -7,7 +7,10 @@ use App\Entity\DevicePicture;
 use App\Entity\User;
 use App\Factory\DeviceFactory;
 use App\Factory\DevicePictureFactory;
+use App\Factory\MediaFactory;
+use App\Factory\UserFactory;
 use App\Form\DeviceType;
+use App\Form\UserType;
 use App\Repository\DevicePictureRepository;
 use App\Repository\DeviceRepository;
 use App\Repository\FavoriteRepository;
@@ -15,7 +18,7 @@ use App\Service\Constances;
 use App\Service\DeviceService;
 use App\Service\LoggerService;
 use App\Service\UploadFileService;
-use Psr\Log\LoggerInterface;
+use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Finder\Exception\AccessDeniedException;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -39,22 +42,69 @@ class UserController extends AbstractController
         private readonly DevicePictureRepository    $devicePictureRepository,
         private readonly DeviceRepository           $deviceRepository,
         private readonly DeviceService              $deviceService,
+        private readonly EntityManagerInterface     $entityManager,
         private readonly FavoriteRepository         $favoriteRepository,
+        private readonly LoggerService              $loggerService,
+        private readonly MediaFactory               $mediaFactory,
         private readonly UploadFileService          $uploadFileService,
-        private readonly LoggerService              $loggerService
+        private readonly UserFactory                $userFactory,
     )
     {}
 
     /**
+     * @param Request $request
      * @return Response
+     * @throws \Exception
      */
-    #[Route(path: '/', name: 'home')]
-    public function profile(): Response
+    #[Route(path: '/', name: 'home', options: ['expose' => true])]
+    public function profile(Request $request): Response
     {
+        $form = $this->createForm(UserType::class, $this->getUser());
+        $form->handleRequest($request);
+
+        if($form->isSubmitted() && $form->isValid()) {
+            $this->entityManager->persist($form->getData());
+            $this->entityManager->flush();
+
+            $this->addFlash('success', "Vos informations ont été modifiées");
+        }
+
+        if($request->headers->get('HX-Request')) {
+
+            try{
+                $file = $request->files->get('file');
+
+                $filename = $this->uploadFileService->uploadFile($file, 'avatars');
+
+                $media = $this->mediaFactory->createByUser($file, $filename, $this->getUser());
+
+                $this->userFactory->addAvatar($this->getUser(), $media);
+
+                $this->addFlash('success', 'Avatar modifié avec succès');
+
+            }catch (\Exception $e){
+                $this->loggerService->write(Constances::LEVEL_ERROR, $e->getMessage(), null, $this->getUser());
+            }
+
+
+            return new JsonResponse([
+                'url' => 'app_user_devices',
+            ]);
+        }
+
         return $this->render('security/profile.html.twig', [
             'data' => $this->deviceRepository->findByUser([], $this->getUser()),
+            'form' => $form->createView(),
         ]);
     }
+
+//    #[Route(path: '/', name: 'home')]
+//    public function profile(): Response
+//    {
+//        return $this->render('security/profile.html.twig', [
+//            'data' => $this->deviceRepository->findByUser([], $this->getUser()),
+//        ]);
+//    }
 
     /**
      * @param Request $request
