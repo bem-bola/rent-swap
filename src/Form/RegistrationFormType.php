@@ -90,12 +90,10 @@ class RegistrationFormType extends AbstractType
             ->add('birthAt', DateType::class, [
                 'label' =>"Je suis né ...",
                 'widget' => 'single_text',
+                'mapped' => false,
                 'constraints' => [
                     new NotBlank([
                         'message' => 'Veuillez entrer une date valide.',
-                    ]),
-                    new Email([
-                        'message' => 'Veuillez entrer une adresse e-mail valide.',
                     ]),
                     new LessThan([
                         'value' => (new \DateTime())->modify('-18 years'), // Calcul de la date limite pour être majeur
@@ -120,12 +118,11 @@ class RegistrationFormType extends AbstractType
                             'minMessage' => 'Votre mot de passe doit contenir au moins {{ limit }} caractères.',
                         ]),
                         new Regex([
-                            'pattern' => '/^(?=.*[letters-z])(?=.*[A-Z])(?=.*\d)(?=.*[@#$%^&*!])[A-Za-z\d@#$%^&*!]{8,}$/',
+                            'pattern' => '/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!#%*?&])[A-Za-z\d@$!%*?&]{8,}$/',
                             'message' => 'Le mot de passe doit contenir au moins une majuscule, une minuscule et un caractère spécial.',
                         ]),
                     ],
                     'attr' => [
-                        'pattern' => '/^(?=.*[letters-z])(?=.*[A-Z])(?=.*\d)(?=.*[@#$%^&*!])[A-Za-z\d@#$%^&*!]{8,}$/',
                         'data-type-pattern' => "password"
                     ],
                 ],

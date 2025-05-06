@@ -108,8 +108,8 @@ const animationRegister = () => {
             gsap.to(sections[currentSectionIndex], {
                 x: '-100%',
                 opacity: 0,
-                duration: 0.7,
-                ease: 'power2.inOut',
+                duration: 0.3,
+                ease: 'sine.inOut',
                 onComplete: () => {
                     sections[currentSectionIndex].classList.add('d-none');
                     currentSectionIndex++;
@@ -117,8 +117,8 @@ const animationRegister = () => {
                     gsap.fromTo(sections[currentSectionIndex], {x: '100%', opacity: 0}, {
                         x: '0%',
                         opacity: 1,
-                        duration: 0.7,
-                        ease: 'power2.inOut'
+                        duration: 0.3,
+                        ease: 'sine.inOut'
                     });
                     updateButtons();
                 }

@@ -4,7 +4,7 @@
 
         {% if nbPage > 1 %}
 
-            {% set routeName = 
+            {% set routeName =
                 app.request.get('_route') == 'app_user_devices' ? 
                 'app_user_devices' : 
                 'app_device_search_by_form'

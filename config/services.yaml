@@ -1,9 +1,11 @@
 parameters:
-    nameProject: '%env(APP_NAME)%'
-    urlNominatim: '%env(URL_NOMINATIM)%'
+    adressEmailNoReply: '%env(EMAIL_NO_REPLY)%'
     adressEmail: '%env(ADRESS_EMAIL)%'
-    urlApiGeoGouv: '%env(URL_API_GEO_GOUV)%'
     dataFixture: '%kernel.project_dir%/dataFixtures/'
+    jwtsecret: '%env(JWT_SECRET)%'
+    nameProject: '%env(APP_NAME)%'
+    urlApiGeoGouv: '%env(URL_API_GEO_GOUV)%'
+    urlNominatim: '%env(URL_NOMINATIM)%'
 
 services:
     # default configuration for services in *this* file
@@ -19,6 +21,10 @@ services:
             - '../src/DependencyInjection/'
             - '../src/Entity/'
             - '../src/Kernel.php'
+
+    App\Service\JWTService:
+        arguments:
+            $secret: '%env(JWT_SECRET)%'
 
     App\Service\HttpClientService:
         arguments:
