@@ -1,0 +1,14 @@
+<p>Bonjour {{ user.firstname|capitalize }}, </p>
+
+<div>
+    Merci de vous être inscrit sur notre site ! <br>
+
+    Pour activer votre compte et finaliser votre inscription, veuillez cliquer sur le lien ci-dessous : <br>
+
+    <a href="{{ absolute_url(path('app_register_verify_user', {token: token})) }}">Lien</a> <br>
+
+    À très vite, <br><br>
+
+    L’équipe <a href="{{ absolute_url(path('app_home')) }}">Reusiix</a> <br>
+</div>
+

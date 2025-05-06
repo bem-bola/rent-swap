@@ -19,8 +19,9 @@ class UserFactory
         private readonly LoggerService          $logger
     ) {}
 
-    public function createByUser(User $user, string $password): User{
+    public function createByUser(User &$user, string $password): User{
         $user->setPassword($password);
+        $user->setCreated(new \DateTime());
         $this->entityManager->persist($user);
         $this->entityManager->flush();
 
@@ -47,5 +48,11 @@ class UserFactory
         );
 
         return $user;
+    }
+
+    public function verified(User $user): User{
+        $user->setVerified(true);
+        $this->entityManager->persist($user);
+        $this->entityManager->flush();
     }
 }
