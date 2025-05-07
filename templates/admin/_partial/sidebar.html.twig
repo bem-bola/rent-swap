@@ -1,0 +1,68 @@
+
+<!-- Sidebar -->
+<ul class="navbar-nav bg-gradient-primary sidebar sidebar-dark accordion" id="accordionSidebar">
+
+    <!-- Sidebar - Brand -->
+    <a class="sidebar-brand d-flex align-items-center justify-content-center" href="{{ path('app_admin_dashboard') }}">
+        <div class="sidebar-brand-icon rotate-n-15">
+            <i class="fas fa-laugh-wink"></i>
+        </div>
+        <div class="sidebar-brand-text mx-3">ReusiiX</div>
+    </a>
+
+    <!-- Divider -->
+    <hr class="sidebar-divider my-0">
+
+    {% for item in menu %}
+        {% if item.children is defined %}
+
+            {% set active =  item.children|checkRoute(app.request.attributes.get('_route')) ? 'active' : ''  %}
+            {% set show =  item.children|checkRoute(app.request.attributes.get('_route')) ? 'show' : ''  %}
+
+            <li class="nav-item {{ active }}">
+
+                <a class="nav-link" href="#" data-toggle="collapse" data-target="#collapse-{{ loop.index  }}"
+                   aria-expanded="true" aria-controls="collapse-{{ loop.index  }}">
+                    <i class="bi bi-{{ item.icon }} fs-5"></i>
+                    <span>{{ item.label|capitalize }}</span>
+                </a>
+                <div id="collapse-{{ loop.index  }}" class="collapse {{ show }}" aria-labelledby="heading-{{ loop.index  }}" data-parent="#accordionSidebar">
+                    <div class="bg-white py-2 collapse-inner rounded">
+                        {% for child in item.children %}
+                            <a class="collapse-item {{  app.request.attributes.get('_route') == child.route ? 'active' : '' }}" href="{{ path(child.route) }}">{{ child.label }}</a>
+                        {% endfor %}
+                    </div>
+                </div>
+            </li>
+        {% else %}
+            <li class="nav-item {{  app.request.attributes.get('_route') == item.route ? 'active' : '' }}">
+                <a class="nav-link " href="{{ path(item.route) }}">
+                    <i class="bi bi-{{ item.icon }} fs-5"></i>
+                    <span>{{ item.label|capitalize }}</span>
+                </a>
+            </li>
+        {% endif %}
+
+
+    {% endfor %}
+
+</ul>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

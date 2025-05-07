@@ -23,7 +23,7 @@ Encore
      */
     .addEntry('app', './assets/app.js')
     .addStyleEntry('style', './assets/styles/global.scss')
-
+    .addStyleEntry('style-admin', './assets/styles/templates/style.scss')
     .addStyleEntry('icons', './node_modules/bootstrap-icons/font/bootstrap-icons.css')
 
     // When enabled, Webpack "splits" your files into smaller pieces for greater optimization.

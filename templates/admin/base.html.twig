@@ -1,0 +1,45 @@
+{#<!DOCTYPE html>#}
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <title>{% block title %}{% endblock %}</title>
+    {% block stylesheets %}
+        {{ encore_entry_link_tags('style-admin') }}
+    {% endblock %}
+
+    {% block javascripts %}
+        {{ encore_entry_script_tags('app') }}
+        {% block importmap %}{{ importmap('app') }}{% endblock %}
+    {% endblock %}
+    {% block head %}
+    {% endblock %}
+    <link rel="icon" href="{{ asset('img/logo/logo-reusiix.png') }}" type="image/svg">
+    <script src="{{ asset('bundles/fosjsrouting/js/router.min.js') }}"></script>
+    <script src="{{ path('fos_js_routing_js', { callback: 'fos.Router.setData' }) }}"></script>
+</head>
+<body class="bg-theme-gray-3" id="page-top">
+
+<div id="wrapper">
+    <!-- Header-->
+    {% block header %}
+        {% include 'admin/_partial/sidebar.html.twig' %}
+    {% endblock %}
+
+    <div id="content-wrapper" class="d-flex flex-column">
+
+        <div id="content">
+            {% include 'admin/_partial/header.html.twig' %}
+            <main class="container-fluid">
+                {% include '_partial/alert.html.twig' %}
+                {% block main %}{% endblock %}
+            </main>
+        </div>
+        <!-- Footer-->
+        {% block footer %}
+            {% include 'admin/_partial/footer.html.twig' %}
+        {% endblock %}
+    </div>
+</div>
+</body>
+
+</html>

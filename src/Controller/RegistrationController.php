@@ -63,7 +63,7 @@ class RegistrationController extends AbstractController
                 compact('token', 'user')
             );
 
-            return $security->login($user, 'app_home', 'main');
+            return $security->login($user, 'form_login', 'main');
         }
 
         return $this->render('registration/register.html.twig', [
@@ -91,6 +91,12 @@ class RegistrationController extends AbstractController
                 return $this->redirectToRoute('app_home');
             }
         }
+
+
+
+
+
+
         $this->addFlash('danger', 'Le token est invalide ou a expiré');
         return $this->redirectToRoute('app_login');
     }
