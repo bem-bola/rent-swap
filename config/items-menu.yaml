@@ -1,0 +1,41 @@
+dashboard:
+  label: 'dashboard'
+  route: 'app_admin_dashboard'
+  icon: 'speedometer2'
+
+home:
+  label: "Page d'accueil"
+  route: 'app_home'
+  icon: 'house'
+
+device:
+  label: "Appareils"
+  icon: 'hdd'
+  children:
+
+    all:
+      label: "Tous les appareils"
+      route: "app_admin_dashboard"
+
+
+    valid:
+      label: "Les appareils à valider"
+      route: "app_admin_dashboard"
+
+    search:
+      label: "Chercher un appareil"
+      route: "app_admin_dashboard"
+
+category:
+  label: "Catégories"
+  icon: 'collection'
+  children:
+
+    all:
+      label: "Toutes les catégories"
+      route: "app_home"
+
+    add:
+      label: "Ajouter une catégorie"
+      route: "app_home"
+

@@ -49,6 +49,9 @@
                     <ul class="dropdown-menu">
                         <li><a class="dropdown-item" href="{{ path('app_user_home') }}">Mon profil</a></li>
                         <li><a class="dropdown-item" href="{{ path('app_user_favorites') }}">Mes favoris</a></li>
+                        {% if is_granted('ROLE_MODERATOR') %}
+                            <li><a class="dropdown-item" href="{{ path('app_admin_dashboard') }}">Back office</a></li>
+                        {% endif %}
                         <li><a class="dropdown-item" href="{{ path('app_logout') }}">Se deconnecter</a></li>
                     </ul>
                 </li>

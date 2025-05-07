@@ -32,6 +32,7 @@ public function getFilters(): array
         new TwigFilter('replacePage', [$this, 'replacePage']),
         new TwigFilter('pathAvatarUser', [$this, 'pathAvatarUser']),
         new TwigFilter('getDevice', [$this, 'getDevice']),
+        new TwigFilter('checkRoute', [$this, 'checkRoute']),
     ];
 }
 
@@ -108,6 +109,10 @@ public function getFilters(): array
             return $iterable->getDevice();
         }
         return $iterable;
+    }
+
+    public function checkRoute(array $routes, string $routeName): bool{
+        return in_array($routeName, array_column($routes, 'route'));
     }
 
 }

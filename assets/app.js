@@ -24,13 +24,8 @@ import './js/form.js';
 import './js/show.js';
 import  './js/tom-select.js';
 import  './js/uppy.js';
+import  './js/templates/nav.js';
 
-// Importer les icônes Leaflet pour corriger un bug avec Webpack
-import markerIcon from 'leaflet/dist/images/marker-icon.png';
-import markerShadow from 'leaflet/dist/images/marker-shadow.png';
-import ol from "ol/dist/ol";
-
-const $ = require('jquery');
 
 const showMap = () => {
     const lat = document.getElementById('lat');
