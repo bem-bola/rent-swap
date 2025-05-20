@@ -21,7 +21,7 @@ readonly class DeviceFactory
      * @param Device $device
      * @param Device|null $parent
      * @param string $status
-     * @param array $categories
+     * @param array|null $categories
      * @param bool $isDiff
      * @param string $location
      * @param User|null $user
@@ -30,13 +30,13 @@ readonly class DeviceFactory
      */
     public function createWithCategory(
         Device $device,
-        Device $parent = null,
+        ?Device $parent = null,
         string $status = Constances::PENDING,
-        array $categories = [],
-        bool $isDiff = false,
+        ?array $categories = [],
+        ?bool $isDiff = false,
         string $location = '',
-        User $user = null,
-        \DateTime $date = null
+        ?User $user = null,
+        ?\DateTime $date = null
     ): ?Device
     {
 
@@ -68,7 +68,10 @@ readonly class DeviceFactory
         return $device;
     }
 
-    public function updateByDevice(Device $device, string $status = null): Device
+    /*
+     *
+     */
+    public function updateByDevice(Device $device): Device
     {
         $device->setUpdated(new \DateTime());
         if($device->getParent() == null) $device->setParent($device);

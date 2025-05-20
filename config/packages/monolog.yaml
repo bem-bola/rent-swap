@@ -9,6 +9,12 @@ monolog:
             level: debug
             channels: ["!event", "!request", "!doctrine", "!security"]
 
+        info_handlers:
+            type: rotating_file
+            path: "%kernel.logs_dir%/info.log"
+            level: info
+            channels: ~
+
         error_handlers:
             type: rotating_file
             path: "%kernel.logs_dir%/error.log"

@@ -25,7 +25,12 @@ class EmailFactory
      * @param Device|null $device
      * @return Email
      */
-    public function create(User $sender, User $receiver, string $content, string $object, string $adressSender = null, Device $device = null): Email
+    public function create(User $sender,
+                           User $receiver,
+                           string $content,
+                           string $object,
+                           ?string $adressSender = null,
+                           ?Device $device = null): Email
     {
         $email = new Email();
 

@@ -24,7 +24,7 @@ class MessageStandardService
      * @return string
      * @throws \Exception
      */
-    public function mailStandardStatusDevice(string $status, string $title, string $motif = null): string
+    public function mailStandardStatusDevice(string $status, string $title, ?string $motif = null): string
     {
         if($status === Constances::VALIDED) return sprintf("Bonne nouvelle ! Votre annonce intitulée « %s » a été validée et est désormais visible sur notre site.", $title);
         if($status === Constances::REJECTED) return sprintf("Votre annonce intitulée « %s » a été rejetée pour motif suivant: %s.", $title, $motif);
