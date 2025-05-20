@@ -5,6 +5,7 @@ namespace App\Entity;
 use App\Repository\DevicePictureRepository;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 #[ORM\Entity(repositoryClass: DevicePictureRepository::class)]
 class DevicePicture
@@ -12,6 +13,7 @@ class DevicePicture
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column(type: 'bigint')]
+    #[Groups(['device:read'])]
     private ?int $id = null;
 
     #[ORM\ManyToOne(targetEntity: Device::class)]
@@ -19,18 +21,23 @@ class DevicePicture
     private ?Device $device = null;
 
     #[ORM\Column(type: 'datetime')]
+    #[Groups(['device:read'])]
     private \DateTimeInterface $created;
 
     #[ORM\Column(type: 'datetime', nullable: true)]
+    #[Groups(['device:read'])]
     private ?\DateTimeInterface $deleted = null;
 
     #[ORM\Column(type: Types::TEXT)]
+    #[Groups(['device:read'])]
     private ?string $filename = null;
 
     #[ORM\Column(length: 255, nullable: true)]
+    #[Groups(['device:read'])]
     private ?string $alt = null;
 
     #[ORM\Column(length: 255, nullable: true)]
+    #[Groups(['device:read'])]
     private ?string $title = null;
 
     public function getId(): ?int

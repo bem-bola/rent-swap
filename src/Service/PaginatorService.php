@@ -37,8 +37,12 @@ class PaginatorService {
 
     /**
      * @throws Exception
+     * @param string $sql
+     * @param array $parameters
+     * @return false|mixed
      */
-    private function countDatas(string $sql, array $parameters){
+    private function countDatas(string $sql, array $parameters): mixed
+    {
         return $this->em
             ->getConnection()
             ->prepare("SELECT COUNT(*) FROM ($sql) as tab")
@@ -46,18 +50,34 @@ class PaginatorService {
             ->fetchOne();
     }
 
+
     /**
+     * @param ResultSetMapping $resultSetMapping
+     * @param $baseSql
+     * @param array $parameters
+     * @param array|null $pagination
+     * @param bool $count
+     * @return array|int|null
      * @throws Exception
      */
-    public function getDatasPaginator(ResultSetMapping $resultSetMapping, $baseSql, array $parameters = [], ?array $pagination = null): array
+    public function getDatasPaginator(
+        ResultSetMapping $resultSetMapping,
+        $baseSql,
+        array $parameters = [],
+        ?array $pagination = null,
+        bool $count = false): array|int|null
     {
 
+        $totalResult = $this->countDatas($baseSql, $parameters);
+
+        if($count === true) return $totalResult;
         $sql =  "$baseSql LIMIT :limit OFFSET :offset";
+
 
         $limit = $pagination['limit'] ?? 10;
         $page =  $pagination['page'] ?? 1;
         $offset = ($page-1)*$limit;
-        $totalResult = $this->countDatas($baseSql, $parameters);
+
 
         $parameters['limit'] = $limit;
         $parameters['offset'] = (int)$offset;
@@ -75,6 +95,66 @@ class PaginatorService {
             ],
             'items' => $query->getResult()
         ];
+    }
+
+    /**
+     * @throws Exception
+     */
+    public function getDataDataTable(ResultSetMapping $resultSetMapping, string $baseSql, array $queryParams = []): array
+    {
+
+        $parameters = [];
+
+        $this->addFilters($baseSql, $queryParams['search'], $parameters);
+
+        $totalResult = $this->countDatas($baseSql, $parameters);
+
+        $sql =  "$baseSql LIMIT :limit OFFSET :offset";
+
+        $parameters['limit'] = intval($queryParams['limit'] ?? 10);
+        $parameters['offset'] = intval($queryParams['offset'] ?? 1);
+
+
+        $query = $this->em->createNativeQuery($sql, $resultSetMapping);
+
+        $query->setParameters($parameters);
+
+        return [
+            'draw' => $queryParams['draw'] ?? 1,
+            'page' => $queryParams['page'] ?? 1,
+            'recordsTotal' => $totalResult,
+            'recordsFiltered' => $totalResult,
+            'data' => $query->getResult()
+        ];
+
+    }
+
+    /**
+     * @param string $sql
+     * @param array $filters
+     * @param array $parameters
+     * @return void
+     */
+    private function addFilters(string &$sql, array $filters, array &$parameters): void
+    {
+        if($filters != null) {
+            foreach ($filters as $filter => $value) {
+                if($value != null){
+                    if($filter === 'title'){
+                        $sql .= " AND LOWER(d.$filter) LIKE :$filter ";
+                        $parameters[$filter] = '%' . strtolower($value) . '%';
+                    }elseif(in_array($filter, ['parent_id', 'user_id'])){
+                        $sql .= " AND d.$filter = :$filter ";
+                        $parameters[$filter] = $value;
+                    }
+                    else{
+                        $sql .= " AND d.$filter = :$filter ";
+                        $parameters[$filter] = strtolower($value);
+                    }
+                }
+            }
+        }
+
     }
 
 }

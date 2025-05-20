@@ -33,7 +33,7 @@ services:
 
     App\Service\UploadFileService:
         arguments:
-            $dirnameUpload: '%kernel.project_dir%/public/upload/'
+            $dirnameUpload: '%kernel.project_dir%/public/uploads/'
 
     App\DataFixtures\AppFixtures:
         arguments:

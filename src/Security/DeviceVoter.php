@@ -42,7 +42,7 @@ class DeviceVoter extends Voter
             return false;
         }
 
-        if ($this->security->isGranted('ROLE_SUPER_ADMIN')) {
+        if ($this->security->isGranted('ROLE_MODERATOR')) {
             return true;
         }
 

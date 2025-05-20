@@ -1,6 +1,6 @@
 
 <!-- Sidebar -->
-<ul class="navbar-nav bg-gradient-primary sidebar sidebar-dark accordion" id="accordionSidebar">
+<ul class="navbar-nav bg-theme-dark-1 sidebar sidebar-dark accordion" id="accordionSidebar">
 
     <!-- Sidebar - Brand -->
     <a class="sidebar-brand d-flex align-items-center justify-content-center" href="{{ path('app_admin_dashboard') }}">
@@ -28,8 +28,14 @@
                 </a>
                 <div id="collapse-{{ loop.index  }}" class="collapse {{ show }}" aria-labelledby="heading-{{ loop.index  }}" data-parent="#accordionSidebar">
                     <div class="bg-white py-2 collapse-inner rounded">
-                        {% for child in item.children %}
-                            <a class="collapse-item {{  app.request.attributes.get('_route') == child.route ? 'active' : '' }}" href="{{ path(child.route) }}">{{ child.label }}</a>
+                        {% for key, child in item.children %}
+                            {% if key != 'show' %}
+                                <a class="collapse-item {{  app.request.attributes.get('_route') == child.route ? 'active' : '' }}"
+                               href="{{ path(child.route, child.queryParams is defined ? child.queryParams : {}) }}">{{ child.label }}</a>
+
+                                {% else  %}
+                                    <div class="collapse-item cursor-pointer {{  app.request.attributes.get('_route') == child.route ? 'active' : '' }}">{{ child.label }}</div>
+                            {% endif %}
                         {% endfor %}
                     </div>
                 </div>

@@ -1,6 +1,6 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}RentSwap - {{ device.title }}{% endblock %}
+{% block title %}Reusiix - {{ device.title }}{% endblock %}
 
 {% block main %}
 
@@ -23,7 +23,7 @@
                             <div class="carousel-slide px-auto col-10 mx-auto h-50 rounded-5 ">
                                 <div class="col-12 h-100 d-flex justify-content-center">
                                     <img class='h-auto object-fit-contain rounded-5 mw-100 mh-100 w-auto'
-                                         src="{{ asset('upload/devices/' ~ picture.filename ) }}"
+                                         src="{{ asset('uploads/devices/' ~ picture.filename ) }}"
                                          alt="{{ picture.alt }}" title="{{ picture.title }}">
                                 </div>
                             </div>

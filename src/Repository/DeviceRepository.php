@@ -8,6 +8,7 @@ use App\Entity\User;
 use App\Mapping\DeviceMapping;
 use App\Service\PaginatorService;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use Doctrine\DBAL\Exception;
 use Doctrine\Persistence\ManagerRegistry;
 use Knp\Component\Pager\PaginatorInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
@@ -114,6 +115,9 @@ class DeviceRepository extends ServiceEntityRepository
             ->getOneOrNullResult();
     }
 
+    /**
+     * @throws Exception
+     */
     public function findByUser(array $params, User $user)
     {
         $filters = $params['filters'] ?? [];
@@ -167,5 +171,124 @@ class DeviceRepository extends ServiceEntityRepository
             ->setMaxResults(10)
             ->getQuery()
             ->getResult();
+    }
+
+
+    /**
+     * @param array $params
+     * @param bool $count
+     * @return array|int|null
+     * @throws Exception
+     */
+    public function findAllNotDelete(array $params, bool $count = false)
+    {
+        $filters = $params['filters'] ?? [];
+
+        $sort = $params['orderby'] ?? [];
+
+        $sql = "SELECT d.*
+                FROM device d
+                LEFT JOIN (
+                    SELECT parent_id, MAX(created) AS max_created
+                    FROM device
+                    WHERE parent_id IS NOT NULL
+                    GROUP BY parent_id
+                ) latest ON d.parent_id = latest.parent_id AND d.created = latest.max_created
+                WHERE (d.parent_id IS NULL OR d.created = latest.max_created) 
+                    AND d.deleted IS NULL
+                ";
+
+        if(isset($filters['status']) && $filters['status'] != null) {
+            $sql .= " AND d.status = :status";
+            $parameters['status'] = $filters['status'];
+        }
+        if(isset($filters['deleted']) && $filters['deleted'] != null) {
+            $sql .= " AND d.deleted IS NOT NULL";
+        }
+
+        if(isset($filters['title']) && $filters['title'] != null) {
+            $sql .= " AND LOWER(d.title) LIKE :title";
+            $parameters['title'] = '%'.strtolower($filters['title']).'%';
+        }
+
+        return $this->paginatorService->getDatasPaginator(
+            $this->deviceMapping->createMapping(),
+            $sql,
+            $parameters ?? [],
+            $params['pagination'] ?? [],
+            $count
+        );
+    }
+
+
+    /**
+     * @param array $queryParams
+     * @param bool $count
+     * @return array
+     * @throws Exception
+     */
+    public function deviceDataTableNoDelete(array $queryParams, bool $count = false):array
+    {
+
+        $sql = "SELECT d.*
+                FROM device d
+                LEFT JOIN (
+                    SELECT parent_id, MAX(created) AS max_created
+                    FROM device
+                    WHERE parent_id IS NOT NULL
+                    GROUP BY parent_id
+                ) latest ON d.parent_id = latest.parent_id AND d.created = latest.max_created
+                WHERE (d.parent_id IS NULL OR d.created = latest.max_created) 
+                    AND d.deleted IS NULL
+                ";
+
+        return $this->paginatorService->getDataDataTable(
+            $this->deviceMapping->createMapping(),
+            $sql,
+            $queryParams
+        );
+    }
+
+    /**
+     * @throws Exception
+     */
+    public function historyDevice(array $queryParams, Device $device, bool $count = false):array
+    {
+
+        $queryParams['search']['parent_id'] = $device->getParent() ? $device->getParent()->getId() : $device->getId();
+
+        $sql = "SELECT d.* FROM device d WHERE d.created is not null";
+
+        return $this->paginatorService->getDataDataTable(
+            $this->deviceMapping->createMapping(),
+            $sql,
+            $queryParams
+        );
+    }
+
+    /**
+     * @throws Exception
+     */
+    public function getByUserDataTable(array $queryParams, int $idUser):array
+    {
+
+        $queryParams['search']['user_id'] = $idUser;
+
+        $sql = "SELECT d.*
+                FROM device d
+                LEFT JOIN (
+                    SELECT parent_id, MAX(created) AS max_created
+                    FROM device
+                    WHERE parent_id IS NOT NULL
+                    GROUP BY parent_id
+                ) latest ON d.parent_id = latest.parent_id AND d.created = latest.max_created
+                WHERE (d.parent_id IS NULL OR d.created = latest.max_created) 
+                ";
+
+        return $this->paginatorService->getDataDataTable(
+            $this->deviceMapping->createMapping(),
+            $sql,
+            $queryParams
+        );
     }
 }

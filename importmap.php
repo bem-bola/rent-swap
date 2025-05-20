@@ -195,9 +195,9 @@ return [
     'p-timeout' => [
         'version' => '6.1.4',
     ],
-    '@uppy/xhr-upload' => [
-        'version' => '4.3.3',
-    ],
+//    '@uppy/xhr-uploads' => [
+//        'version' => '4.3.3',
+//    ],
     '@uppy/core/lib/EventManager.js' => [
         'version' => '4.4.2',
     ],

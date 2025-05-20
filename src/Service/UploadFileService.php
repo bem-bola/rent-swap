@@ -2,6 +2,7 @@
 
 namespace App\Service;
 
+use PHPUnit\Util\Exception;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\DependencyInjection\Attribute\Autowire;
 use Symfony\Component\HttpFoundation\File\Exception\FileException;
@@ -15,9 +16,7 @@ class UploadFileService
         private readonly SluggerInterface $slugger,
         private readonly string           $dirnameUpload
     )
-    {
-
-    }
+    {}
 
     /**
      * @param UploadedFile $file
@@ -40,9 +39,8 @@ class UploadFileService
             return $newFilename;
         } catch (FileException|\Exception $e) {
             $this->logger->write(Constances::LEVEL_ERROR, $e->getMessage());
-
+            throw new Exception("Error upload file");
         }
-        return null;
     }
 
 }

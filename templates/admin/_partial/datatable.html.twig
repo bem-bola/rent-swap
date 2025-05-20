@@ -1,0 +1,59 @@
+
+<div class="card shadow mb-4 rounded-4 py-4 px-3 border-1 border-{{ color is defined ? color : 'secondary' }}">
+
+
+    <input type="hidden" name='datatable-info'
+           data-id="{{ id }}"
+           data-pathname="{{ pathname }}"
+           data-params-route="{{ paramsRoute is defined ? paramsRoute|json_encode|e('html_attr') : '' }}"
+           data-current-route="{{ app.request.attributes.get('_route') }}"
+    >
+
+    <div class="card-body">
+        <div class="table-responsive ">
+            <table class="table table-bordered table-datatable" id="{{ id }}">
+                <thead>
+                    <tr>
+                        {% for th in header %}
+                            <th class="{{ th.class is defined ? th.class : '' }} text-center">
+                                {{ th.label|capitalize }}
+                                <div>
+                                    {% if th.select is defined %}
+                                        <select id="filter-{{ th.select.name }}" name="{{ th.select.name is defined ? th.select.name }}" class="form-select mt-2 datatable-filters">
+                                            {% for option in th.select.options %}
+                                                <option value="{{ option.value }}"
+                                                        class="{{ option.class }}" {{ status is defined and option.value == status ? 'selected' : ''  }}
+                                                >
+                                                    {{ option.label }}
+                                                </option>
+                                            {% endfor %}
+                                        </select>
+
+
+                                        {% elseif th.input is defined %}
+                                            <input type="{{ th.input.type }}"
+                                                   class="form-control mt-2 datatable-filters {{ th.input.class is defined ? th.input.class : ''  }}"
+                                                   id="filter-{{ th.input.name }}" name="{{ th.input.name }}">
+
+                                        {% else %}
+                                            <input type="text" class="form-control mt-2" disabled>
+                                    {% endif %}
+
+
+                                </div>
+                            </th>
+                        {% endfor %}
+
+                    </tr>
+                </thead>
+                <tfoot>
+                    <tr>
+                        {% for th in header %}
+                            <th>{{ th.label|capitalize }}</th>
+                        {% endfor %}
+                    </tr>
+                </tfoot>
+            </table>
+        </div>
+    </div>
+</div>

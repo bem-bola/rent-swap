@@ -1,6 +1,6 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}RentSwap - Profile{% endblock %}
+{% block title %}Reusiix - Profile{% endblock %}
 
 {% block main %}
     {% set user = app.user %}
@@ -76,7 +76,7 @@
                                 <h3 class="fw-500 fs-5 text-capitalize">{{ device.title | length > 15 ?  device.title | slice(0,15) ~ '...': device.title }}</h3>
 
                                     <img class='rounded-4'
-                                         src="{{ asset('/upload/devices/' ~ filename) }}"
+                                         src="{{ asset('/uploads/devices/' ~ filename) }}"
                                          alt="{{ device.title }}">
 
 
@@ -87,7 +87,7 @@
 
                                 </div>
                                 {% if device.status == 'pending' or  device.status == '' %}
-                                    <div class="col-12 text-warning mt-2 fs-5">En attente de validation <i class="bi bi-hourglass-split "></i></div>
+                                    <div class="col-12 text-warning mt-2 fs-5">En attente de validation <i class="bi bi-hourglass-split"></i></div>
                                 {% elseif device.status == 'rejected' %}
                                     <div class="col-12 text-danger mt-2 fs-5">Rejeté <i class="bi bi-x-lg "></i></div>
                                 {% elseif device.status == 'draft' %}

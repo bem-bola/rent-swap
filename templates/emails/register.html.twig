@@ -1,14 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-BmbxuPwQa2lc/FVzBcNJ7UAyJxM6wuqIj61tLrc4wSX0szH/Ev+nYRRuWlolflfl" crossorigin="anonymous">
+    <title>Document</title>
+</head>
+<body>
 <p>Bonjour {{ user.firstname|capitalize }}, </p>
 
 <div>
-    Merci de vous être inscrit sur notre site ! <br>
+    Merci de vous être inscrit sur notre site ! <br><br>
 
-    Pour activer votre compte et finaliser votre inscription, veuillez cliquer sur le lien ci-dessous : <br>
+    Pour activer votre compte et finaliser votre inscription, veuillez cliquer sur le lien ci-dessous : <br><br>
 
-    <a href="{{ absolute_url(path('app_register_verify_user', {token: token})) }}">Lien</a> <br>
+    <a href="{{ absolute_url(path('app_register_verify_user', {token: token})) }}">Je confirme mon compte</a> <br><br>
 
     À très vite, <br><br>
 
-    L’équipe <a href="{{ absolute_url(path('app_home')) }}">Reusiix</a> <br>
+    L’équipe <a href="{{ absolute_url(path('app_home')) }}">Reusiix</a> <br><br>
 </div>
 
+</body>
+</html>

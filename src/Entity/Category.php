@@ -7,6 +7,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Annotation\Groups;
 use Symfony\Component\Uid\Uuid;
 
 #[ORM\Entity(repositoryClass: CategoryRepository::class)]
@@ -15,12 +16,15 @@ class Category
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column(type: 'bigint')]
+    #[Groups(['device:read'])]
     private ?int $id = null;
 
     #[ORM\Column(type: 'string', length: 150)]
+    #[Groups(['device:read'])]
     private string $name;
 
     #[ORM\Column(type: Types::GUID)]
+    #[Groups(['device:read'])]
     private ?string $slug = null;
 
     #[ORM\ManyToMany(targetEntity: Device::class, inversedBy: 'devices', cascade: ['persist'])]
@@ -31,11 +35,6 @@ class Category
         $this->devices = new ArrayCollection();
         $this->slug = Uuid::v1();
     }
-
-//    public function __toString(): string
-//    {
-//        return $this->getName(); // ou autre champ que tu veux afficher dans le select
-//    }
 
     public function getId(): ?int
     {

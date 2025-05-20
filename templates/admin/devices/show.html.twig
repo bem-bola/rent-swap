@@ -1,0 +1,345 @@
+{% extends 'admin/base.html.twig' %}
+
+{% block title %}Reusiix - Détail appareil{% endblock %}
+
+{% block main %}
+
+    {% if device.status == 'pending'  %}
+        {% set color = 'warning' %}
+        {% set message = 'Annonce en attente de validation' %}
+    {% elseif device.status == 'validated' %}
+        {% set color = 'success' %}
+        {% set message = 'Annonce est déjà en ligne' %}
+    {% elseif device.status == 'draft' %}
+        {% set color = 'info' %}
+        {% set message = "Cette annonce n'est encore publié, il est dans le brouillon" %}
+    {% elseif device.status == 'deleted' or device.status == 'rejected' %}
+        {% set color = 'danger' %}
+        {% set message = "Annonce suuprimé ou réjetée" %}
+    {% endif %}
+    {% include '_partial/alert_message.html.twig' with {
+        color: color,
+        messsage: message
+    } %}
+
+    <h1 class="h3 mb-2 text-gray-800 fw-bolder">{{ device.title|capitalize }} </h1>
+
+    {% include 'admin/_partial/card_dashboard.html.twig' with {
+        datas: [
+            {
+                title: '',
+                cards: [
+                {
+                    title: 'Détail',
+                    id: 'details',
+                    icon: 'eye',
+                    color: color
+                },
+                {
+                    title: 'Images',
+                    id: 'images',
+                    icon: 'card-image',
+                    color: color
+                },
+                {
+                    title: 'Faire action sur cette annonce',
+                    id: 'update',
+                    icon: 'gear',
+                    color: color
+                },
+                {
+                    title: 'Historique',
+                    id: 'historics',
+                    data: historics != null ? historics|length : 0,
+                    icon: 'clock-history',
+                    color: color
+                },
+                {
+                    title: 'Utilisateur',
+                    id: 'user',
+                    pathname: 'app_admin_users_show',
+                    data: device.user.firstname ~ ' ' ~ device.user.lastname,
+                    queryparams: { id: user.id },
+                    icon: 'person',
+                    color: color
+                },
+                {
+                    title: 'Historique message',
+                    id: 'history-message',
+                    icon: 'chat',
+                    color: color
+                },
+
+            ]
+            },
+
+
+        ]
+    } %}
+
+
+<div id="details" class="mb-5">
+    <h3 class="px-1 fs-4 mb-3">Détails</h3>
+
+    <div class="card shadow mb-4 rounded-4 py-4 px-3 border-1 border-{{ color }}">
+
+        <div class="row gap-2 mb-2 px-4">
+            <div class=" col-12 row">
+                <h4 class="fs-6 fw-semibold col-1">Titre</h4>
+                <p class="col">{{ device.title }}</p>
+            </div>
+
+            <div class="col-12 row">
+                <h4 class="fs-6 fw-semibold col-1">Télephone</h4>
+                <p class="col">{{ device.phoneNumber }}</p>
+            </div>
+
+            <div class="col-12 row">
+                <h4 class="fs-6 fw-semibold col-1">Prix</h4>
+                <p class="col">{{ device.price }}</p>
+            </div>
+
+            <div class="col-12 row">
+                <h4 class="fs-6 fw-semibold col-1">Quantité</h4>
+                <p class="col">{{ device.quantity }}</p>
+            </div>
+
+            <div class="col-12 row">
+                <h4 class="fs-6 fw-semibold col-1">Type</h4>
+                <p class="col">{{ device.type.name|capitalize }}</p>
+            </div>
+
+            <div class="col-12 row">
+                <h4 class="fs-6 fw-semibold col-1">Ville</h4>
+                <p class="col">{{ device.location|capitalize }}</p>
+            </div>
+
+        </div>
+
+        <div class="row gap-2 px-4">
+            <div class=" col-12 row">
+                <h4 class="fs-6 fw-semibold col-1">Description</h4>
+                <p class="col">{{ device.body }}</p>
+            </div>
+
+            <div class=" col-12 row">
+                <h4 class="fs-6 fw-semibold col-1">Catégories</h4>
+                <ul class="d-flex text-decoration-none col gap-1">
+                    {% for category in device.categories %}
+                        <li class=" border-0 m-0 ps-0"><a href="#" class="btn btn-danger">{{ category.name }}</a></li>
+                    {% endfor %}
+                </ul>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+<div id="images" class="mb-5">
+    <h3 class="px-1 fs-4 mb-3">Images</h3>
+
+    <div class="card shadow mb-4 rounded-4 py-4 px-3 border-1 border-{{ color }}">
+        {% if images['items']|length > 0 %}
+            <div class="d-flex flex-wrap gap-2">
+                {% for image in images['items'] %}
+                    <div class="col-2 rounded-5">
+                        <img class="col-12 pe-auto" src="{{ asset('uploads/devices/' ~ image.filename) }}" alt="{{ image.alt }}">
+                    </div>
+                {% endfor %}
+            </div>
+            {% else %}
+                <div>Aucune image</div>
+        {% endif %}
+    </div>
+</div>
+
+
+<div id="update" class="mb-5">
+    <h3 class=" fs-4 mb-3">Faire action sur cette annonce</h3>
+
+    <div class="card rounded-4 px-4 py-4 border-1 border-{{ color }}">
+
+        {{ form_start(form) }}
+
+        <div class="mb-3 col-12 d-flex">
+            <h4 class="text-{{ color }} fs-6">{{ message }}</h4>
+        </div>
+
+        <div class="mb-3 col-12 d-flex">
+            <div class="col-2">
+                {{ form_label(form.status, '', {
+                    'label_attr' : {
+                        'class': 'fw-semibold  form-label'
+                    }
+                }) }}
+                <span class="text-danger">*</span>
+            </div>
+
+            <div>
+                {{ form_widget(form.status, {
+                    'attr': {
+                        'class': 'form-select'
+                    }
+                }) }}
+            </div>
+
+        </div>
+
+        <div class="mb-3 col-12 d-flex flex-wrap">
+            {{ form_label(form.reason, '', {
+                'label_attr' : {
+                    'class': 'fw-semibold col-2 form-label'
+                }
+            }) }}
+
+            <div class="col-6 px-0">
+                {{ form_widget(form.reason, {
+                    'attr': {
+                        'class': statusForm != null ? 'border-1 border-danger form-control fw-semibold col-12' : 'form-control fw-semibold col-12',
+                        'placeholder': "Motif"
+                    }
+                }) }}
+
+                {% if statusForm != null %}
+                    <div class="col-12 mt-2 px-0">
+                        <small class="text-danger">Vous supprimer ou rejeter une annonce vous devez remplir le motif</small>
+                    </div>
+                {% endif %}
+
+            </div>
+
+
+        </div>
+
+        <div class="mb-3 col-12 d-flex">
+            {{ form_label(form.message, '', {
+                'label_attr' : {
+                    'class': 'fw-semibold col-2 form-label'
+                }
+            }) }}
+
+                {{ form_widget(form.message, {
+                    'attr': {
+                        'class': 'form-control',
+                        'cols': "100",
+                        'rows': "10",
+                        'placeholder': "Message à envoyer à l'utilisateur"
+                    }
+                }) }}
+
+        </div>
+        <div class="col-12 d-flex justify-content-end">
+            <button type="submit" class="btn btn-success">Valider</button>
+        </div>
+    {{ form_end(form) }}
+    </div>
+
+</div>
+
+
+<div id="historics" class="mb-3">
+    <h3 class="px-1 fs-4 mb-3">Historique</h3>
+
+    {% include 'admin/_partial/datatable.html.twig' with {
+        id: 'devices-history-datatable',
+        pathname: 'app_admin_devices_history_parent',
+        paramsRoute:{ slug: device.slug },
+        header: [
+            {
+                name: 'title',
+                label: 'titre',
+                class: 'col-3',
+                input:
+                {
+                    name: 'title',
+                    type: 'text'
+                }
+
+            },
+            {
+                name: 'price',
+                label: 'prix',
+                class: 'col-1'
+            },
+            {
+                name: 'status',
+                label: 'Status',
+                class: 'col-1',
+                select:
+                {
+                    name: 'status',
+                    options: [
+                    { label: 'Selectionner', value: null, class: 'text-warning'},
+                    { label: 'En attente', value: 'pending', class: 'text-warning'},
+                    { label: 'Validé', value: 'validated', class: 'text-success'},
+                    { label: 'Rejeté', value: 'rejected', class: 'text-danger'},
+                    { label: 'Brouillon', value: 'draft', class: 'text-info'},
+                ]
+
+
+                }
+
+            },
+            {
+                name: 'location',
+                label: 'Ville',
+                class: 'col-2'
+            },
+            {
+                name: 'created',
+                label: 'Date de création',
+            },
+            {
+                name: 'updated',
+                label: 'Dernière modification'
+            },
+            {
+                name: 'show',
+                label: 'Voir le détail'
+            }
+        ]
+    } %}
+</div>
+
+<div id="history-message">
+    <h3 class="px-1 fs-4 mb-3">Historique message</h3>
+
+    <div class="card rounded-4 px-4 py-4 border-1 border-{{ color }}">
+
+        {% for key, email in historyEmails  %}
+            <div class="card card-body mb-2">
+                <h3 class="text-decoration-none fs-6 fw-bold text-dark user-select-auto cursor-pointer"
+                    data-toggle="collapse"
+                    data-target="#collapse-{{ key }}"
+                    aria-expanded="true"
+                    aria-controls="collapse-{{ key }}">
+                    <i class="bi bi-plus-circle "></i>
+                    <span>{{ email.object }}</span>
+                </h3>
+
+                <div class="collapse mt-2" id="collapse-{{ key }}">
+
+                    <div>{{ email.content|nl2br }}</div>
+                    <div class="mt-2">
+                        <span class="text-success">
+                            Envoyé par {{ email.sender.firstname|capitalize }} {{ email.sender.lastname|capitalize }}, le {{ email.created|formatDateFr }}
+                        </span>
+
+                    </div>
+
+                </div>
+            </div>
+
+        {% endfor %}
+
+    </div>
+
+</div>
+
+{% endblock %}
+
+
+
+
+
+

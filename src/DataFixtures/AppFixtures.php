@@ -8,6 +8,7 @@ use App\Entity\DevicePicture;
 use App\Entity\TypeDevice;
 use App\Entity\TypeUser;
 use App\Entity\User;
+use App\Service\Constances;
 use App\Service\HttpClientService;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Persistence\ObjectManager;
@@ -171,6 +172,8 @@ class AppFixtures extends Fixture
 
         $devicesData =  $this->getDataFile('device');
 
+        $status = [Constances::PENDING, Constances::VALIDED, Constances::REJECTED, Constances::DELETED, Constances::DRAFT];
+
         $results = [];
         foreach ($devicesData as $deviceData) {
             $device = new Device();
@@ -178,7 +181,7 @@ class AppFixtures extends Fixture
             $device->setBody($deviceData->body);
             $device->setPrice($deviceData->price);
             $device->setTitle($deviceData->title);
-            $device->setStatus('pending');
+            $device->setStatus($status[rand(0,4)]);
             $device->setShowPhone($deviceData->showPhone);
             $device->setCreated(new \DateTime($deviceData->created));
             $device->setLocation($deviceData->location);

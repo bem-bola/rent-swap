@@ -25,6 +25,7 @@ readonly class DeviceFactory
      * @param bool $isDiff
      * @param string $location
      * @param User|null $user
+     * @param \DateTime|null $date
      * @return Device|null
      */
     public function createWithCategory(
@@ -34,7 +35,8 @@ readonly class DeviceFactory
         array $categories = [],
         bool $isDiff = false,
         string $location = '',
-        User $user = null
+        User $user = null,
+        \DateTime $date = null
     ): ?Device
     {
 
@@ -55,7 +57,9 @@ readonly class DeviceFactory
 
         if($location != null ) $device->setUser($user);
 
-        $device->setCreated(new \DateTime());
+        if($date != null) $device->setCreated(new \DateTime());
+
+        $device->setUpdated(new \DateTime());
 
         $this->deviceRepository->save($device);
 
@@ -108,18 +112,26 @@ readonly class DeviceFactory
         $newDevice->setQuantity($device->getQuantity());
         $newDevice->setLocation($device->getLocation());
         $newDevice->setLocation($device->getLocation());
+        $newDevice->setCreated($device->getCreated());
 
         return $newDevice;
     }
 
     public function setStatus(Device $device, string $status): Device{
 
-        if(in_array($status, Constances::ARRAY_STATUS)) $device->setStatus($status);
+        if(!in_array($status, Constances::ARRAY_STATUS)) throw new \Exception('Status is not valid');
+
+        $device->setStatus($status);
 
         if($status === Constances::DELETED) $device->setDeleted(new \DateTime());
+        if($status === Constances::VALIDED) $device->setValidated(new \DateTime());
 
         $this->deviceRepository->save($device);
 
+        $this->logger->info(sprintf('Device %s updated status: "%s" - class: %s', $device->getId(), $status, __CLASS__));
+
+
         return $device;
     }
+
 }

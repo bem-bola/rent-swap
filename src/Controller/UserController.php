@@ -18,6 +18,7 @@ use App\Service\Constances;
 use App\Service\DeviceService;
 use App\Service\LoggerService;
 use App\Service\UploadFileService;
+use Doctrine\DBAL\Exception;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Finder\Exception\AccessDeniedException;
@@ -98,17 +99,10 @@ class UserController extends AbstractController
         ]);
     }
 
-//    #[Route(path: '/', name: 'home')]
-//    public function profile(): Response
-//    {
-//        return $this->render('security/profile.html.twig', [
-//            'data' => $this->deviceRepository->findByUser([], $this->getUser()),
-//        ]);
-//    }
-
     /**
      * @param Request $request
      * @return Response
+     * @throws Exception
      */
     #[Route(path: '/devices', name: 'devices')]
     public function devices(Request $request): Response
@@ -222,7 +216,7 @@ class UserController extends AbstractController
 
             $status = $this->deviceService->handleFormStatus($device, $form);
 
-            $this->deviceFactory->createWithCategory($device, null, $status, $categories, false, $location, $this->getUser());
+            $this->deviceFactory->createWithCategory($device, null, $status, $categories, false, $location, $this->getUser(), new \DateTime());
 
             return $this->deviceService->redirect($form, ['slug' => $device->getSlug()], $this->getUser());
         }
@@ -257,7 +251,7 @@ class UserController extends AbstractController
      * @param Device $device
      * @return Response
      */
-    #[Route(path: '/device/images/upload/{slug}', name: 'upload_image_device', options: ["expose" => true])]
+    #[Route(path: '/device/images/uploads/{slug}', name: 'upload_image_device', options: ["expose" => true])]
     public function categoriesDevices(Request $request, Device $device): Response{
 
         try {

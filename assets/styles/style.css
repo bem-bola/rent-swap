@@ -16,6 +16,9 @@ body {
 	position: relative;
 	aspect-ratio: 1 / 1;
 }
+.cursor-pointer{
+	cursor: pointer;
+}
 ul:hover * {
 	-webkit-animation-play-state: paused;
 	        animation-play-state: paused;
