@@ -15,16 +15,38 @@ device:
 
     all:
       label: "Tous les appareils"
-      route: "app_admin_dashboard"
-
+      route: "app_admin_devices_all"
 
     valid:
       label: "Les appareils à valider"
-      route: "app_admin_dashboard"
+      route: "app_admin_devices_pending"
+      queryParams:
+        status: 'pending'
 
     search:
       label: "Chercher un appareil"
-      route: "app_admin_dashboard"
+      route: "app_admin_devices_all"
+
+    show:
+      label: "Détail d'un appareil"
+      route: "app_admin_devices_show"
+      queryParams:
+        slug: 'null'
+
+user:
+  label: "Utilisateurs"
+  icon: 'person'
+  children:
+
+    all:
+      label: "Tous les utilisateurs"
+      route: "app_admin_devices_all"
+
+    show:
+      label: "Détail d'un utilisateur"
+      route: "app_admin_users_show"
+      queryParams:
+        id: 'null'
 
 category:
   label: "Catégories"
@@ -38,4 +60,5 @@ category:
     add:
       label: "Ajouter une catégorie"
       route: "app_home"
+
 

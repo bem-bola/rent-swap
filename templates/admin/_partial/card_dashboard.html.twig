@@ -1,0 +1,40 @@
+{%  for data in datas %}
+    <div class="mb-3">
+
+        <div class="d-sm-flex align-items-center justify-content-between mb-2 px-2">
+            <h2 class="h3 mb-0 text-gray-800 fs-4">{{ data.title|capitalize }}</h2>
+        </div>
+
+        <div class="row">
+            {% for card in data.cards %}
+                <div class="col-xl-3 col-md-6 mb-4">
+
+                    <a href="
+                            {% if card.pathname is defined %}
+                                {{ path(card.pathname, card.queryparams is defined ? card.queryparams : {}) }}
+
+                                {% elseif card.id is defined %} #{{ card.id  }}
+                            {% endif %}"
+                       class="card border-left-{{ card.color }} shadow h-100 py-4 rounded-4 text-decoration-none">
+
+                        <div class="card-body">
+                            <div class="row no-gutters align-items-center">
+                                <div class="col mr-2">
+                                    <div class="text-xs font-weight-bold text-{{ card.color }} text-uppercase mb-1">
+                                        {{ card.title }}</div>
+                                    <div class="h5 mb-0 font-weight-bold text-gray-800">{{ card.data is defined ? card.data : '' }}</div>
+                                </div>
+
+                                <div class="col-auto">
+                                    <i class="bi bi-{{ card.icon }} fs-1 text-gray-300 "></i>
+                                </div>
+                            </div>
+                        </div>
+                    </a>
+                </div>
+            {% endfor %}
+        </div>
+
+    </div>
+
+{% endfor %}

@@ -6,6 +6,7 @@ use App\Entity\User;
 use App\Factory\UserFactory;
 use App\Form\RegistrationFormType;
 use App\Repository\UserRepository;
+use App\Service\Constances;
 use App\Service\JWTService;
 use App\Service\SendEmailService;
 use Doctrine\ORM\EntityManagerInterface;
@@ -87,15 +88,10 @@ class RegistrationController extends AbstractController
 
             // On vérifie qu'on a bien un user et qu'il n'est pas déjà activé
             if($user && !$user->isVerified()){
-               $this->userFactory->verified($user);
+               $this->userFactory->updateStatus($user, Constances::VALIDED, $user);
                 return $this->redirectToRoute('app_home');
             }
         }
-
-
-
-
-
 
         $this->addFlash('danger', 'Le token est invalide ou a expiré');
         return $this->redirectToRoute('app_login');

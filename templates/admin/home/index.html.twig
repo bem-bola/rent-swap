@@ -1,11 +1,93 @@
 {% extends 'admin/base.html.twig' %}
 
-{% block title %}RentSwap - Home{% endblock %}
+{% block title %}Reusiix - Home{% endblock %}
 
 {% block main %}
 
-    <h1>Admin</h1>
+    {% include 'admin/_partial/card_dashboard.html.twig' with {
+        datas: [
+            {
+                title: 'appareils',
+                cards: [
+                    {
+                        title: 'Total de tous les appareils',
+                        pathname: 'app_admin_devices_all',
+                        data: lengthDevice,
+                        icon: 'hdd',
+                        color: 'primary'
+                    },
+                    {
+                        title: 'En attente de validation',
+                        pathname: 'app_admin_devices_all',
+                        queryparams: { status: 'pending' },
+                        data: lengthDevicePending,
+                        icon: 'hourglass',
+                        color: 'warning'
+                    },
+                    {
+                        title: 'Validés',
+                        pathname: 'app_admin_devices_all',
+                        data: lengthDeviceValidated,
+                        queryparams: { status: 'validated' },
+                        icon: 'check-lg',
+                        color: 'success'
+                    },
+                    {
+                        title: 'Chercher un appareil',
+                        pathname: 'app_admin_devices_all',
+                        icon: 'search',
+                        color: 'info'
+                    }
+                ]
+            },
 
+
+            {
+                title: 'catégories',
+                cards: [
+                    {
+                        title: 'Voir toutes les catégories',
+                        pathname: 'app_admin_category_all',
+                        data: lengthCategory,
+                        icon: 'collection',
+                        color: 'primary'
+                    },
+                    {
+                        title: 'Ajouter une nouvelle catégorie',
+                        pathname: 'app_admin_category_all',
+                        icon: 'plus',
+                        color: 'success'
+                    },
+                    {
+                        title: 'Chercher une catégorie',
+                        pathname: 'app_admin_devices_all',
+                        icon: 'search',
+                        color: 'info'
+                    }
+                ]
+            },
+
+
+            {
+                title: 'Utilisateurs',
+                cards: [
+                {
+                    title: 'Les utilisateurs',
+                    pathname: 'app_admin_category_all',
+                    data: lengthCategory,
+                    icon: 'person',
+                    color: 'primary'
+                },
+                {
+                    title: 'Chercher un utilisateur',
+                    pathname: 'app_admin_devices_all',
+                    icon: 'search',
+                    color: 'info'
+                }
+            ]
+            },
+        ]
+    } %}
 
 {% endblock %}
 

@@ -1,0 +1,90 @@
+<div class="me-4 d-lg-block">
+    <section class="container shadow-sm rounded-3 bg-theme-white-2 fs-6 py-3 bg-white">
+        <form class="container d-sm-flex d-md-flex flex-wrap"
+              hx-get="{{ path('app_device_search_by_form') }}"
+              hx-target="#result"
+              hx-swap="outerHTML"
+            >
+            <div class="col-10 ms-3 mb-4">
+                <label for="search-item" class="">Recherche</label>
+                <input type="text"
+                       class="form-control rounded-3 "
+                       id="search-item"
+                       name="filters[title]"
+                       autocomplete="off"
+                       value="{{ filters.title is defined ? filters.title : ''}}"
+                       placeholder="Rechercher"
+                >
+            </div>
+            <div class="col-10 ms-3 mb-4">
+                <label for="search-category" class="">Catégories</label>
+
+                <select class="form-select rounded-3"
+                        id="search-category"
+                        name="filters[category]"
+                        placeholder="">
+                    <option class="text-black-50" value="">Selectionner</option>
+                    {% for category in categories %}
+                        <option class="text-capitalize"
+                                value="{{ category.slug }}"
+                                {{ filters.category is defined and filters.category == category.slug ? 'selected' : ''}}>{{ category.name }}</option>
+                    {% endfor %}
+                </select>
+
+            </div>
+            <div class="col-10 ms-3 mb-4">
+                <div class="input-group" id="city-search-content">
+                    <label for="search-city" class="col-12">Localisation</label>
+                    <input type="text"
+                           class="form-control rounded-start-3 border-end-0"
+                           id="search-city"
+                           name="filters[location]"
+                           autocomplete="off"
+                           value="{{ filters.location is defined ? filters.location : ''}}"
+                           placeholder="Localisation">
+                    <span class="input-group-text rounded-end-3 btn-empty-input"><i class="bi bi-x-circle"></i></span>
+                </div>
+
+                <div class="rounded-3 shadow-sm bg-white mt-2 position-relative">
+                    <ul class="py-2 position-absolute z-1 bg-white col-12 d-none" id="city-options">
+                        <li class="city-name py-1 color-theme-dark-olive-green col-12" data-value=""></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="col-10 ms-3 mb-4">
+                <label class="col-12">Prix</label>
+                <div class="d-flex">
+                    <div class="input-group me-2" id="price-min">
+                        <input type="text"
+                               class="form-control rounded-start-3 border-end-0 filter-price"
+                               name="filters[priceMin]"
+                               placeholder="Minimum"
+                               value="{{ filters.priceMin is defined ? filters.priceMin : ''}}"
+                        >
+                        <span class="input-group-text border-end-3 rounded-end-3">€</span>
+                    </div>
+
+                    <div class="input-group" id="price-max">
+                        <input type="text"
+                               class="form-control rounded-start-3 border-end-0 filter-price"
+                               placeholder="Maximum"
+                               name="filters[priceMax]"
+                               value="{{ filters.priceMax is defined ? filters.priceMax : ''}}"
+
+                        >
+                        <span class="input-group-text border-end-3 rounded-end-3">€</span>
+                    </div>
+                </div>
+            </div>
+
+            <input type="hidden" name="pagination[page]" value="1">
+            <input type="hidden" name="pagination[limit]" value="10">
+
+            <div class="ms-3 mb-3 col-12">
+                <button type='submit' class="bg-theme-dark color-theme-white border-0 px-1 py-2 rounded-2 col-4 me-1">Rechercher</button>
+                <button class="bg-transparent border-1 border-dark px-1 py-2 rounded-2 col-6 text-black-50 empty-filter">Effacer les filtres</button>
+            </div>
+
+        </form>
+    </section>
+</div>

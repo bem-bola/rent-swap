@@ -22,7 +22,7 @@ class DropzoneType extends AbstractType
                     'multiple' => 'multiple',
                     'placeholder' => 'Cliquez-déposez des images ou cliquez pour pour parcourir',
                     'data-dropzone-action' => 'uploadFiles',
-                    'data-dropzone-auto-upload' => 'true',
+                    'data-dropzone-auto-uploads' => 'true',
 
                 ],
                 'constraints' => [

@@ -6,10 +6,13 @@ use App\Entity\Conversation;
 use App\Entity\Message;
 use App\Entity\User;
 use App\Repository\MessageRepository;
+use App\Service\LoggerService;
 
 class MessageFactory
 {
-    public function __construct(private readonly MessageRepository $messageRepository) {}
+    public function __construct(
+        private readonly MessageRepository $messageRepository
+    ) {}
 
     public function create(User $author, string $content, Conversation $conversation): Message
     {

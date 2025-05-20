@@ -25,14 +25,15 @@ class AppExtension extends AbstractExtension
 public function getFilters(): array
 {
     return [
+        new TwigFilter('checkRoute', [$this, 'checkRoute']),
         new TwigFilter('filterUser', [$this, 'excludeCurrentUser']),
         new TwigFilter('firstFilename', [$this, 'firstFilename']),
-        new TwigFilter('typeUserFrench', [$this, 'typeUserFrench']),
         new TwigFilter('formatDateFr', [$this, 'formatDateFr']),
-        new TwigFilter('replacePage', [$this, 'replacePage']),
-        new TwigFilter('pathAvatarUser', [$this, 'pathAvatarUser']),
         new TwigFilter('getDevice', [$this, 'getDevice']),
-        new TwigFilter('checkRoute', [$this, 'checkRoute']),
+        new TwigFilter('pathAvatarUser', [$this, 'pathAvatarUser']),
+        new TwigFilter('replacePage', [$this, 'replacePage']),
+        new TwigFilter('roleFr', [$this, 'roleFr']),
+        new TwigFilter('typeUserFrench', [$this, 'typeUserFrench']),
     ];
 }
 
@@ -100,7 +101,7 @@ public function getFilters(): array
 
     public function pathAvatarUser(User $user): string
     {
-        if($user->getAvatar()) return '/upload/avatars/' . $user->getAvatar()->getFilename();
+        if($user->getAvatar()) return '/uploads/avatars/' . $user->getAvatar()->getFilename();
         else return sprintf("/img/letters/%s.png", substr($user->getFirstname(), 0, 1));
     }
 
@@ -113,6 +114,14 @@ public function getFilters(): array
 
     public function checkRoute(array $routes, string $routeName): bool{
         return in_array($routeName, array_column($routes, 'route'));
+    }
+
+    public function roleFr(array $role): string
+    {
+        if(in_array('ROLE_ADMIN', $role)) return 'administrateur';
+        if(in_array('ROLE_MODERATOR', $role)) return 'moderateur';
+
+        return 'utilisateur';
     }
 
 }

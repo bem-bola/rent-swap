@@ -21,6 +21,7 @@ const uploadXHR = () => {
     const routeName = dashbordElement ? dashbordElement.dataset.route : null;
     const name = dashbordElement ? dashbordElement.dataset.name : null;
 
+    console.log(routeName, name, param, dashbordElement)
     const uppy = new Uppy({
         autoProceed: false,
         locale: French,
@@ -56,7 +57,7 @@ const uploadXHR = () => {
         return uploadButton.innerText = "Téleverser le(s) " + uppy.getFiles().length + " fichier(s) chargé(s)"
     }
 
-    const uploadButton = document.querySelector('.uppy-StatusBar-actionBtn--upload')
+    const uploadButton = document.querySelector('.uppy-StatusBar-actionBtn--uploads')
 
     if (uploadButton) {
 

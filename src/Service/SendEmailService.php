@@ -8,7 +8,7 @@ use Symfony\Component\Mime\Address;
 
 class SendEmailService
 {
-    public function __construct(private readonly MailerInterface $mailer)
+    public function __construct(private MailerInterface $mailer)
     {}
 
     /**

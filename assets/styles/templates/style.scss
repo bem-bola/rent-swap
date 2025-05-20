@@ -1,7 +1,10 @@
 @charset "UTF-8";
+@import "./_variables.scss";
+@import "./datatable.scss";
 @import "~bootstrap/scss/bootstrap";
 @import "~bootstrap-icons/font/bootstrap-icons.css";
 @import "icon.css";
+
 :root {
   --blue: #4e73df;
   --indigo: #6610f2;
@@ -45,9 +48,22 @@ html {
   -webkit-text-size-adjust: 100%;
   -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
 }
+.bg-theme-gray-300{
+  background-color: $color-theme-gray-300;
+}
+.bg-theme-gray-400{
+  background-color: $color-theme-gray-400;
+}
+.bg-theme-dark-1{
+  background-color: $color-theme-dark-1;
+}
 
 article, aside, figcaption, figure, footer, header, hgroup, main, nav, section {
   display: block;
+}
+
+li{
+  list-style: none !important;
 }
 
 body {
@@ -11270,4 +11286,7 @@ footer.sticky-footer .copyright {
 
 body.sidebar-toggled footer.sticky-footer {
   width: 100%;
+}
+.cursor-pointer{
+  cursor: pointer;
 }

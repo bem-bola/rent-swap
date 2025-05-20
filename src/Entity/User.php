@@ -10,6 +10,7 @@ use Doctrine\ORM\Mapping as ORM;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 #[ORM\Entity(repositoryClass: UserRepository::class)]
 #[ORM\UniqueConstraint(name: 'UNIQ_IDENTIFIER_EMAIL', fields: ['email'])]
@@ -19,15 +20,18 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column(type: 'bigint')]
+    #[Groups(['device:read'])]
     private ?int $id = null;
 
     #[ORM\Column(length: 180)]
+    #[Groups(['device:read'])]
     private ?string $email = null;
 
     /**
      * @var list<string> The user roles
      */
     #[ORM\Column]
+    #[Groups(['device:read'])]
     private array $roles = [];
 
     /**
@@ -47,18 +51,23 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     private ?string $siret = null;
 
     #[ORM\Column(type: 'boolean', nullable: true)]
+    #[Groups(['device:read'])]
     private bool $isVerified;
 
     #[ORM\Column(type: 'boolean', nullable: true)]
+    #[Groups(['device:read'])]
     private ?bool $isDeleted = null;
 
     #[ORM\Column(type: 'string', length: 100)]
+    #[Groups(['device:read'])]
     private string $username;
 
     #[ORM\Column(type: 'string', length: 255, nullable: true)]
+    #[Groups(['device:read'])]
     private ?string $firstname = null;
 
     #[ORM\Column(type: 'string', length: 255, nullable: true)]
+    #[Groups(['device:read'])]
     private ?string $lastname = null;
 
     #[ORM\Column(nullable: true)]
@@ -79,10 +88,29 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\ManyToOne]
     private ?Media $avatar = null;
 
+    /**
+     * @var Collection<int, Email>
+     */
+    #[ORM\OneToMany(targetEntity: Email::class, mappedBy: 'sender')]
+    private Collection $emails;
+
+    #[ORM\Column(nullable: true)]
+    private ?\DateTime $deleted = null;
+
+    #[ORM\Column(nullable: true)]
+    private ?\DateTime $banned = null;
+
+    #[ORM\Column(nullable: true)]
+    private ?bool $isBanned = null;
+
+    #[ORM\Column(nullable: true)]
+    private ?\DateTime $verified = null;
+
     public function __construct()
     {
         $this->conversations = new ArrayCollection();
         $this->messages = new ArrayCollection();
+        $this->emails = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -286,9 +314,9 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         $this->lastname = $lastname;
     }
 
-    public function setVerified(bool $isVerified): static
+    public function setVerified(\DateTime $date): static
     {
-        $this->isVerified = $isVerified;
+        $this->verified = $date;
 
         return $this;
     }
@@ -298,9 +326,9 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this->isDeleted;
     }
 
-    public function setDeleted(?bool $isDeleted): static
+    public function setDeleted(?\DateTime $deleted): static
     {
-        $this->isDeleted = $isDeleted;
+        $this->deleted = $deleted;
 
         return $this;
     }
@@ -384,5 +412,69 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         $this->avatar = $avatar;
 
         return $this;
+    }
+
+    /**
+     * @return Collection<int, Email>
+     */
+    public function getEmails(): Collection
+    {
+        return $this->emails;
+    }
+
+    public function addEmail(Email $email): static
+    {
+        if (!$this->emails->contains($email)) {
+            $this->emails->add($email);
+            $email->setSender($this);
+        }
+
+        return $this;
+    }
+
+    public function removeEmail(Email $email): static
+    {
+        if ($this->emails->removeElement($email)) {
+            // set the owning side to null (unless already changed)
+            if ($email->getSender() === $this) {
+                $email->setSender(null);
+            }
+        }
+
+        return $this;
+    }
+
+    public function getDeleted(): ?\DateTime
+    {
+        return $this->deleted;
+    }
+
+    public function getBanned(): ?\DateTime
+    {
+        return $this->banned;
+    }
+
+    public function setBanned(?\DateTime $banned): static
+    {
+        $this->banned = $banned;
+
+        return $this;
+    }
+
+    public function isBanned(): ?bool
+    {
+        return $this->isBanned;
+    }
+
+    public function setIsBanned(?bool $isBanned): static
+    {
+        $this->isBanned = $isBanned;
+
+        return $this;
+    }
+
+    public function getVerified(): ?\DateTime
+    {
+        return $this->verified;
     }
 }

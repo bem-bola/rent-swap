@@ -8,6 +8,7 @@ use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Uid\Uuid;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 #[ORM\Entity(repositoryClass: DeviceRepository::class)]
 class Device
@@ -15,10 +16,12 @@ class Device
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column(type: 'bigint')]
+    #[Groups(['device:read'])]
     private ?int $id = null;
 
     #[ORM\ManyToOne(targetEntity: User::class)]
     #[ORM\JoinColumn(nullable: false)]
+    #[Groups(['device:read'])]
     private ?User $user = null;
 
     #[ORM\ManyToOne(targetEntity: Device::class, cascade: ['persist'])]
@@ -26,49 +29,72 @@ class Device
 
     #[ORM\ManyToOne(targetEntity: TypeDevice::class)]
     #[ORM\JoinColumn(nullable: false)]
+    #[Groups(['device:read'])]
     private TypeDevice $type;
 
     #[ORM\Column(type: 'string', length: 250)]
+    #[Groups(['device:read'])]
     private string $slug;
 
     #[ORM\Column(type: 'text')]
+    #[Groups(['device:read'])]
     private string $body;
 
     #[ORM\Column(type: 'float')]
+    #[Groups(['device:read'])]
     private float $price;
 
     #[ORM\Column(type: 'boolean', nullable: true)]
+    #[Groups(['device:read'])]
     private ?bool $showPhone = null;
 
     #[ORM\Column(type: 'datetime')]
+    #[Groups(['device:read'])]
     private \DateTimeInterface $created;
 
     #[ORM\Column(type: 'datetime', nullable: true)]
+    #[Groups(['device:read'])]
     private ?\DateTimeInterface $deleted = null;
 
     #[ORM\Column(type: 'string', length: 100)]
+    #[Groups(['device:read'])]
     private string $title;
 
     #[ORM\Column(type: 'string', length: 10)]
+    #[Groups(['device:read'])]
     private string $status;
 
     #[ORM\Column(type: 'string', length: 100)]
+    #[Groups(['device:read'])]
     private string $location;
 
     #[ORM\Column(type: 'string', length: 20, nullable: true)]
+    #[Groups(['device:read'])]
     private ?string $phoneNumber = null;
 
     #[ORM\ManyToMany(targetEntity: Category::class, mappedBy: 'devices')]
+    #[Groups(['device:read'])]
     private Collection $categories;
 
     #[ORM\Column(nullable: true)]
+    #[Groups(['device:read'])]
     private ?int $quantity = null;
 
     #[ORM\OneToMany(targetEntity: DevicePicture::class, mappedBy: 'device', cascade: ['persist', 'remove'])]
+    #[Groups(['device:read'])]
     private Collection $devicePictures;
 
     #[ORM\Column(type: Types::DATETIME_MUTABLE, nullable: true)]
+    #[Groups(['device:read'])]
     private ?\DateTimeInterface $updated = null;
+
+    #[ORM\Column(nullable: true)]
+    #[Groups(['device:read'])]
+    private ?\DateTime $validated = null;
+
+    #[ORM\Column(nullable: true)]
+    #[Groups(['device:read'])]
+    private ?\DateTime $rejected = null;
 
     public function __construct()
     {
@@ -318,6 +344,30 @@ class Device
     public function setUpdated(?\DateTimeInterface $updated): static
     {
         $this->updated = $updated;
+
+        return $this;
+    }
+
+    public function getValidated(): ?\DateTime
+    {
+        return $this->validated;
+    }
+
+    public function setValidated(?\DateTime $validated): static
+    {
+        $this->validated = $validated;
+
+        return $this;
+    }
+
+    public function getRejected(): ?\DateTime
+    {
+        return $this->rejected;
+    }
+
+    public function setRejected(?\DateTime $rejected): static
+    {
+        $this->rejected = $rejected;
 
         return $this;
     }

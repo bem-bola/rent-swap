@@ -1851,6 +1851,21 @@ csso@^5.0.5:
   dependencies:
     css-tree "~2.2.0"
 
+datatables.net-bs5@^2.3.0:
+  version "2.3.0"
+  resolved "https://registry.yarnpkg.com/datatables.net-bs5/-/datatables.net-bs5-2.3.0.tgz#36344ee116d8ad644476d47974eb7b26cfe256e5"
+  integrity sha512-JvcYrf2kEVzHY7NKsJxV132kehhc5+iRIpZAYmYqSW52yCcMiQYWtw1Z4+Wb/FMbJDQwP9exCtTwroLYPKwkeQ==
+  dependencies:
+    datatables.net "2.3.0"
+    jquery ">=1.7"
+
+datatables.net@2.3.0, datatables.net@^2.3.0:
+  version "2.3.0"
+  resolved "https://registry.yarnpkg.com/datatables.net/-/datatables.net-2.3.0.tgz#2d9a040dbbf03b8fe6afb6134f57a94fa7744982"
+  integrity sha512-IX5Dsc7bTNqI3RyT4B7imtFicLMCg7ZLwwx/gvR6cbwYgfG+mLX2KAVm7BNmnwOhUdMMcGSGSE19RpTn31TTGQ==
+  dependencies:
+    jquery ">=1.7"
+
 debug@^4.1.0, debug@^4.1.1, debug@^4.3.1:
   version "4.3.7"
   resolved "https://registry.npmjs.org/debug/-/debug-4.3.7.tgz"
@@ -2342,7 +2357,7 @@ jiti@^1.20.0:
   resolved "https://registry.npmjs.org/jiti/-/jiti-1.21.6.tgz"
   integrity sha512-2yTgeWTWzMWkHu6Jp9NKgePDaYHbntiwvYuuJLbbN9vl7DC9DvXKOB2BC3ZZ92D3cvV/aflH0osDfwpHepQ53w==
 
-jquery@^3.7.1:
+jquery@>=1.7, jquery@^3.7.1:
   version "3.7.1"
   resolved "https://registry.npmjs.org/jquery/-/jquery-3.7.1.tgz"
   integrity sha512-m4avr8yL8kmFN8psrbFFFmB/If14iN5o9nw/NgnnM+kybDJpRsAynV2BsfpTYrTRysYUdADVD7CkUUizgkpLfg==

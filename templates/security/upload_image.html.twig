@@ -1,6 +1,6 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}RentSwap - Device{% endblock %}
+{% block title %}Reusiix - Device{% endblock %}
 
 {% block main %}
 
@@ -10,7 +10,10 @@
             <h2 class="col-12 bg-white rounded-3 fs-5 text-center py-2 color-theme-gray-4">Charger des nouvelles images</h2>
             <div id="uppy-dashboard"
                  class="col-12"
-                 data-param='{{ {slug: device.slug}|json_encode|raw }}'>
+                 data-param='{{ {slug: device.slug}|json_encode|raw }}'
+                 data-route="app_user_upload_image_device"
+                 data-name="upload_file"
+            >
             </div>
 
         </div>
