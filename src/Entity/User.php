@@ -3,9 +3,11 @@
 namespace App\Entity;
 
 use App\Repository\UserRepository;
+use App\Service\Constances;
 use DateTimeInterface;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
+use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
@@ -106,6 +108,9 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column(nullable: true)]
     private ?\DateTime $verified = null;
 
+    #[ORM\Column(nullable: true)]
+    private ?array $oldPasswords = [];
+
     public function __construct()
     {
         $this->conversations = new ArrayCollection();
@@ -174,10 +179,26 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
     public function setPassword(string $password): static
     {
+        // Initialisation du tableau si nécessaire
+        if ($this->oldPasswords === null) {
+            $this->oldPasswords = [];
+        }
+
+        // Si un mot de passe actuel existe ET qu'il est différent du nouveau
+        if (!empty($this->password) && $this->password !== $password) {
+            // Ajout de l'ancien mot de passe en tête
+            array_unshift($this->oldPasswords, $this->password);
+
+            // Limiter à N anciens mots de passe (défini dans la constante)
+            $this->oldPasswords = array_slice($this->oldPasswords, 0, Constances::NB_REPET_PASSWORD);
+        }
+
+        // Mise à jour du mot de passe
         $this->password = $password;
 
         return $this;
     }
+
 
     /**
      * @see UserInterface
@@ -476,5 +497,17 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function getVerified(): ?\DateTime
     {
         return $this->verified;
+    }
+
+    public function getOldPasswords(): ?array
+    {
+        return $this->oldPasswords;
+    }
+
+    public function setOldPasswords(?array $oldPasswords): static
+    {
+        $this->oldPasswords = $oldPasswords;
+
+        return $this;
     }
 }

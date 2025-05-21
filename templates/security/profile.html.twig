@@ -7,8 +7,15 @@
     {% set devices = data.items %}
     {% set pagination = data.pagination %}
 
-
     <section class="container mt-5">
+        {% if app.user.isVerified == false %}
+
+            <div class="container p-4 pb-3 d-flex justify-content-between bg-warning rounded-4 mb-3 text-white">
+                <div>Votre compte n'est pas encore validé</div>
+                <a href="{{ path('app_register_send_mail_valid') }}" class="bg-theme-dark border-0 text-white px-3 py-2 rounded-3">Valider son compte</a>
+            </div>
+
+        {% endif %}
         <!-- Profile -->
         <div class="rounded-4 shadow-sm d-flex flex-wrap bg-white justify-content-between align-items-center p-4">
             <div class="col-4 row align-items-center">
@@ -29,10 +36,21 @@
                     <span class="font-size-09 color-theme-gray-4"><i class="bi bi-calendar-week"></i> Membre depuis {{ user.created|formatDateFr }}</span>
                 </div>
                 <div class="col-12 d-flex justify-content-end mt-1">
+
+
                     <button
-                            class="bg-theme-dark border-0 text-white px-3 py-2 rounded-3 text-end"
-                            data-bs-toggle="modal" data-bs-target="#form-user"
-                    ><i class="bi bi-pencil"></i> Modifier mon profil</button>
+                            class="bg-theme-dark border-0 text-white px-3 py-2 rounded-3 text-end dropdown-toggle"
+                            type="button" data-bs-toggle="dropdown" aria-expanded="false"
+                    >
+                        <i class="bi bi-pencil"></i> Modifier mon profil
+                    </button>
+
+                    <ul class="dropdown-menu">
+                        <li><a class="dropdown-item cursor-pointer" data-bs-toggle="modal" data-bs-target="#form-user">Modifier mes informations</a></li>
+                        <li><a class="dropdown-item cursor-pointer" data-bs-toggle="modal" data-bs-target="#form-user-reset-password">Réinitialiser votre mon de passe</a></li>
+                        <li><a class="dropdown-item cursor-pointer" href="{{ path('app_logout') }}">Supprimer votre compte</a></li>
+                    </ul>
+
                 </div>
             </div>
 
@@ -146,6 +164,7 @@
         {% include '_partial/user/upload_avatar.html.twig' %}
         <!-- Modal user form -->
         {% include '_partial/user/update_user.html.twig' %}
+        {% include '_partial/user/reset_password.html.twig' %}
     </section>
 
 {% endblock %}

@@ -1,0 +1,15 @@
+<div class="container mb-2">
+    {% for type, messages in app.flashes %}
+        {% for message in messages %}
+            <div class="text-{{ type == 'error' ? 'danger' : type }}">
+                <span>{{ message }}</span>
+            </div>
+        {% endfor %}
+    {% endfor %}
+
+    {% for flash_error in app.flashes('reset_password_error') %}
+        <div class="text-danger" role="alert"><span>{{ flash_error }}</span></div>
+    {% endfor %}
+</div>
+
+

@@ -2,7 +2,11 @@
   {
     "username": "Dyer",
     "email": "vaughandyer@endipine.com",
-    "password": "password-et",
+    "password": "password-eT-343",
+    "password1": "password1-eT-343",
+    "password2": "password2-eT-343",
+    "password3": "password3-eT-343",
+    "password4": "password4eT343@",
     "firstname": "Hensley",
     "lastname": "Orr",
     "type": 2,
@@ -13,7 +17,7 @@
   {
     "username": "Moody",
     "email": "hensleymoody@endipine.com",
-    "password": "password-ex",
+    "password": "Password-ex-123",
     "firstname": "Dudley",
     "lastname": "Ramirez",
     "type": 0,

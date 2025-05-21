@@ -28,4 +28,6 @@ class Constances {
 
     const ARRAY_ROLES = ['ROLE_USER', 'ROLE_ADMIN', 'ROLE_MODERATOR'];
 
+    const NB_REPET_PASSWORD = 3;
+
 }

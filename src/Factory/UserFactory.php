@@ -11,15 +11,19 @@ use App\Repository\MessageRepository;
 use App\Repository\TypeUserRepository;
 use App\Service\Constances;
 use App\Service\LoggerService;
+use App\Service\UserService;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 
 class UserFactory
 {
     public function __construct(
-        private readonly EntityManagerInterface $entityManager,
-        private readonly LoggerService          $logger,
-        private readonly TypeUserRepository     $typeUserRepository
+        private readonly EntityManagerInterface      $entityManager,
+        private readonly LoggerService               $logger,
+        private readonly UserService                 $userService,
+        private readonly TypeUserRepository          $typeUserRepository,
+        private readonly UserPasswordHasherInterface $passwordHasher,
     ) {}
 
     public function createByUser(User &$user, string $password, ?TypeUser $typeUser = null): User{
@@ -106,5 +110,18 @@ class UserFactory
         $this->logger->write('info', "Role update for user id: " . $user->getId(), Response::HTTP_CREATED, $executor);
 
         return $user;
+    }
+
+    public function updatePassword(User $user, string $plainPassword): bool{
+
+        $isReusedPassword = $this->userService->isReusedPassword($user, $plainPassword);
+        // Verifier si le mot de pass est different 3 derniers
+        if($isReusedPassword){
+            $user->setPassword($this->passwordHasher->hashPassword($user, $plainPassword));
+            $this->entityManager->flush();
+        }
+
+        return $isReusedPassword;
+
     }
 }

@@ -1,29 +1,14 @@
-<html lang="fr">
-<head>
-    <meta charset="UTF-8">
-    <title>Je me connecte</title>
-    {% block stylesheets %}
-        {{ encore_entry_link_tags('style') }}
-    {% endblock %}
+{% extends 'base_user.html.twig' %}
 
-    {% block javascripts %}
-        {{ encore_entry_script_tags('app') }}
-        {% block importmap %}{{ importmap('app') }}{% endblock %}
-    {% endblock %}
-    {% block head %}
-    {% endblock %}
-    <link rel="icon" href="{{ asset('img/logo/logo-reusiix.png') }}" type="image/svg">
-    <script src="{{ asset('bundles/fosjsrouting/js/router.min.js') }}"></script>
-    <script src="{{ path('fos_js_routing_js', { callback: 'fos.Router.setData' }) }}"></script>
-</head>
-<body class="bg-theme-dark d-flex justify-content-center align-items-center vh-100">
-<div class="col-6 p-5 bg-theme-gray rounded-5">
+{% block title %}Reusiix - Je me connecte{% endblock %}
+{% block body %}
     <form method="post" class="">
 
         <input type="hidden" name="_target_path" value="{{ referer }}">
 
         <div class="mb-5">
-            <h1 class="h3 fw-700 text-center">Se connecter</h1>
+            <h1 class="h3 fw-700 text-center mb-1">Se connecter</h1>
+            {% include '_partial/alert_user.html.twig' %}
             {% if error %}
                 <div class="text-danger text-center">{{ error.messageKey|trans(error.messageData, 'security') }}</div>
             {% endif %}
@@ -49,7 +34,7 @@
         </div>
 
         <div class="text-center mb-4">
-            <p class="text-center mb-0">Mot de passe oublié ? <a href="#" class="fw-500">Cliquez ici <i
+            <p class="text-center mb-0">Mot de passe oublié ? <a href="{{ path('app_reset_password_forgot_request')}}" class="fw-500">Cliquez ici <i
                             class="bi bi-arrow-right"></i></a></p>
             <p class="text-center mb-0">Pas encore inscrit ? <a href="{{ path('app_register') }}" class="fw-500">Cliquez ici <i
                             class="bi bi-arrow-right"></i></a></p>
@@ -62,5 +47,4 @@
         </div>
 
     </form>
-</div>
-</body>
+{% endblock %}
