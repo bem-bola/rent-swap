@@ -15,7 +15,9 @@
 
     Pour activer votre compte et finaliser votre inscription, veuillez cliquer sur le lien ci-dessous : <br>
 
-    <a href="{{ absolute_url(path('app_register_verify_user', {token: token})) }}">Je confirm mon compte</a> <br>
+    <div class="d-flex justify-content-center">
+        <a href="{{ absolute_url(path('app_register_verify_user', {token: token})) }}" class="btn btn-dark rounded-4">Je confirm mon compte</a>
+    </div>
 
     À très vite, <br><br>
 

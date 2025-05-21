@@ -139,6 +139,9 @@ li{
 .color-theme-yellow-2{
   color: $color-theme-yellow-2;
 }
+.color-theme-danger{
+  color: $color-theme-danger;
+}
 
 .bg-theme-gray{
   background-color: $color-theme-gray;
@@ -158,6 +161,9 @@ li{
 .bg-theme-gray-4{
   background-color: $color-theme-gray-4;
 }
+.bg-theme-danger{
+  background-color: $color-theme-danger;
+}
 
 .border-theme-dark{
   border: 1px solid $color-theme-dark;
@@ -167,6 +173,9 @@ li{
 }
 .border-theme-gray-2{
   border: 1px solid $color-theme-gray-2;
+}
+.border-theme-danger{
+  border: 1px solid $color-theme-danger;
 }
 
 .cursor-pointer{
@@ -191,6 +200,9 @@ li{
   }
   .end-#{$i} {
     right: $i * 1%;
+  }
+  .start-#{$i} {
+    left: $i * 1%;
   }
 }
 

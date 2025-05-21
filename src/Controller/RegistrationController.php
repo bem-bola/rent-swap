@@ -8,7 +8,9 @@ use App\Form\RegistrationFormType;
 use App\Repository\UserRepository;
 use App\Service\Constances;
 use App\Service\JWTService;
+use App\Service\LoggerService;
 use App\Service\SendEmailService;
+use App\Service\UserService;
 use Doctrine\ORM\EntityManagerInterface;
 use JetBrains\PhpStorm\NoReturn;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -19,17 +21,23 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Mailer\Exception\TransportExceptionInterface;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use Symfony\Component\Routing\Attribute\Route;
+use Symfony\Component\Security\Http\Attribute\IsGranted;
+use SymfonyCasts\Bundle\ResetPassword\Exception\ResetPasswordExceptionInterface;
+use SymfonyCasts\Bundle\ResetPassword\ResetPasswordHelperInterface;
 
+/**
+ * @method User|null getUser()
+ */
 #[Route('/register', name: 'app_register')]
 class RegistrationController extends AbstractController
 {
 
     public function __construct(
-        private readonly JWTService                  $JWTService,
-        private readonly SendEmailService            $sendEmailService,
-        private readonly UserFactory                 $userFactory,
-        private readonly UserPasswordHasherInterface $userPasswordHasher,
-        private readonly UserRepository              $userRepository,
+        private readonly LoggerService                  $loggerService,
+        private readonly ResetPasswordHelperInterface   $resetPasswordHelper,
+        private readonly UserFactory                    $userFactory,
+        private readonly UserPasswordHasherInterface    $userPasswordHasher,
+        private readonly UserService                    $userService
     ){
 
     }
@@ -54,15 +62,17 @@ class RegistrationController extends AbstractController
 
             $this->userFactory->createByUser($user, $password);
 
-            $token = $this->JWTService->generate(['user_id' => $user->getId()]);
+            try {
+                $this->userService->validUser($user);
 
-            $this->sendEmailService->send(
-                $this->getParameter('adressEmailNoReply'),
-                $user->getEmail(),
-                'Activation de votre compte sur Reusiix',
-                'register',
-                compact('token', 'user')
-            );
+                $this->addFlash('success', "Un mail de confirmation vient de vous être envoyé.");
+
+            } catch (ResetPasswordExceptionInterface $e) {
+                $this->addFlash('success', "Un mail de confirmation vient de vous être envoyé.");
+                $this->loggerService->write('error', $e->getMessage(), null, $user);
+                return $this->redirectToRoute('app_home');
+
+            }
 
             return $security->login($user, 'form_login', 'main');
         }
@@ -72,28 +82,53 @@ class RegistrationController extends AbstractController
         ]);
     }
 
+    /**
+     * @throws ResetPasswordExceptionInterface
+     */
     #[Route('/verif/{token}', name: '_verify_user')]
-    public function verifUser(string $token): RedirectResponse
+    public function verifUser(?string $token = null): RedirectResponse
     {
-        if($this->JWTService->isValid($token) &&
-            !$this->JWTService->isExpired($token) &&
-            $this->JWTService->check($token)){
+        if($token !== null){
+            try{
+                $user = $this->resetPasswordHelper->validateTokenAndFetchUser($token);
+                // Le token de réinitialisation ne doit être utilisé qu’une seule fo©is, on le supprime.
+                $this->resetPasswordHelper->removeResetRequest($token);
+                // On vérifie qu'on a bien un user et qu'il n'est pas déjà activé
+                if($user && !$user->isVerified()){
+                    $this->userFactory->updateStatus($user, Constances::VALIDED, $user);
+                    $this->addFlash('success', 'Compte validé avec succès');
+                    return $this->redirectToRoute('app_home');
+                }
+            }catch(ResetPasswordExceptionInterface $e){
+                $this->addFlash('error', "Token invalid");
+                $this->loggerService->write('error', $e->getMessage());
+            }catch(\Exception $e){
+                $this->addFlash('error', "Une erreurs'est produite ");
+                $this->loggerService->write('error', $e->getMessage());
 
-            // Le token est valide
-            // On récupère les données (payload)
-            $payload = $this->JWTService->getPayload($token);
-
-            // On récupère le user
-            $user = $this->userRepository->find($payload['user_id']);
-
-            // On vérifie qu'on a bien un user et qu'il n'est pas déjà activé
-            if($user && !$user->isVerified()){
-               $this->userFactory->updateStatus($user, Constances::VALIDED, $user);
-                return $this->redirectToRoute('app_home');
             }
+            return $this->redirectToRoute('app_home');
         }
 
-        $this->addFlash('danger', 'Le token est invalide ou a expiré');
+        $this->addFlash('error', 'Le token est invalide ou a expiré');
         return $this->redirectToRoute('app_login');
+    }
+
+    #[Route('/send-maile-valid', name: '_send_mail_valid')]
+    #[isGranted('ROLE_USER')]
+    public function verifUserMail(){
+
+        try {
+            $this->userService->validUser($this->getUser());
+
+            $this->addFlash('success', 'Un mail de confirmation vient de vous être envoyé.');
+
+        } catch (ResetPasswordExceptionInterface|TransportExceptionInterface $e) {
+            $this->addFlash('error', "Une erreur s'est produite veuillez réessayer plus tard !.");
+            $this->loggerService->write('error', $e->getMessage(), null, $this->getUser());
+        }
+
+        return $this->redirectToRoute('app_user_home');
+
     }
 }

@@ -10,6 +10,7 @@ use App\Factory\DevicePictureFactory;
 use App\Factory\MediaFactory;
 use App\Factory\UserFactory;
 use App\Form\DeviceType;
+use App\Form\ResetPasswordByProfilUserFormTypeForm;
 use App\Form\UserType;
 use App\Repository\DevicePictureRepository;
 use App\Repository\DeviceRepository;
@@ -26,6 +27,7 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
+use Symfony\Component\Mailer\Exception\TransportExceptionInterface;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
 
@@ -47,6 +49,7 @@ class UserController extends AbstractController
         private readonly FavoriteRepository         $favoriteRepository,
         private readonly LoggerService              $loggerService,
         private readonly MediaFactory               $mediaFactory,
+        private readonly ResetPasswordController    $resetPasswordController,
         private readonly UploadFileService          $uploadFileService,
         private readonly UserFactory                $userFactory,
     )
@@ -56,6 +59,7 @@ class UserController extends AbstractController
      * @param Request $request
      * @return Response
      * @throws \Exception
+     * @throws TransportExceptionInterface
      */
     #[Route(path: '/', name: 'home', options: ['expose' => true])]
     public function profile(Request $request): Response
@@ -70,6 +74,7 @@ class UserController extends AbstractController
             $this->addFlash('success', "Vos informations ont été modifiées");
         }
 
+        // Modifier l'avatar avec htmx
         if($request->headers->get('HX-Request')) {
 
             try{
@@ -87,15 +92,25 @@ class UserController extends AbstractController
                 $this->loggerService->write(Constances::LEVEL_ERROR, $e->getMessage(), null, $this->getUser());
             }
 
-
             return new JsonResponse([
                 'url' => 'app_user_devices',
             ]);
         }
 
+        $formResetPassword = $this->createForm(ResetPasswordByProfilUserFormTypeForm::class);
+        $formResetPassword->handleRequest($request);
+
+        if($formResetPassword->isSubmitted() && $formResetPassword->isValid()) {
+            $this->resetPasswordController->resetPasswordByProfile(
+                $this->getUser(),
+                $formResetPassword->get('password')->getData(),
+            'app_user_home');
+        }
+
         return $this->render('security/profile.html.twig', [
             'data' => $this->deviceRepository->findByUser([], $this->getUser()),
             'form' => $form->createView(),
+            'formResetPassword' => $formResetPassword->createView(),
         ]);
     }
 
@@ -202,6 +217,11 @@ class UserController extends AbstractController
      */
     #[Route(path: '/device/create', name: 'create_device')]
     public function createDevice(Request $request): Response{
+
+        if(!$this->getUser()->isVerified()){
+            $this->addFlash('warning', "Pour créer déposer une annonce, vous deviez valider votre compte.Un email vient de vous être envoyé");
+            return $this->redirectToRoute('app_register_send_mail_valid');
+        }
 
         $device = new Device();
 

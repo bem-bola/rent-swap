@@ -1,13 +1,34 @@
 <div class="container">
     {% for type, messages in app.flashes %}
-        {% set label = type == 'error' ? 'danger' : type %}
         {% for message in messages %}
-            <div class="container col-8 col-xs-12 col-md-12 col-sm-12 col-lg-8">
-                <div class="alert alert-{{ label}} alert-dismissible fade show" role="alert">
-                    <strong></strong> {{ message }}
-                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            {% if type == "error" %}
+                <div class="container col-8 col-xs-12 col-md-12 col-sm-12 col-lg-8 mt-4">
+                    <div class="alert alert-dismissible fade show bg-white border-1 alert-danger color-theme-danger border-theme-danger" role="alert">
+                        <span><i class="bi bi-x-circle-fill"></i></span>
+                        <span>{{ message|nl2br }}</span>
+                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                    </div>
                 </div>
-            </div>
+
+            {% elseif type == "warning" %}
+                <div class="container col-8 col-xs-12 col-md-12 col-sm-12 col-lg-8 mt-4">
+                    <div class="alert alert-dismissible fade show bg-white border-1 alert-warning text-warning border-warning" role="alert">
+                        <span><i class="bi bi-exclamation-circle-fill"></i></span>
+                        <span>{{ message|nl2br }}</span>
+                        <button type="button" class="btn-close text-success" data-bs-dismiss="alert" aria-label="Close"></button>
+                    </div>
+                </div>
+
+            {% elseif type == "success" %}
+                <div class="container col-8 col-xs-12 col-md-12 col-sm-12 col-lg-8 mt-4">
+                    <div class="alert alert-dismissible fade show bg-white border-1 alert-success text-success border-success" role="alert">
+                        <span><i class="bi bi-check-circle-fill"></i></span>
+                        <span>{{ message|nl2br }}</span>
+                        <button type="button" class="btn-close text-success" data-bs-dismiss="alert" aria-label="Close"></button>
+                    </div>
+                </div>
+
+            {% endif %}
 
         {% endfor %}
     {% endfor %}

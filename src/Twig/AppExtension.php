@@ -78,9 +78,9 @@ public function getFilters(): array
     public function replacePage(
         string $url,
         ?int $page = null,
-        string $sort = null,
-        string $status = null,
-        string $title = null): string
+        ?string $sort = null,
+        ?string $status = null,
+        ?string $title = null): string
     {
 
         $parts = parse_url(urldecode($url));

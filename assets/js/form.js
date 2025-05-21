@@ -1,6 +1,6 @@
 const regexMap = {
     email: /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/,
-    password: /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@#$%^&*!])[A-Za-z\d@#$%^&*!]{8,}$/,
+    password: /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@#$%^&-*!])[A-Za-z\d@#$%^&-*!]{8,}$/,
     name: /^[A-Za-zÀ-ÖØ-öø-ÿ\s'-]{2,}$/, // Supporte les espaces et apostrophes
 };
 
@@ -54,7 +54,7 @@ const checkPassWordRepeat = (container) => {
 
 document.addEventListener('DOMContentLoaded', () => {
     const validateInput = (input) => {
-        const pattern = input.getAttribute('data-type-pattern');
+        const pattern = input.dataset.typePattern;
         const regex = regexMap[pattern];
         let isValid = true;
 
@@ -69,14 +69,8 @@ document.addEventListener('DOMContentLoaded', () => {
         // Afficher ou masquer le message d'erreur de pattern
         if (input.closest('.sub-section')) {
             const errorPattern = input.closest('.sub-section').querySelector('.input-error-pattern'); // Sélectionner le message d'erreur spécifique
-
-            if (errorPattern) {
-                if (!isValid) {
-                    errorPattern.classList.remove('d-none');  // Afficher le message d'erreur si non valide
-                } else {
-                    errorPattern.classList.add('d-none');  // Masquer le message d'erreur si valide
-                }
-            }
+            // Afficher le message d'erreur si non valide
+            if (errorPattern) errorPattern.classList.toggle('d-none', isValid)
         }
 
         input.classList.toggle('border-danger', !isValid);

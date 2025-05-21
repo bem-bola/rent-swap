@@ -25,7 +25,7 @@ class SessionService
      * @param array $params
      * @return RedirectResponse
      */
-    public function redirectWithFlash(string $route, string $flashType = null, string $flashMessage = null, array $params = []): RedirectResponse
+    public function redirectWithFlash(string $route, ?string $flashType = null, ?string $flashMessage = null, array $params = []): RedirectResponse
     {
         if($flashType !== null && $flashMessage !== null){
             // Ajouter un message flash
