@@ -2,19 +2,28 @@
 
 namespace App\Controller\Admin;
 
+use App\Entity\Category;
 use App\Entity\Device;
 
 use App\Entity\User;
+use App\Entity\WarnMessage;
+use App\Factory\CategoryFactory;
 use App\Factory\DeviceFactory;
 use App\Factory\EmailFactory;
+use App\Factory\MessageFactory;
 use App\Factory\UserFactory;
+use App\Factory\WarnMessageFactory;
 use App\Form\ActionDeviceType;
 use App\Form\ActionUserType;
+use App\Form\CategoryForm;
 use App\Form\RoleUserType;
+use App\Form\WarnMessageForm;
 use App\Repository\CategoryRepository;
 use App\Repository\DevicePictureRepository;
 use App\Repository\DeviceRepository;
 use App\Repository\EmailRepository;
+use App\Repository\UserRepository;
+use App\Repository\WarnMessageRepository;
 use App\Service\Constances;
 use App\Service\JWTService;
 use App\Service\LoggerService;
@@ -36,6 +45,7 @@ use Symfony\Component\Security\Http\Attribute\IsGranted;
 class AdminController extends AbstractController
 {
     public function __construct(
+        private readonly CategoryFactory            $categoryFactory,
         private readonly CategoryRepository         $categoryRepository,
         private readonly DeviceFactory              $deviceFactory,
         private readonly DeviceRepository           $deviceRepository,
@@ -45,8 +55,12 @@ class AdminController extends AbstractController
         private readonly JWTService                 $JWTService,
         private readonly LoggerService              $loggerService,
         private readonly MessageStandardService     $messageStandardService,
+        private readonly MessageFactory             $messageFactory,
         private readonly SendEmailService           $sendEmailService,
         private readonly UserFactory                $userFactory,
+        private readonly UserRepository             $userRepository,
+        private readonly WarnMessageFactory         $warnMessageFactory,
+        private readonly WarnMessageRepository      $warnMessageRepository,
     ) {}
 
     /**
@@ -73,12 +87,12 @@ class AdminController extends AbstractController
     public function allDevices(Request $request): Response
     {
         if($request->isXmlHttpRequest()){
-
             return $this->json($this->deviceRepository->deviceDataTableNoDelete($request->query->all()), Response::HTTP_OK, [],  ['groups' => 'device:read']);
         }
 
         return $this->render('admin/devices/index.html.twig', [
             'status' => $request->get('status'),
+            'length' => $this->deviceRepository->findAllNotDelete($request->query->all(), true),
         ]);
     }
 
@@ -151,16 +165,6 @@ class AdminController extends AbstractController
             'user'          => $device->getUser()
         ]);
     }
-
-
-    #[Route('/categories/all', name: 'category_all', options: ['expose' => true])]
-    public function allCategories(): Response
-    {
-        return $this->render('admin/devices/index.html.twig', [
-            'devices' => $this->deviceRepository->findAll(),
-        ]);
-    }
-
 
     /**
      * @throws Exception
@@ -273,6 +277,123 @@ class AdminController extends AbstractController
 
         return $this->json([], Response::HTTP_NOT_FOUND);
     }
+
+
+    #[Route('/users/all', name: 'users_all', options: ['expose' => true])]
+    public function getUsers(Request $request): Response
+    {
+        if($request->isXmlHttpRequest()){
+            return $this->json($this->userRepository->getAll($request->query->all(), $this->getUser()), Response::HTTP_OK, [],  ['groups' => 'user:read']);
+        }
+
+        return $this->render('admin/users/index.html.twig', [
+            'length'    => $this->userRepository->length($this->getUser())
+        ]);
+    }
+
+
+    #[Route('/categories/all', name: 'category_all', options: ['expose' => true])]
+    #[Route('/categories/update/{slug}', name: 'category_update', options: ['expose' => true])]
+    public function allUpdateCategories(Request $request, ?Category $category = null): Response
+    {
+        $form = $this->createForm(CategoryForm::class, $category ?? new Category());
+
+        $form->handleRequest($request);
+
+        if($form->isSubmitted() && $form->isValid()){
+
+            $this->categoryFactory->update($form->getData(), $this->getUser());
+            $this->addFlash('success', 'Catégorie modifiée ou créée avec succès');
+
+            return $this->redirectToRoute('app_admin_category_all');
+        }
+        return $this->render('admin/category/index.html.twig', [
+            'form'      => $form->createView(),
+            'length'    => $this->categoryRepository->length(),
+            'category'  => $category,
+        ]);
+    }
+
+    #[Route('/categories/datatable/', name: 'categories_datatable', options: ['expose' => true])]
+    public function categoriesDatatable(Request $request): Response
+    {
+
+        if($request->isXmlHttpRequest()){
+            return $this->json($this->categoryRepository->getAll($request->query->all()), Response::HTTP_OK, [],  ['groups' => 'category:read']);
+        }
+
+        return $this->json([], Response::HTTP_NOT_FOUND);
+    }
+
+    /**
+     * @throws TransportExceptionInterface
+     */
+    #[Route('/warn/message/', name: 'warn_message', options: ['expose' => true])]
+    #[Route('/warn/message/show/{id}', name: 'warn_message_show', options: ['expose' => true])]
+    public function warnMessage(Request $request, ?WarnMessage $warnMessage = null): Response
+    {
+        if($warnMessage){
+            $form = $this->createForm(WarnMessageForm::class);
+
+            $form->handleRequest($request);
+
+            if($form->isSubmitted() && $form->isValid()){
+
+                $action = $form->get('action')->getData();
+
+                $reason = $form->get('reason')->getData();
+
+                $authorMessage =  $warnMessage->getMessage()->getAuthor();
+
+                $message = $warnMessage->getMessage();
+
+                $informant = $warnMessage->getInformant();
+
+                // modifier l'examinateur
+                $this->warnMessageFactory->updateReviewer($warnMessage, $this->getUser());
+                // Supprimer le message
+                $this->messageFactory->delete($this->getUser(), $message);
+                // bannir/suspendre utilisateur
+                $this->userFactory->updateStatus(
+                   $authorMessage,
+                    $action,
+                    $this->getUser()
+                );
+                // envoyer email
+                $this->sendEmailService->send(
+                    $this->getParameter('adressEmailNoReply'),
+                    $authorMessage->getEmail(),
+                    'Message signalé',
+                    'warn_message',
+                    compact('action', 'authorMessage', 'message', 'informant', 'reason')
+                );
+
+                $content = sprintf("%s\n - motif: %s", $action ?? 'avertissement', $reason);
+                $this->emailFactory->create($this->getUser(), $authorMessage, $content, 'Message signalé', $this->getParameter('adressEmailNoReply'));
+
+                $this->addFlash('success', 'Signalement traité avec success');
+
+                return $this->redirectToRoute('app_admin_warn_message');
+            }
+
+            return $this->render('admin/warn/message.html.twig', [
+                'form' => $form,
+                'warnMessage' => $warnMessage,
+            ]);
+
+        }
+        return $this->render('admin/warn/message.html.twig', []);
+    }
+    #[Route('/warn/message/data', name: 'warn_message_data', options: ['expose' => true])]
+    public function warnMessageDatatable(Request $request): Response{
+
+        if($request->isXmlHttpRequest()){
+            $reviewed = boolval($request->query->get('reviewed'));
+            return $this->json($this->warnMessageRepository->getAll($request->query->all(), $reviewed), Response::HTTP_OK, [],  ['groups' => 'warn:read']);
+        }
+        return $this->json([], Response::HTTP_NOT_FOUND);
+    }
+
 
 }
 

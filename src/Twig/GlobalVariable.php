@@ -7,7 +7,7 @@ use Twig\Extension\AbstractExtension;
 use Twig\Extension\GlobalsInterface;
 use Symfony\Component\Yaml\Yaml;
 
-class AppItemsMenu extends AbstractExtension implements GlobalsInterface
+class GlobalVariable extends AbstractExtension implements GlobalsInterface
 {
 
     public function __construct(private readonly string $pathItemsMenu){}

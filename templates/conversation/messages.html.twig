@@ -1,11 +1,41 @@
 {% set userCurrent = app.user %}
 <!-- entente content messages-->
-{% for messagessss in messages %}
-    <li class="messagessss col-8 {{ userCurrent == messagessss.author ? 'shadow-lg ms-auto': 'd-inline-block bg-primary text-white' }} px-3 py-3 rounded-4 mb-3">
-        <div class="font-size-09">{{ messagessss.content }}</div>
-        <div class="font-size-07 text-end">Le 10 Jan 2024 à 10:30</div>
+{% if message is defined %}
+    <li class="message col-6 mb-3 {{  userCurrent == message.author ? 'ms-auto': '' }}">
+        <div class="font-size-09 {{ userCurrent == message.author ? 'bg-secondary-opacity-1': 'text-white bg-primary' }} px-3 py-3 rounded-3">{{ message.content|nl2br }}</div>
+        <div class="font-size-08 text-end ">{{ message.createdAt|date('H:i') }}</div>
     </li>
-{% endfor %}
+    {% else %}
+    {% for date, contents in messages %}
+        <li>
+            <h6 class="text-center">{{ date|date('d F Y', "Europe/Paris") }}</h6>
+            <ul id="detail-message-content">
+                {% for message in contents %}
+                    <li class="message col-6 mb-3 {{  userCurrent == message.author ? 'ms-auto': '' }}">
+                        {% if message.deletedAt != null %}
+                                <div class="font-size-08 fst-italic text-danger px-3 py-3 rounded-3 border-1 border border-danger">Message supprimé le {{ message.deletedAt|formatDateFr }}</div>
+                        {% else %}
+                            <div class="font-size-09 position-relative {{ userCurrent == message.author ? 'bg-secondary-opacity-1': 'text-white bg-primary' }} px-3 py-3 rounded-3">
+                                <span class="cursor-pointer position-absolute top-2 end-2" data-bs-toggle="dropdown" aria-expanded="false"><i class="bi bi-gear fs-5"></i></span>
+                                <div class="py-2">{{ message.content|nl2br }}</div>
+
+                                <ul class="dropdown-menu">
+                                    {% if userCurrent == message.author %}
+                                        <li><a class="dropdown-item cursor-pointer" href="{{ path('app_message_delete', { id: message.id }) }}">Supprimer</a></li>
+                                    {% else %}<li><a class="dropdown-item cursor-pointer" href="{{ path('app_warn_message', { id: message.id }) }}">Signaler</a></li>
+                                    {% endif %}
+                                </ul>
+                            </div>
+                            <div class="font-size-08 text-end ">{{ message.createdAt|date('H:i') }}</div>
+                        {% endif %}
+
+                    </li>
+                {% endfor %}
+            </ul>
+        </li>
+
+    {% endfor %}
+{% endif %}
 
 
 

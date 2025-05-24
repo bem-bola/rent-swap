@@ -84,9 +84,18 @@
 
                     <div class="d-flex justify-content-center mt-3">
                         <a
-                                {% if user %} href="{{ path('app_conversation_send_new', { slugDevice: device.slug }) }}"
+                                {% if user %}
+                                    {% if device|conversationByDeviceLength(user) > 0 %}
+                                        href="{{ path('app_conversation_send_new', { slugDevice: device.slug }) }}"
+                                        {% else %}
+                                            data-bs-toggle="modal" data-bs-target="#form-conversation"
+                                    {% endif %}
+
                                     {% else %} href="{{ path('app_login') }}"
                                 {% endif %}
+
+
+
                            class="bg-theme-dark text-white border-0 px-3 py-2 rounded-pill text-center col-10">Message
                         </a>
                     </div>
@@ -129,5 +138,7 @@
 
     </section>
 
+
+    {% include '_partial/conversation/send.html.twig' %}
 
 {% endblock %}

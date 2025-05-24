@@ -1,0 +1,63 @@
+
+<div class="row justify-content-between border-1 border-bottom shadow-sm pb-3 px-4 pt-0 mb-3 mt-0 mx-0">
+    <!-- User -->
+    <div  class="row col align-items-baseline">
+        <div class="col-3 rounded-circle ms-0 d-sm-none d-md-none d-xxl-block">
+            <img src="{{ asset(otherUser|pathAvatarUser) }}" alt="Avatar utilisateur {{ otherUser.username }}"
+                 class="col-12 width-4 height-4 rounded-circle">
+        </div>
+        <div class="col ps-0">
+            <h4 class="ps-0 mb-0 fs-sm-5">{{ otherUser.firstname }} {{ otherUser.lastname }}</h4>
+        </div>
+    </div>
+    <!-- FIN User -->
+
+    <!-- Device -->
+    <div class="col row">
+        <a href="{{ path('app_device_show', { slug: currentConversation.device.slug }) }}" class="row gap">
+            <div class="col-5 d-sm-none d-md-none d-xxl-block">
+                <img src="{{ asset(currentConversation.device|pathImgDeviceDefault) }}" alt="appareil" class="width-5 rounded-1">
+            </div>
+            <div class="col">
+                <h5 class="col mb-0">{{ currentConversation.device.title|length > 20 ? currentConversation.device.title|slice(0,20) ~ ' ...' :   currentConversation.device.title }}</h5>
+                <p class="mb-0">{{ currentConversation.device.price|number_format(2, ',', ' ') }} €</p>
+            </div>
+        </a>
+    </div>
+    <!--FIN  Device -->
+
+</div>
+<!-- Fin entente content messages-->
+
+<!-- CONTENT MESSAGE -->
+<div>
+    <ul class="col-11 mx-auto overflow-y-auto px-3"
+        data-author="{{ userCurrent.id }}"
+        id="message-content"
+        hx-ext="sse"
+        sse-connect="{{ mercure(topic) }}"
+        sse-swap="message"
+    >
+        {% include('conversation/messages.html.twig') %}
+    </ul>
+
+
+    <form class="col-11 mx-auto row gap-2 position-relative"
+          hx-post="{{ path('app_message_new') }}"
+          hx-swap="beforeend"
+          hx-target="#detail-message-content"
+    >
+        <div class="col-12 px-0">
+            <textarea type="text" class="form-control rounded-3 py-2 resize-none" name="content" rows="3"></textarea>
+        </div>
+
+        <button type="submit"
+                class="col-2 px-0 py-0 bg-transparent rounded-3 border-0 color-theme-yellow position-absolute top-25 start-87"><i class="bi bi-send fs-3"></i></button>
+
+        <input type="hidden" name="slugConversation" value="{{ slugConversation }}">
+
+    </form>
+
+
+</div>
+<!-- FIN CONTENT MESSAGE -->

@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-BmbxuPwQa2lc/FVzBcNJ7UAyJxM6wuqIj61tLrc4wSX0szH/Ev+nYRRuWlolflfl" crossorigin="anonymous">
+    <title>Document</title>
+</head>
+<body>
+
+<p>Bonjour {{ authorMessage.username|capitalize }},</p>
+
+<p>
+    Le message suivant, que vous avez envoyé à {{ informant.username|capitalize }} le {{ message.createdAt|formatDateFr }} :<br><br>
+    <span style="font-style: italic;">"{{ message.content|raw|nl2br }}"</span><br><br>
+    a été signalé par un utilisateur.
+</p>
+
+<p>
+    {% if action == null %}
+        Ce signalement n'entraîne pour le moment aucune sanction, mais constitue un avertissement. <br><br>Merci de respecter les règles d'utilisation de notre plateforme à l'avenir.
+    {% elseif action == 'banned' %}
+        À la suite de ce signalement, votre compte a été <strong>banni</strong>
+        {% if reason %} pour le motif suivant : <br><br><em>{{ reason }}</em>{% endif %}.<br><br>
+        Si vous pensez que cette décision est injustifiée, n'hésitez pas à nous contacter pour plus d’informations.
+    {% endif %}
+</p>
+
+<p>
+    Cordialement,<br>
+    L’équipe <a href="{{ absolute_url(path('app_home')) }}" class="fw-bold">Reusiix</a>
+</p>
+
+
+</body>
+</html>

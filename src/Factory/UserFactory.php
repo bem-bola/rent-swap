@@ -22,16 +22,13 @@ class UserFactory
         private readonly EntityManagerInterface      $entityManager,
         private readonly LoggerService               $logger,
         private readonly UserService                 $userService,
-        private readonly TypeUserRepository          $typeUserRepository,
         private readonly UserPasswordHasherInterface $passwordHasher,
     ) {}
 
-    public function createByUser(User &$user, string $password, ?TypeUser $typeUser = null): User{
-        $type = $typeUser ?? $this->typeUserRepository->findOneBy(['name' => 'particular']);
+    public function createByUser(User &$user, string $password): User{
         $user->setPassword($password);
         $user->setCreated(new \DateTime());
         $user->setIsVerified(false);
-       $user->setType($type);
         $this->entityManager->persist($user);
         $this->entityManager->flush();
 
@@ -61,7 +58,7 @@ class UserFactory
     }
 
 
-    public function updateStatus(User $user, bool $status, ?User $executor): User
+    public function updateStatus(User $user, ?string $status, ?User $executor): User
     {
         switch ($status) {
             case Constances::DELETED:
@@ -77,6 +74,11 @@ class UserFactory
             case Constances::VALIDED:
                 $user->setVerified(new \DateTime());
                 $user->setIsVerified(true);
+                break;
+
+            case Constances::SUSPENDED:
+                $user->setSuspended(new \DateTime());
+                $user->setIsSuspended(true);
                 break;
         }
 

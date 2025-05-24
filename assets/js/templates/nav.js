@@ -10,6 +10,9 @@ import 'datatables.net-bs5/css/dataTables.bootstrap5.css';
 import './datatables/device.js'
 import './datatables/history.js'
 import './datatables/device-user.js'
+import './datatables/category.js'
+import './datatables/users.js'
+import './datatables/warnMessage.js'
 
 ( function( global, factory ) {
 

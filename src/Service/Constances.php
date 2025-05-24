@@ -3,31 +3,36 @@
 namespace App\Service;
 
 
+use phpDocumentor\Reflection\Types\Self_;
+
 class Constances {
-    const PENDING = 'pending';
-    const REJECTED = 'rejected';
+    // Status
     const ACCEPTED = 'accepted';
+    const BANNED = 'banned';
     const CANCELLED = 'cancelled';
 
     const DELETED = 'deleted';
-    const VALIDED = 'validated';
     const DRAFT = 'draft';
-    const BANNED = 'banned';
+    const PENDING = 'pending';
+    const REJECTED = 'rejected';
 
-    const ARRAY_STATUS = [self::PENDING, self::REJECTED, self::ACCEPTED, self::CANCELLED, self::DELETED, self::DRAFT, self::VALIDED];
+    const VALIDED = 'validated';
 
-    const LEVEL_INFO = 'info';
+    const NOVALIDED = 'no_validated';
 
+    const SUSPENDED = 'suspended';
+
+    // Log levels
     const LEVEL_DEBUG = 'debug';
-
+    const LEVEL_ERROR = 'error';
+    const LEVEL_INFO = 'info';
     const LEVEL_WARNING = 'warning';
 
-    const LEVEL_ERROR = 'error';
-
+    // Arrays
     const ARRAY_LEVEL_LOG = [self::LEVEL_ERROR, self::LEVEL_WARNING, self::LEVEL_DEBUG, self::LEVEL_INFO];
-
     const ARRAY_ROLES = ['ROLE_USER', 'ROLE_ADMIN', 'ROLE_MODERATOR'];
+    const ARRAY_STATUS = [self::PENDING, self::REJECTED, self::ACCEPTED, self::CANCELLED, self::DELETED, self::DRAFT, self::VALIDED, self::BANNED, self::SUSPENDED];
 
+    // Other
     const NB_REPET_PASSWORD = 3;
-
 }

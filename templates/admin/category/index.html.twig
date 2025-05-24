@@ -1,0 +1,89 @@
+{% extends 'admin/base.html.twig' %}
+
+{% block title %}Reusiix - Les appareil{% endblock %}
+
+{% block main %}
+
+    <h1 class="h3 fs-5 mb-4 text-gray-800">Liste de catégories & insection</h1>
+
+    <div class="d-flex mb-4 gap-2">
+        <div class="col-5 bg-warning text-white py-5 rounded-3 text-center">
+            <h4 class="h5"><i class="bi bi-collection me-2 fs-3"></i>Categories</h4>
+            <div><i class="bi bi-arrow-bar-right"></i>{{ length }} catégories</div>
+        </div>
+        <div class="d-flex justify-content-center col card border border-1 border-warning rounded-3">
+
+            {{ form_start(form) }}
+
+
+            <div class="d-flex align-items-center flex-wrap">
+
+                <p class="col-12 fs-6 mb-3">
+                    {% if category != null %}
+                        Modification de la catégorie <span class="fw-bolder">{{ category.name }}</span>
+                        {% else %} Création d'une nouvelle catégorie
+                    {% endif %}
+                   </p>
+                {{ form_label(form.name, 'Nom', {
+                    'label_attr': {
+                        'class': 'col-1'
+                    }
+                }) }}
+                <div class="col-6">
+                    {{ form_widget(form.name, {
+                        'attr': {
+                            'class': 'form-control'
+                        }
+                    }) }}
+                </div>
+
+                <button class="btn btn-success">{{ category != null ? 'Modifier' : 'Créer' }}</button>
+            </div>
+
+            {{ form_end(form) }}
+        </div>
+
+
+    </div>
+    {% include 'admin/_partial/datatable.html.twig' with {
+        id: 'categories-all-datatable',
+        pathname: 'app_admin_categories_datatable',
+        classTable: 'col-12',
+        color: 'warning',
+        header: [
+            {
+                name: 'name',
+                label: 'Nom',
+                class: 'col-8',
+                input:
+                    {
+                        name: 'c.name',
+                        type: 'text'
+                    }
+
+            },
+            {
+                name: 'update',
+                label: 'Modifier',
+                class: 'col-3',
+            }
+        ],
+        buttons: [
+            {
+                text: 'Ajouter une nouvelle catégorie',
+                pathname: 'app_admin_category_all',
+                color: 'success',
+                icon: 'plus'
+
+            }
+
+        ]
+    } %}
+
+{% endblock %}
+
+
+
+
+
+

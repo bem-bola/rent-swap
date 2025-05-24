@@ -29,12 +29,18 @@ class MessageRepository extends ServiceEntityRepository
 
     public function findOneBySlugConversation(string $slugConversation): array
     {
-        return $this->createQueryBuilder('m')
+        $messages = $this->createQueryBuilder('m')
             ->join('m.conversation', 'c')
             ->where('c.slug = :slug')
             ->setParameter('slug', $slugConversation)
             ->orderBy('m.createdAt', 'ASC')
             ->getQuery()
             ->getResult();
+
+        return array_reduce($messages, function ($carry, $message) {
+            $dateKey = $message->getCreatedAt()->format('Y-m-d');
+            $carry[$dateKey][] = $message;
+            return $carry;
+        }, []);
     }
 }

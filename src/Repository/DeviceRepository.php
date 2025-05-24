@@ -6,6 +6,7 @@ use App\Entity\Device;
 use App\Entity\DevicePicture;
 use App\Entity\User;
 use App\Mapping\DeviceMapping;
+use App\Service\Constances;
 use App\Service\PaginatorService;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\DBAL\Exception;
@@ -67,40 +68,35 @@ class DeviceRepository extends ServiceEntityRepository
     }
 
 
+    /**
+     * @throws Exception
+     */
     public function findByFilters(array $params): array
     {
+        $params['filters']['status'] = Constances::VALIDED;
 
-        $filters = $params['filters'] ?? [];
+        $sql = "SELECT DISTINCT d.*
+                FROM device d
+                LEFT JOIN (
+                    SELECT parent_id, MAX(created) AS max_created
+                    FROM device
+                    WHERE parent_id IS NOT NULL
+                    GROUP BY parent_id
+                ) latest ON d.parent_id = latest.parent_id AND d.created = latest.max_created
+                JOIN category_device cd ON cd.device_id = d.id 
+                     JOIN category c ON cd.category_id = c.id
+                    JOIN user ON user.id = d.user_id
+                AND (d.parent_id IS NULL OR d.created = latest.max_created) 
+                    AND (d.deleted IS NULL)
+                AND (user.deleted != null OR user.is_deleted = true OR user.banned != null OR user.is_banned = true OR user.suspended != null OR user.is_suspended = true)
+                ";
 
-        $sort = $params['orderby'] ?? [];
+        return $this->paginatorService->getDatasPaginator(
+            $this->deviceMapping->createMapping(),
+            $sql,
+            $params
+        );
 
-        $query = $this->createQueryBuilder('d');
-        if(isset($filters['title']) && $filters['title'] != null) {
-            $query->andWhere('LOWER(d.title) LIKE :title')
-                ->setParameter('title', '%'.strtolower($filters['title']).'%');
-        }
-        if(isset($filters['category']) && $filters['category'] != null) {
-            $query->join('d.categories', 'c')
-                ->andWhere('c.slug = :slug')
-            ->setParameter('slug', $filters['category']);
-        }
-        if(isset($filters['location']) && $filters['location'] != null) {
-            $query->andWhere('d.location LIKE :location')
-                ->setParameter('location', '%'.$filters['location'].'%');
-        }
-        if(isset($filters['priceMin']) && $filters['priceMin'] != null) {
-            $query->andWhere('d.price > :priceMin')
-                ->setParameter('priceMin', (float)$filters['priceMin']);;
-        }
-        if(isset($filters['priceMax']) && $filters['priceMax'] != null) {
-            $query->andWhere('d.price < :priceMax')
-                ->setParameter('priceMax', (float)$filters['priceMax']);
-        }
-        if(isset($sort['price']) && $sort['price'] != null) {
-            $query->orderBy('d.price', $sort['price']);
-        }
-
-        return $this->paginatorService->getDatas($query, $params['pagination'] ?? []);
     }
     public function findLatestVersionByParent(Device $device): ?Device
     {
@@ -118,11 +114,9 @@ class DeviceRepository extends ServiceEntityRepository
     /**
      * @throws Exception
      */
-    public function findByUser(array $params, User $user)
+    public function findByUser(array $params, User $user, bool $count = false): array|int|null
     {
-        $filters = $params['filters'] ?? [];
-
-        $sort = $params['orderby'] ?? [];
+        $params['filters']['user_id'] = $user->getId();
 
         $sql = "SELECT d.*
                 FROM device d
@@ -133,31 +127,16 @@ class DeviceRepository extends ServiceEntityRepository
                     GROUP BY parent_id
                 ) latest ON d.parent_id = latest.parent_id AND d.created = latest.max_created
                 WHERE (d.parent_id IS NULL OR d.created = latest.max_created) 
-                    AND d.user_id = :userId
                     AND (d.deleted IS NULL)
-                ORDER BY d.deleted DESC
+                    AND d.status = 'validated'
+        
                 ";
-
-        $parameters = ['userId' => $user->getId()];
-
-        if(isset($filters['status']) && $filters['status'] != null) {
-            $sql .= " AND d.status = :status";
-            $parameters['status'] = $filters['status'];
-        }
-        if(isset($filters['deleted']) && $filters['deleted'] != null) {
-            $sql .= " AND d.deleted IS NOT NULL";
-        }
-
-        if(isset($filters['title']) && $filters['title'] != null) {
-            $sql .= " AND LOWER(d.title) LIKE :title";
-            $parameters['title'] = '%'.strtolower($filters['title']).'%';
-        }
 
         return $this->paginatorService->getDatasPaginator(
             $this->deviceMapping->createMapping(),
             $sql,
-            $parameters,
-            $params['pagination'] ?? []
+            $params,
+            $count
         );
     }
 
@@ -182,9 +161,6 @@ class DeviceRepository extends ServiceEntityRepository
      */
     public function findAllNotDelete(array $params, bool $count = false)
     {
-        $filters = $params['filters'] ?? [];
-
-        $sort = $params['orderby'] ?? [];
 
         $sql = "SELECT d.*
                 FROM device d
@@ -198,24 +174,11 @@ class DeviceRepository extends ServiceEntityRepository
                     AND d.deleted IS NULL
                 ";
 
-        if(isset($filters['status']) && $filters['status'] != null) {
-            $sql .= " AND d.status = :status";
-            $parameters['status'] = $filters['status'];
-        }
-        if(isset($filters['deleted']) && $filters['deleted'] != null) {
-            $sql .= " AND d.deleted IS NOT NULL";
-        }
-
-        if(isset($filters['title']) && $filters['title'] != null) {
-            $sql .= " AND LOWER(d.title) LIKE :title";
-            $parameters['title'] = '%'.strtolower($filters['title']).'%';
-        }
 
         return $this->paginatorService->getDatasPaginator(
             $this->deviceMapping->createMapping(),
             $sql,
-            $parameters ?? [],
-            $params['pagination'] ?? [],
+            $params,
             $count
         );
     }
@@ -242,10 +205,11 @@ class DeviceRepository extends ServiceEntityRepository
                     AND d.deleted IS NULL
                 ";
 
-        return $this->paginatorService->getDataDataTable(
+        return $this->paginatorService->dataDataBleDeviceBySql(
             $this->deviceMapping->createMapping(),
             $sql,
-            $queryParams
+            $queryParams,
+            $count
         );
     }
 
@@ -259,7 +223,7 @@ class DeviceRepository extends ServiceEntityRepository
 
         $sql = "SELECT d.* FROM device d WHERE d.created is not null";
 
-        return $this->paginatorService->getDataDataTable(
+        return $this->paginatorService->dataDataBleDeviceBySql(
             $this->deviceMapping->createMapping(),
             $sql,
             $queryParams
@@ -274,7 +238,7 @@ class DeviceRepository extends ServiceEntityRepository
 
         $queryParams['search']['user_id'] = $idUser;
 
-        $sql = "SELECT d.*
+        $sql = "select * from (SELECT d.*
                 FROM device d
                 LEFT JOIN (
                     SELECT parent_id, MAX(created) AS max_created
@@ -282,10 +246,10 @@ class DeviceRepository extends ServiceEntityRepository
                     WHERE parent_id IS NOT NULL
                     GROUP BY parent_id
                 ) latest ON d.parent_id = latest.parent_id AND d.created = latest.max_created
-                WHERE (d.parent_id IS NULL OR d.created = latest.max_created) 
+                WHERE (d.parent_id IS NULL OR d.created = latest.max_created)) `dld.*` 
                 ";
 
-        return $this->paginatorService->getDataDataTable(
+        return $this->paginatorService->dataDataBleDeviceBySql(
             $this->deviceMapping->createMapping(),
             $sql,
             $queryParams

@@ -85,10 +85,17 @@ li{
 
 @for $i from 5 through 9 {
   .font-size-0#{$i} {
-    font-size: $i * 0.1rem;
+    font-size: $i*0.1rem;
   }
   .font-size-#{$i}{
-    font-size: $i * 1rem;
+    font-size: $i*1rem;
+  }
+}
+
+@for $i from 2 through 10 {
+  $suffixe: $i*100;
+  .fw-#{$suffixe} {
+    font-weight: $suffixe;
   }
 }
 
@@ -158,11 +165,35 @@ li{
 .bg-theme-gray-3{
   background-color: $color-theme-gray-3;
 }
+.bg-theme-gray-2{
+  background-color: $color-theme-gray-2;
+}
 .bg-theme-gray-4{
   background-color: $color-theme-gray-4;
 }
 .bg-theme-danger{
   background-color: $color-theme-danger;
+}
+
+.bg-secondary-opacity-1 {
+  --bs-bg-opacity: 0.1;
+  background-color: rgba(var(--bs-secondary-rgb), var(--bs-bg-opacity)) !important;
+}
+
+@for $i from 1 through 5 {
+  .border-left-color-theme-dark-#{$i}{
+    border-left: $i*1rem solid $color-theme-dark;
+  }
+  .border-right-color-theme-dark-#{$i}{
+    border-right: $i*1rem solid $color-theme-dark;
+  }
+
+  .border-left-color-white-#{$i}{
+    border-left: $i*1rem solid #fff;
+  }
+  .border-right-color-white-#{$i}{
+    border-right: $i*1rem solid #fff;
+  }
 }
 
 .border-theme-dark{
@@ -177,6 +208,9 @@ li{
 .border-theme-danger{
   border: 1px solid $color-theme-danger;
 }
+.border-left{
+  border-left: 3px solid $color-theme-dark;
+}
 
 .cursor-pointer{
   cursor: pointer;
@@ -186,25 +220,34 @@ li{
 }
 @for $i from 6 through 10 {
   .py-#{$i} {
-    padding-top: $i * 1rem;
-    padding-bottom: $i * 1rem;
+    padding-top: $i*1rem;
+    padding-bottom: $i*1rem;
   }
 }
 
-@for $i from 1 through 50 {
+@for $i from 1 through 100 {
   .bottom-#{$i} {
-    bottom: $i * 1%;
+    bottom: $i*1%;
   }
   .top-#{$i} {
-    top: $i * 1%;
+    top: $i*1%;
   }
   .end-#{$i} {
-    right: $i * 1%;
+    right: $i*1%;
   }
   .start-#{$i} {
-    left: $i * 1%;
+    left: $i*1%;
+  }
+
+  .width-#{$i} {
+    width: $i*1rem;
+  }
+
+  .height-#{$i} {
+    height: $i*1rem;
   }
 }
+
 
 .resize-none{
   resize: none;
@@ -222,8 +265,11 @@ header{
   box-shadow: rgba(17, 17, 26, 0.05) 0 1px 0, rgba(17, 17, 26, 0.1) 0 0 8px;
 }
 
+
 main{
   min-height: 4vh !important;
+
+  overflow-y: hidden;
 
   #section-home-3{
     font-size: 1.10rem;
@@ -291,7 +337,7 @@ main{
       overflow-x: hidden;
     }
     #message-content{
-      max-height: 400px;
+      height: 400px;
       overflow-x: hidden;
     }
 
@@ -315,8 +361,6 @@ footer {
   will-change: transform;
   transition: transform 0.5s ease-in-out;
 }
-
-
 
 .product-card img {
   width: 100%;

@@ -4,10 +4,10 @@
 <div class="modal fade col-10" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered col-10 ">
         <div class="modal-content position-relative py-4">
-            <button type="button" class="btn-close position-absolute" data-bs-dismiss="modal" aria-label="Close"></button>
+            <button type="button" class="btn-close position-absolute top-4 end-10" data-bs-dismiss="modal" aria-label="Close"></button>
 
-            <div class="col-3 mx-auto">
-                <img src="{{ asset(user|pathAvatarUser) }}" alt="" class="col-12 rounded-circle">
+            <div class="col-3 mx-auto mb-4">
+                <img src="{{ asset(user|pathAvatarUser) }}" alt="image profil {{ user.username }}" class="col-12 rounded-circle height-7 width-7">
             </div>
 
             <div class="col-10 mx-auto">

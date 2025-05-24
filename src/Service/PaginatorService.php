@@ -35,6 +35,7 @@ class PaginatorService {
         ];
     }
 
+
     /**
      * @throws Exception
      * @param string $sql
@@ -53,36 +54,40 @@ class PaginatorService {
 
     /**
      * @param ResultSetMapping $resultSetMapping
-     * @param $baseSql
-     * @param array $parameters
-     * @param array|null $pagination
+     * @param string $baseSql
+     * @param array $queryParams
      * @param bool $count
      * @return array|int|null
      * @throws Exception
      */
     public function getDatasPaginator(
         ResultSetMapping $resultSetMapping,
-        $baseSql,
-        array $parameters = [],
-        ?array $pagination = null,
-        bool $count = false): array|int|null
+        string           $baseSql,
+        array            $queryParams = [],
+        bool             $count = false): array|int|null
     {
+        // parametre url
+        $parameters = [];
+        // ajoute filtre
+        if(isset($queryParams['filters']))
+            $this->addFiltersDevice($baseSql, $queryParams['filters'], $parameters);
 
         $totalResult = $this->countDatas($baseSql, $parameters);
 
+
         if($count === true) return $totalResult;
-        $sql =  "$baseSql LIMIT :limit OFFSET :offset";
 
 
-        $limit = $pagination['limit'] ?? 10;
-        $page =  $pagination['page'] ?? 1;
+        $limit = $queryParams['pagination']['limit'] ?? 10;
+        $page =  $queryParams['pagination']['page'] ?? 1;
         $offset = ($page-1)*$limit;
 
 
-        $parameters['limit'] = $limit;
+        $parameters['limit']  = (int)$limit;
         $parameters['offset'] = (int)$offset;
 
-        $query = $this->em->createNativeQuery($sql, $resultSetMapping);
+
+        $query = $this->em->createNativeQuery("$baseSql LIMIT :limit OFFSET :offset", $resultSetMapping);
 
         $query->setParameters($parameters);
 
@@ -100,14 +105,16 @@ class PaginatorService {
     /**
      * @throws Exception
      */
-    public function getDataDataTable(ResultSetMapping $resultSetMapping, string $baseSql, array $queryParams = []): array
+    public function dataDataBleDeviceBySql(ResultSetMapping $resultSetMapping, string $baseSql, array $queryParams = [], bool $count = false): array
     {
 
         $parameters = [];
 
-        $this->addFilters($baseSql, $queryParams['search'], $parameters);
+        $this->addFiltersDevice($baseSql, $queryParams['search'], $parameters);
 
         $totalResult = $this->countDatas($baseSql, $parameters);
+
+        if($count === true) return $totalResult;
 
         $sql =  "$baseSql LIMIT :limit OFFSET :offset";
 
@@ -129,13 +136,84 @@ class PaginatorService {
 
     }
 
+    public function dataTableByQueryBuilder($query, $queryParams): array
+    {
+        $this->addFilters($query, $queryParams['search'] ?? []);
+
+        $data =  $this->paginator->paginate(
+            $query,
+            intval($queryParams['page'] ?? 1),
+            intval($queryParams['limit'] ?? 10));
+
+
+        return [
+            'draw' => $queryParams['draw'] ?? 1,
+            'page' => $queryParams['page'] ?? 1,
+            'recordsTotal' => $data->getTotalItemCount(),
+            'recordsFiltered' => $data->getTotalItemCount(),
+            'data' => $data->getItems()
+        ];
+
+    }
+
+
+    private function addFilters(&$query, array $filters): void{
+
+        if($filters != null) {
+            foreach ($filters as $filter => $value) {
+
+                if($value != null){
+
+                    if($filter == 'u.status'){
+                        $this->addFiltersStatusUser($query, $value);
+                    }else{
+                        // enlever le "." ex: c.name en name
+                        $columnName = strrchr($filter, '.');
+                        $columnName = $columnName ? str_replace('.', '', $columnName) : $filter;
+
+                        $query->andWhere("LOWER($filter) LIKE :$columnName");
+                        $query->setParameter("$columnName", "%" . mb_strtolower($value) . "%");
+                    }
+
+                }
+
+            }
+        }
+
+    }
+
+    private function addFiltersStatusUser(&$query, string $value): void{
+
+        switch ($value) {
+            case Constances::BANNED:
+                $query->andWhere('u.isBanned = true');
+                break;
+
+            case Constances::SUSPENDED:
+                $query->andWhere('u.isSuspended = true');
+                break;
+
+            case Constances::DELETED:
+                $query->andWhere('u.isDeleted = true');
+                break;
+
+            case Constances::VALIDED:
+                $query->andWhere('u.isVerified = true');
+                break;
+
+            case Constances::NOVALIDED:
+                $query->andWhere('u.isVerified = false');
+                break;
+        }
+    }
+
     /**
      * @param string $sql
      * @param array $filters
      * @param array $parameters
      * @return void
      */
-    private function addFilters(string &$sql, array $filters, array &$parameters): void
+    private function addFiltersDevice(string &$sql, array $filters, array &$parameters): void
     {
         if($filters != null) {
             foreach ($filters as $filter => $value) {
@@ -147,7 +225,17 @@ class PaginatorService {
                         $sql .= " AND d.$filter = :$filter ";
                         $parameters[$filter] = $value;
                     }
-                    else{
+                    elseif($filter === 'category'){
+                        $sql .= " AND c.slug = :$filter ";
+                        $parameters[$filter] = $value;
+                    }
+                    elseif($filter === 'priceMin'){
+                        $sql .= " AND d.price >= :$filter ";
+                        $parameters[$filter] = (int)$value;
+                    }elseif($filter === 'priceMax'){
+                        $sql .= " AND d.price <= :$filter ";
+                        $parameters[$filter] = $value;
+                    }else{
                         $sql .= " AND d.$filter = :$filter ";
                         $parameters[$filter] = strtolower($value);
                     }

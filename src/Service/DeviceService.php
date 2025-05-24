@@ -16,9 +16,7 @@ class DeviceService
         private readonly LoggerService  $loggerService,
         private readonly SessionService $sessionService
     )
-    {
-
-    }
+    {}
 
     public function isUserValid(Device $device, UserInterface $user): bool{
         return $device->getUser() !== $user;

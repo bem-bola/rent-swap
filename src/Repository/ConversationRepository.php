@@ -3,6 +3,7 @@
 namespace App\Repository;
 
 use App\Entity\Conversation;
+use App\Entity\Device;
 use App\Entity\User;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Common\Collections\ArrayCollection;
@@ -50,9 +51,37 @@ class ConversationRepository extends ServiceEntityRepository
     public function findAllByUser(User $user): ?array
     {
         return $this->createQueryBuilder('c')
+            ->innerJoin('c.users', 'u')
+            ->leftJoin('c.messages', 'm')
+            ->where('u = :user')
+            ->setParameter('user', $user)
+            ->groupBy('c.id')
+            ->orderBy('MAX(m.createdAt)', 'DESC')
+            ->getQuery()
+            ->getResult();
+    }
+
+    public function countByUser(User $user): ?array
+    {
+        return $this->createQueryBuilder('c')
+            ->select('COUNT(c) AS length')
             ->where(':user MEMBER OF c.users')
             ->setParameter('user', $user)
             ->getQuery()
-            ->getResult();
+            ->getOneOrNullResult()
+           ;
+    }
+
+    public function countByDevice(Device $device, User $user): ?array
+    {
+        return $this->createQueryBuilder('c')
+            ->select('COUNT(c) AS length')
+            ->where(':user MEMBER OF c.users')
+            ->andWhere('c.device = :device')
+            ->setParameter('user', $user)
+            ->setParameter('device', $device)
+            ->getQuery()
+            ->getOneOrNullResult()
+            ;
     }
 }

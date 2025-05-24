@@ -4,7 +4,6 @@ document.addEventListener('DOMContentLoaded', e => {
 
     const createDatatable = () => {
         if(dt.info === null || dt.info.currentRoute !== 'app_admin_devices_all') return;
-        console.log("eee");
         const table =  $(`#${dt.info.id}`).DataTable({
             serverSide: true,
             processing: true,
@@ -64,7 +63,7 @@ document.addEventListener('DOMContentLoaded', e => {
 
                     name: 'user',
                     render: data => {
-                        return `<a href='#' class="">${data.firstname} ${data.lastname}</a>`
+                        return `<a href='${Routing.generate('app_admin_users_show', {id: data.id})}' class="">${data.firstname} ${data.lastname}</a>`
                     }
                 },
                 {

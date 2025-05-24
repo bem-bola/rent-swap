@@ -4,7 +4,14 @@
 
 {% block main %}
 
-    <h1 class="h3 mb-2 text-gray-800">Les appareils</h1>
+    <h1 class="h3 fs-5 mb-4 text-gray-800">Les appareils</h1>
+
+    <div class="col-5 bg-dark text-white py-5 rounded-3 text-center mb-4">
+        <h4 class="h5"><i class="bi bi-hdd me-2 fs-3"></i>Appareils</h4>
+        <div><i class="bi bi-arrow-bar-right"></i>{{ length}} appareils
+        </div>
+    </div>
+
     {% include 'admin/_partial/datatable.html.twig' with {
         id: 'devices-all-nametable',
         pathname: 'app_admin_devices_all',
@@ -37,6 +44,7 @@
                     {
                         name: 'status',
                         options: [
+                            { label: 'Tous', value: null, class: 'text-warning'},
                             { label: 'En attente', value: 'pending', class: 'text-warning'},
                             { label: 'Validé', value: 'validated', class: 'text-success'},
                             { label: 'Rejeté', value: 'rejected', class: 'text-danger'},

@@ -6,7 +6,7 @@
     "password1": "password1-eT-343",
     "password2": "password2-eT-343",
     "password3": "password3-eT-343",
-    "password4": "password4eT343@",
+    "password4": "password4eT3435@",
     "firstname": "Hensley",
     "lastname": "Orr",
     "type": 2,
@@ -87,7 +87,7 @@
     "firstname": "Francis",
     "lastname": "Scott",
     "type": 2,
-    "isVerified": false,
+    "isVerified": false,FF
     "isDeleted": false,
     "created": "2017-02-21T11:35:07 -01:00"
   },

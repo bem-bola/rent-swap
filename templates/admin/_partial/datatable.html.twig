@@ -1,5 +1,7 @@
 
-<div class="card shadow mb-4 rounded-4 py-4 px-3 border-1 border-{{ color is defined ? color : 'secondary' }}">
+<div class="card shadow mb-4 rounded-4 py-4 px-3 border-1
+            border-{{ color is defined ? color : 'secondary' }}
+            {{ classTable is defined ? classTable : '' }}">
 
 
     <input type="hidden" name='datatable-info'
@@ -10,6 +12,20 @@
     >
 
     <div class="card-body">
+        {% if buttons is defined %}
+            <div class="d-flex justify-content-end gap-2">
+                {% for button in buttons %}
+                    {% if button.pathname is defined %}
+                        {% set route =  path(button.pathname) %}
+                        {% if button.paramsRoute is defined %}
+                           {% set route =  path(button.pathname, button.paramsRoute) %}
+                        {% endif %}
+                        {% else  %} {% set route = '#' %}
+                    {% endif %}
+                    <a href="{{ route }}" class="btn btn-{{ button.color }}"><i class="bi bi-{{ button.icon }}"></i>{{ button.text }}</a>
+                {% endfor %}
+            </div>
+        {% endif %}
         <div class="table-responsive ">
             <table class="table table-bordered table-datatable" id="{{ id }}">
                 <thead>

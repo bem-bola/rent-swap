@@ -1,0 +1,48 @@
+<h3 class="fs-5 px-0 mt-0 py-3 text-center rounded-top-3">Sélectionner</h3>
+
+<div class="px-0 h-100 {{ lengthConversations > 7 ? 'overflow-y-scroll' :'' }}" id="conversation-content">
+    {% for conversation in conversations %}
+
+        {% set otherUser = conversation.users|filterUser(userCurrent.id) %}
+
+        {% set message = conversation.messages | last %}
+
+        {% if otherUser != userCurrent %}
+
+            <a href="{{ path('app_conversation_message_conversation_slug', {
+                slugConversation :conversation.slug,
+                slugDevice: conversation.device.slug
+            }) }}"
+               class="cursor-pointer row gap-2 conversation-list py-3
+                {{ slugConversation is defined and slugConversation == conversation.slug ? 'bg-secondary-opacity-1 border-left-color-theme-dark-1 border-right-color-theme-dark-1' : 'border-left-color-white-1 border-right-color-white-1' }}">
+
+                <div class="row justify-content-between px-4">
+                    <div class="me-sm-4 me-md-4 col-sm-1 col-md-1 col-xxl-2 pt-0">
+
+                        <img src="{{ asset(otherUser|pathAvatarUser) }}" alt="Avatar utilisateur {{ otherUser.username }}"
+                             class="col-12 width-3 height-3 rounded-circle">
+
+                    </div>
+                    <div class="col ps-3 ms-0 d-flex justify-content-between me-3">
+                        <div class="mb-3 d-sm-none d-md-none d-xxl-block">
+                            <h6 class="mb-0 fw-500">{{ conversation.device.title|length > 25 ? conversation.device.title|slice(0,25) ~ ' ...' : conversation.device.title }}</h6>
+                            <p class="mb-0 font-size-08">{{ message.content|length > 32 ? message.content|slice(0,32) ~ ' ...' : message.content }}</p>
+                        </div>
+
+                        <div class="mb-3 d-md-block d-xxl-none">
+                            <h6 class="mb-0 fw-500">{{ conversation.device.title|length > 25 ? conversation.device.title|slice(0,25) ~ ' ...' : conversation.device.title }}</h6>
+                            <p class="mb-0 font-size-08">{{ message.content|length > 32 ? message.content|slice(0,32) ~ ' ...' : message.content }}</p>
+                        </div>
+
+                    </div>
+                </div>
+
+
+            </a>
+        {% endif %}
+
+
+    {% endfor %}
+</div>
+
+<input type="hidden" name="author" value="{{ userCurrent.id }}">
