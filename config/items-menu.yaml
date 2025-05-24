@@ -17,16 +17,6 @@ device:
       label: "Tous les appareils"
       route: "app_admin_devices_all"
 
-    valid:
-      label: "Les appareils à valider"
-      route: "app_admin_devices_pending"
-      queryParams:
-        status: 'pending'
-
-    search:
-      label: "Chercher un appareil"
-      route: "app_admin_devices_all"
-
     show:
       label: "Détail d'un appareil"
       route: "app_admin_devices_show"
@@ -40,7 +30,7 @@ user:
 
     all:
       label: "Tous les utilisateurs"
-      route: "app_admin_devices_all"
+      route: "app_admin_users_all"
 
     show:
       label: "Détail d'un utilisateur"
@@ -51,14 +41,14 @@ user:
 category:
   label: "Catégories"
   icon: 'collection'
+  route: "app_admin_category_all"
+
+
+warn:
+  label: "Signalement"
+  icon: 'exclamation-diamond'
   children:
 
-    all:
-      label: "Toutes les catégories"
-      route: "app_home"
-
-    add:
-      label: "Ajouter une catégorie"
-      route: "app_home"
-
-
+    message:
+      label: "Messages"
+      route: "app_admin_warn_message"

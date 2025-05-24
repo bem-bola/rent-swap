@@ -4,8 +4,8 @@ namespace App\Twig;
 
 use App\Entity\Device;
 use App\Entity\Favorite;
-use App\Entity\TypeUser;
 use App\Entity\User;
+use App\Repository\ConversationRepository;
 use App\Repository\DevicePictureRepository;
 use App\Repository\DeviceRepository;
 use IntlDateFormatter;
@@ -17,8 +17,9 @@ class AppExtension extends AbstractExtension
 {
 
     public function __construct(
-        private readonly DeviceRepository $deviceRepository,
-        private readonly DevicePictureRepository $devicePictureRepository)
+        private readonly ConversationRepository     $conversationRepository,
+        private readonly DeviceRepository           $deviceRepository,
+        private readonly DevicePictureRepository    $devicePictureRepository)
     {
 
     }
@@ -26,14 +27,16 @@ public function getFilters(): array
 {
     return [
         new TwigFilter('checkRoute', [$this, 'checkRoute']),
+        new TwigFilter('conversationLength', [$this, 'conversationLength']),
+        new TwigFilter('conversationByDeviceLength', [$this, 'conversationByDeviceLength']),
         new TwigFilter('filterUser', [$this, 'excludeCurrentUser']),
         new TwigFilter('firstFilename', [$this, 'firstFilename']),
         new TwigFilter('formatDateFr', [$this, 'formatDateFr']),
         new TwigFilter('getDevice', [$this, 'getDevice']),
         new TwigFilter('pathAvatarUser', [$this, 'pathAvatarUser']),
+        new TwigFilter('pathImgDeviceDefault', [$this, 'pathImgDeviceDefault']),
         new TwigFilter('replacePage', [$this, 'replacePage']),
         new TwigFilter('roleFr', [$this, 'roleFr']),
-        new TwigFilter('typeUserFrench', [$this, 'typeUserFrench']),
     ];
 }
 
@@ -54,17 +57,7 @@ public function getFilters(): array
         return 'logo-reusiix.svg';
     }
 
-    public function typeUserFrench(?TypeUser $typeUser): ?string
-    {
-        $typesEng = [
-            'professional' => 'professionnel',
-            'particular' => 'particulier',
-            'organization' => 'association'
-        ];
-        return $typesEng[$typeUser->getName()] ?? null;
-    }
-
-    public function formatDateFr(\DateTime $date): ?string
+    public function formatDateFr(\DateTime|\DateTimeImmutable $date): ?string
     {
         $formatter = new IntlDateFormatter(
             'fr_FR', // locale française
@@ -105,6 +98,15 @@ public function getFilters(): array
         else return sprintf("/img/letters/%s.png", substr($user->getFirstname(), 0, 1));
     }
 
+    public function pathImgDeviceDefault(Device $device): string
+    {
+        $picture = $this->devicePictureRepository->findByParentFirst($device);
+
+        if($picture) return "/uploads/devices/" . $picture->getFilename();
+        else return "/img/devices/default.png";
+    }
+
+
     public function getDevice($iterable): ?Device {
         if($iterable instanceof Favorite){
             return $iterable->getDevice();
@@ -122,6 +124,16 @@ public function getFilters(): array
         if(in_array('ROLE_MODERATOR', $role)) return 'moderateur';
 
         return 'utilisateur';
+    }
+
+    public function conversationLength(User $user){
+        $conversations = $this->conversationRepository->countByUser($user);
+        return $conversations['length'];
+    }
+
+    public function conversationByDeviceLength(Device $device, User $user){
+        $conversations = $this->conversationRepository->countByDevice($device, $user);
+        return $conversations['length'];
     }
 
 }

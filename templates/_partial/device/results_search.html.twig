@@ -122,9 +122,9 @@
 
                 <li class="col-12 rounded-3 mb-3 item-card bg-white">
                     {% if isUserDevicesRoute %}
-                    <div class="d-flex" style="height: 19rem">
+                    <div class="d-flex height-19">
                         {% else %}
-                        <a href="{{ path('app_device_show', {slug: device.slug}) }}" class="d-flex" style="height: 15rem">
+                        <a href="{{ path('app_device_show', {slug: device.slug}) }}" class="d-flex height-15">
                             {% endif %}
 
                             <div class="img-card-search col-4 rounded-start-3 position-relative">
@@ -139,7 +139,6 @@
                             <div class="ms-3 pt-4">
                                 <h3 class="fs-6 fw-bolder title-card">{{ device.title }}</h3>
                                 <p class="fw-bold">{{ device.price|number_format(2, ',', ' ') }} €</p>
-                                <span class="border-theme-dark-olive-green p-2 rounded-3 text-capitalize">{{ device.user.type|typeUserFrench }}</span>
 
                                 <div class="d-flex flex-column col-12 text-black-50 mt-3">
                                     <small class="category">

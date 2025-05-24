@@ -1,0 +1,179 @@
+{% extends 'admin/base.html.twig' %}
+
+{% block title %}Reusiix - Les appareil{% endblock %}
+
+{% block main %}
+
+    <h1 class="h3 fs-5 mb-4 text-gray-800">Liste de signalements messages</h1>
+
+    <div class="d-flex mb-4 gap-2 {{ warnMessage is defined ? 'align-items-start' : '' }}">
+        <div class="col-5 bg-danger text-white py-5 rounded-3 text-center">
+            <h4 class="h5"><i class="bi bi-exclamation-diamond me-2 fs-3"></i>Signalements messages</h4>
+            <div><i class="bi bi-arrow-bar-right"></i> signalements</div>
+        </div>
+        <div class="col card border border-1 border-danger rounded-3 py-5">
+            {% if warnMessage is defined %}
+
+                <div class="d-flex mb-3">
+                    <h5 class="col-2 fs-6 fw-semibold">Contenu</h5>
+                    <div class="col">{{ warnMessage.message.content|raw|nl2br}}</div>
+                </div>
+
+
+
+                {{ form_start(form) }}
+                <div class="d-flex align-items-start flex-wrap mb-3">
+                    <div class="col-2">
+                        {{ form_label(form.action, 'Action', {
+                            'label_attr': {
+                                'class': 'fw-semibold'
+                            }
+                        }) }}
+                        <span class="text-danger">*</span>
+                    </div>
+
+
+                    <div class="col-7">
+                        {{ form_widget(form.action, {
+                            'attr': {
+                                'class': 'form-select',
+                            }
+                        }) }}
+                    </div>
+
+                </div>
+
+                    <div class="d-flex align-items-start flex-wrap mb-3 ">
+
+                        {{ form_label(form.reason, '', {
+                            'label_attr': {
+                                'class': 'col-2 fw-semibold'
+                            }
+                        }) }}
+                        <div class="col-7">
+                            {{ form_widget(form.reason, {
+                                'attr': {
+                                    'class': 'form-control',
+                                }
+                            }) }}
+                        </div>
+
+
+
+                    </div>
+
+                <div class="d-flex justify-content-center col-12">
+                    <button class="btn btn-success">Envoyer</button>
+
+                </div>
+
+                {{ form_end(form) }}
+
+            {% endif %}
+        </div>
+
+
+    </div>
+
+
+
+    {% include 'admin/_partial/datatable.html.twig' with {
+        id: 'warn-message-datatable',
+        pathname: 'app_admin_warn_message_data',
+        classTable: 'col-12',
+        color: 'danger',
+        header: [
+            {
+                name: 'informant',
+                label: 'Informateur',
+                class: '',
+                input:
+                    {
+                        name: 'user.username',
+                        type: 'text'
+                    }
+
+            },
+            {
+                name: 'author',
+                label: 'Auteur',
+                class: '',
+                input:
+                {
+                    name: 'author.username',
+                    type: 'text'
+                }
+
+            },
+            {
+                name: 'message',
+                label: 'Message',
+                class: 'col-4',
+                input:
+                {
+                    name: 'm.content',
+                    type: 'text'
+                }
+
+            },
+            {
+                name: 'created',
+                label: 'Signalé le',
+                class: 'col-1',
+
+            },
+            {
+                name: 'reviewer',
+                label: 'Examinateur',
+                class: '',
+                input:
+                {
+                    name: 'reviewer.lastname',
+                    type: 'text'
+                }
+
+            },
+            {
+                name: 'reviewed',
+                label: 'examiné le',
+                class: 'col-1',
+
+            },
+            {
+                name: 'update',
+                label: 'Voir',
+                class: 'col-1',
+            }
+        ],
+        buttons: [
+            {
+                text: 'Voir les signalements non traités',
+                pathname: 'app_admin_warn_message',
+                paramsRoute: {
+                    reviewed: false
+                },
+                color: 'warning',
+                icon: 'eyes'
+
+            },
+            {
+                text: 'Voir les signalements traités',
+                pathname: 'app_admin_warn_message',
+                paramsRoute: {
+                    reviewed: true
+                },
+                color: 'success',
+                icon: 'eyes'
+
+            }
+
+        ]
+    } %}
+
+{% endblock %}
+
+
+
+
+
+

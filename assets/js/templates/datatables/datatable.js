@@ -29,7 +29,11 @@ export const status = (data) => {
         pending:   { color: 'text-warning', status: 'En attente' },
         validated: { color: 'text-success', status: 'Validé' },
         rejected:  { color: 'text-danger', status: 'Rejeté' },
-        draft:     { color: 'text-info', status: 'Brouillon' }
+        draft:     { color: 'text-info', status: 'Brouillon' },
+        banned:    { color: 'text-danger', status: 'Banni' },
+        noValid:   { color: 'text-warning', status: 'Non validé' },
+        suspended: { color: 'text-danger', status: 'Suspendu' },
+        deleted:   { color: 'text-danger', status: 'Supprimé' },
     };
 
     return statusMap[data] || statusMap['pending']

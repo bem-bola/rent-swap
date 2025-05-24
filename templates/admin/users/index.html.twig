@@ -1,0 +1,98 @@
+{% extends 'admin/base.html.twig' %}
+
+{% block title %}Reusiix - Détail appareil{% endblock %}
+
+{% block main %}
+
+
+
+<h1 class="h3 fs-5 mb-4 text-gray-800">Liste des utilisateur</h1>
+
+<div class="col-5 bg-primary text-white py-5 rounded-3 text-center mb-4">
+    <h4 class="h5"><i class="bi bi-people me-2 fs-3"></i>Utilsateurs</h4>
+    <div><i class="bi bi-arrow-bar-right"></i>{{ length}} utilisateurs
+    </div>
+</div>
+
+{% include 'admin/_partial/datatable.html.twig' with {
+    id: 'users-all-datatable',
+    pathname: 'app_admin_users_all',
+    color: 'primary',
+    header: [
+        {
+            name: 'u.username',
+            label: 'Pseudo',
+            class: '',
+            input:
+            {
+                name: 'u.username',
+                type: 'text'
+            }
+
+        },
+
+        {
+            name: 'u.firstname',
+            label: 'Prénom',
+            class: '',
+            input:
+            {
+                name: 'u.firstname',
+                type: 'text'
+            }
+
+        },
+
+        {
+            name: 'lastname',
+            label: 'Nom',
+            class: '',
+            input:
+            {
+                name: 'u.lastname',
+                type: 'text'
+            }
+
+        },
+
+        {
+            name: 'u.status',
+            label: 'Status',
+            select:
+            {
+                name: 'u.status',
+                options: [
+                { label: 'Tous', value: null, class: 'text-warning'},
+                { label: 'Banni', value: 'banned', class: 'text-warning'},
+                { label: 'Suspendu', value: 'suspended', class: 'text-danger'},
+                { label: 'Supprimé', value: 'deleted', class: 'text-danger'},
+            ]
+
+            }
+
+        },
+        {
+            name: 'u.created',
+            label: 'Date de création',
+        },
+        {
+            name: 'u.banned',
+            label: 'Date de bannissement',
+        },
+        {
+            name: 'show',
+            label: 'Détail',
+            class: 'col-1',
+        }
+    ]
+} %}
+
+
+
+{% endblock %}
+
+
+
+
+
+

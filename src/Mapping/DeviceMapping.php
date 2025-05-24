@@ -2,6 +2,7 @@
 
 namespace App\Mapping;
 
+use App\Entity\Category;
 use Doctrine\ORM\Query\ResultSetMapping;
 use App\Entity\Device;
 class DeviceMapping
@@ -29,7 +30,5 @@ class DeviceMapping
         $rsm->addMetaResult('d', 'type_id', 'type_id');
 
         return $rsm;
-
     }
-
 }

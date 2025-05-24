@@ -4,9 +4,16 @@ namespace App\Controller;
 
 use App\Entity\Device;
 use App\Entity\Favorite;
+use App\Entity\Message;
+use App\Entity\User;
+use App\Factory\ConversationFactory;
+use App\Factory\MessageFactory;
+use App\Form\MessageType;
 use App\Repository\CategoryRepository;
 use App\Repository\DeviceRepository;
+use App\Service\DeviceService;
 use App\Service\HttpClientService;
+use App\Service\MessageService;
 use Doctrine\ORM\EntityManagerInterface;
 use Exception;
 use Psr\Log\LoggerInterface;
@@ -20,17 +27,27 @@ use Symfony\Contracts\HttpClient\Exception\RedirectionExceptionInterface;
 use Symfony\Contracts\HttpClient\Exception\ServerExceptionInterface;
 use Symfony\Contracts\HttpClient\Exception\TransportExceptionInterface;
 
+/**
+ * @method User|null getUser()
+ */
 #[Route('/device', name: 'app_device_')]
 class DeviceController extends AbstractController
 {
     public function __construct(
         private readonly CategoryRepository     $categoryRepository,
+        private readonly ConversationFactory    $conversationFactory,
         private readonly DeviceRepository       $deviceRepository,
         private readonly EntityManagerInterface $entityManager,
+        private readonly MessageFactory         $messageFactory,
+        private readonly MessageService         $messageService,
         private readonly LoggerInterface        $logger)
     {}
+
+    /**
+     * @throws \Doctrine\DBAL\Exception
+     */
     #[Route('/search', name: 'search')]
-    public function search(Request $request): Response
+    public function search(Request $request, ?string $slugDevice = null): Response
     {
         $sort = $request->get('orderby');
         return $this->render('device/search.html.twig', [
@@ -41,6 +58,11 @@ class DeviceController extends AbstractController
         ]);
     }
 
+
+
+    /**
+     * @throws \Doctrine\DBAL\Exception
+     */
     #[Route('/search/by-form', name: 'search_by_form')]
     public function searchByForm(Request $request): Response
     {
@@ -63,9 +85,8 @@ class DeviceController extends AbstractController
      * @throws Exception
      */
     #[Route('/show/{slug}', name: 'show')]
-    public function view(string $slug, EntityManagerInterface $entityManager, HttpClientService $httpClientService): Response
+    public function view(Request $request, string $slug, EntityManagerInterface $entityManager, HttpClientService $httpClientService): Response
     {
-
         $device = $entityManager->getRepository(Device::class)->findOneBy(['slug' => $slug]);
 
         if(!$device){
@@ -78,6 +99,23 @@ class DeviceController extends AbstractController
         $devicesSimilar = $entityManager->getRepository(Device::class)->findSimilarDevices($device);
         $devicesUser = $entityManager->getRepository(Device::class)->findBy(['user' => $device->getUser()]);
 
+        $form = $this->createForm(MessageType::class, $this->messageService->messageDefaultDevice($device));
+
+        $form->handleRequest($request);
+        if($form->isSubmitted() && $form->isValid()){
+
+            $content = $form->get('content')->getData();
+
+            $conversations = $this->conversationFactory->create($this->getUser(), $device->getUser(), $device);
+
+            $this->messageFactory->create($this->getUser(), $content , $conversations);
+
+            $this->addFlash('success', 'Message envoyé avec succès');
+
+            return $this->redirectToRoute('app_device_show', ['slug' => $device->getSlug()]);
+
+        }
+
         $coordonates = $httpClientService->request(
             sprintf($this->getParameter('urlNominatim'), urlencode($device->getLocation())),
         );
@@ -87,6 +125,7 @@ class DeviceController extends AbstractController
             'devicesUser' => $devicesUser,
             'coordonates' => ['lat' => $coordonates[0]['lat'], 'lon' => $coordonates[0]['lon']],
             'favorite' => $favorite ?? null,
+            'form' => $form->createView(),
         ]);
     }
 }

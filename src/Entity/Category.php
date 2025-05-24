@@ -16,15 +16,15 @@ class Category
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column(type: 'bigint')]
-    #[Groups(['device:read'])]
+    #[Groups(['device:read', 'category:read'])]
     private ?int $id = null;
 
     #[ORM\Column(type: 'string', length: 150)]
-    #[Groups(['device:read'])]
+    #[Groups(['device:read', 'category:read'])]
     private string $name;
 
     #[ORM\Column(type: Types::GUID)]
-    #[Groups(['device:read'])]
+    #[Groups(['device:read', 'category:read'])]
     private ?string $slug = null;
 
     #[ORM\ManyToMany(targetEntity: Device::class, inversedBy: 'devices', cascade: ['persist'])]

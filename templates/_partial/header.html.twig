@@ -1,5 +1,5 @@
 {% set routeName = app.request.get('_route') %}
-<header class="px-xs-3 px-sm-3 px-md-3 px-lg-5 py-4 box-shadow-fh row align-items-center bg-white">
+<header class="px-xs-3 px-sm-3 px-md-3 px-lg-5 py-4 box-shadow-fh d-flex align-items-center bg-white">
     <!-- Logo et Search -->
     <div class="col-xs col-sm col-md col-lg-5 row py-0 align-items-center">
         <div class="logo-content col-xs-4 col-sm-4 col-md-4 col-lg-3r">
@@ -34,12 +34,14 @@
                         <i class="bi bi-heart fs-5"></i><br><span class="mx-2 d-xs-none d-sm-none d-md-none d-lg-inline">Favoris</span>
                     </a>
                 </li>
-                <li class="me-2">
-                    <a href="{{ path('app_conversation_show_all') }}"
-                       class="btn box-shadow-sm fw-bolder border-dark py-2">
-                        <i class="bi bi-chat-square-text fs-5"></i><br><span class="mx-2 d-xs-none d-sm-none d-md-none d-lg-inline">Messages</span>
-                    </a>
-                </li>
+                {% if app.user|conversationLength > 0 %}
+                    <li class="me-2">
+                        <a href="{{ path('app_conversation_show_all') }}"
+                           class="btn box-shadow-sm fw-bolder border-dark py-2">
+                            <i class="bi bi-chat-square-text fs-5"></i><br><span class="mx-2 d-xs-none d-sm-none d-md-none d-lg-inline">Messages</span>
+                        </a>
+                    </li>
+                {% endif %}
 
                 <li class="me-2">
                     <button class="btn box-shadow-sm fw-bolder border-dark py-2 dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">

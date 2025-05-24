@@ -22,18 +22,18 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column(type: 'bigint')]
-    #[Groups(['device:read'])]
+    #[Groups(['device:read', 'user:read', 'warn:read'])]
     private ?int $id = null;
 
     #[ORM\Column(length: 180)]
-    #[Groups(['device:read'])]
+    #[Groups(['device:read', 'user:read', 'warn:read'])]
     private ?string $email = null;
 
     /**
      * @var list<string> The user roles
      */
     #[ORM\Column]
-    #[Groups(['device:read'])]
+    #[Groups(['device:read', 'user:read'])]
     private array $roles = [];
 
     /**
@@ -42,37 +42,32 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column]
     private ?string $password = null;
 
-    #[ORM\ManyToOne(targetEntity: TypeUser::class)]
-    #[ORM\JoinColumn(nullable: true)]
-    private TypeUser $type;
-
     #[ORM\Column(type: 'datetime')]
+    #[Groups(['device:read', 'user:read', 'warn:read'])]
     private DateTimeInterface $created;
 
-    #[ORM\Column(type: 'string', length: 30, nullable: true)]
-    private ?string $siret = null;
-
     #[ORM\Column(type: 'boolean', nullable: true)]
-    #[Groups(['device:read'])]
+    #[Groups(['device:read', 'user:read', 'warn:read'])]
     private bool $isVerified;
 
     #[ORM\Column(type: 'boolean', nullable: true)]
-    #[Groups(['device:read'])]
+    #[Groups(['device:read', 'user:read', 'warn:read'])]
     private ?bool $isDeleted = null;
 
     #[ORM\Column(type: 'string', length: 100)]
-    #[Groups(['device:read'])]
+    #[Groups(['device:read', 'user:read', 'warn:read'])]
     private string $username;
 
     #[ORM\Column(type: 'string', length: 255, nullable: true)]
-    #[Groups(['device:read'])]
+    #[Groups(['device:read', 'user:read', 'warn:read'])]
     private ?string $firstname = null;
 
     #[ORM\Column(type: 'string', length: 255, nullable: true)]
-    #[Groups(['device:read'])]
+    #[Groups(['device:read', 'user:read', 'warn:read'])]
     private ?string $lastname = null;
 
     #[ORM\Column(nullable: true)]
+    #[Groups(['device:read', 'user:read'])]
     private ?\DateTimeImmutable $birthAt = null;
 
     /**
@@ -88,6 +83,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     private Collection $messages;
 
     #[ORM\ManyToOne]
+    #[Groups(['device:read', 'user:read', 'warn:read'])]
     private ?Media $avatar = null;
 
     /**
@@ -97,25 +93,49 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     private Collection $emails;
 
     #[ORM\Column(nullable: true)]
+    #[Groups(['device:read', 'user:read', 'warn:read'])]
     private ?\DateTime $deleted = null;
 
     #[ORM\Column(nullable: true)]
+    #[Groups(['device:read', 'user:read'])]
     private ?\DateTime $banned = null;
 
     #[ORM\Column(nullable: true)]
+    #[Groups(['device:read', 'user:read'])]
     private ?bool $isBanned = null;
 
     #[ORM\Column(nullable: true)]
+    #[Groups(['device:read', 'user:read'])]
     private ?\DateTime $verified = null;
 
     #[ORM\Column(nullable: true)]
     private ?array $oldPasswords = [];
+
+    /**
+     * @var Collection<int, WarnMessage>
+     */
+    #[ORM\OneToMany(targetEntity: WarnMessage::class, mappedBy: 'informant')]
+    private Collection $warnMessages;
+
+    #[ORM\Column(nullable: true)]
+    private ?bool $isSuspended = null;
+
+    #[ORM\Column(nullable: true)]
+    private ?\DateTime $suspended = null;
+
+    /**
+     * @var Collection<int, WarnMessage>
+     */
+    #[ORM\OneToMany(targetEntity: WarnMessage::class, mappedBy: 'reviewer')]
+    private Collection $reviewerWarnMessage;
 
     public function __construct()
     {
         $this->conversations = new ArrayCollection();
         $this->messages = new ArrayCollection();
         $this->emails = new ArrayCollection();
+        $this->warnMessages = new ArrayCollection();
+        $this->reviewerWarnMessage = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -208,23 +228,6 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         // If you store any temporary, sensitive data on the user, clear it here
         // $this->plainPassword = null;
     }
-
-    /**
-     * @return TypeUser|null
-     */
-    public function getType(): ?TypeUser
-    {
-        return $this->type;
-    }
-
-    /**
-     * @param TypeUser|null $type
-     */
-    public function setType(?TypeUser $type): void
-    {
-        $this->type = $type;
-    }
-
 
     /**
      * @param DateTimeInterface $created
@@ -507,6 +510,90 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function setOldPasswords(?array $oldPasswords): static
     {
         $this->oldPasswords = $oldPasswords;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, WarnMessage>
+     */
+    public function getWarnMessages(): Collection
+    {
+        return $this->warnMessages;
+    }
+
+    public function addWarnMessage(WarnMessage $warnMessage): static
+    {
+        if (!$this->warnMessages->contains($warnMessage)) {
+            $this->warnMessages->add($warnMessage);
+            $warnMessage->setInformant($this);
+        }
+
+        return $this;
+    }
+
+    public function removeWarnMessage(WarnMessage $warnMessage): static
+    {
+        if ($this->warnMessages->removeElement($warnMessage)) {
+            // set the owning side to null (unless already changed)
+            if ($warnMessage->getInformant() === $this) {
+                $warnMessage->setInformant(null);
+            }
+        }
+
+        return $this;
+    }
+
+    public function isSuspended(): ?bool
+    {
+        return $this->isSuspended;
+    }
+
+    public function setIsSuspended(?bool $isSuspended): static
+    {
+        $this->isSuspended = $isSuspended;
+
+        return $this;
+    }
+
+    public function getSuspended(): ?\DateTime
+    {
+        return $this->suspended;
+    }
+
+    public function setSuspended(?\DateTime $suspended): static
+    {
+        $this->suspended = $suspended;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, WarnMessage>
+     */
+    public function getReviewerWarnMessage(): Collection
+    {
+        return $this->reviewerWarnMessage;
+    }
+
+    public function addReviewerWarnMessage(WarnMessage $reviewerWarnMessage): static
+    {
+        if (!$this->reviewerWarnMessage->contains($reviewerWarnMessage)) {
+            $this->reviewerWarnMessage->add($reviewerWarnMessage);
+            $reviewerWarnMessage->setReviewer($this);
+        }
+
+        return $this;
+    }
+
+    public function removeReviewerWarnMessage(WarnMessage $reviewerWarnMessage): static
+    {
+        if ($this->reviewerWarnMessage->removeElement($reviewerWarnMessage)) {
+            // set the owning side to null (unless already changed)
+            if ($reviewerWarnMessage->getReviewer() === $this) {
+                $reviewerWarnMessage->setReviewer(null);
+            }
+        }
 
         return $this;
     }

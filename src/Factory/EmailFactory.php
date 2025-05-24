@@ -8,6 +8,7 @@ use App\Entity\Email;
 use App\Entity\Message;
 use App\Entity\User;
 use App\Repository\EmailRepository;
+use App\Service\Constances;
 use App\Service\LoggerService;
 
 class EmailFactory
@@ -43,7 +44,7 @@ class EmailFactory
         $email->setObject($object);
         $this->emailRepository->save($email);
 
-        $this->loggerService->write('info', sprintf("Mail envoyé par userId: %s à userId: %s", $sender->getId(), $receiver->getId()));
+        $this->loggerService->write(Constances::LEVEL_INFO, sprintf("Mail envoyé par userId: %s à userId: %s", $sender->getId(), $receiver->getId()));
 
 
         return $email;

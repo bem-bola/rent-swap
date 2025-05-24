@@ -32,6 +32,9 @@ class Conversation
     #[ORM\Column(type: Types::GUID)]
     private ?string $slug = null;
 
+    #[ORM\ManyToOne]
+    private ?Device $device = null;
+
     public function __construct()
     {
         $this->users = new ArrayCollection();
@@ -101,6 +104,18 @@ class Conversation
     public function getSlug(): ?string
     {
         return $this->slug;
+    }
+
+    public function getDevice(): ?Device
+    {
+        return $this->device;
+    }
+
+    public function setDevice(?Device $device): static
+    {
+        $this->device = $device;
+
+        return $this;
     }
 
 }

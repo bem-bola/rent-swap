@@ -3,6 +3,7 @@
 namespace App\Repository;
 
 use App\Entity\Category;
+use App\Service\PaginatorService;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 
@@ -11,7 +12,10 @@ use Doctrine\Persistence\ManagerRegistry;
  */
 class CategoryRepository extends ServiceEntityRepository
 {
-    public function __construct(ManagerRegistry $registry)
+    public function __construct(
+        ManagerRegistry $registry,
+        private readonly PaginatorService $paginatorService
+    )
     {
         parent::__construct($registry, Category::class);
     }
@@ -35,5 +39,12 @@ class CategoryRepository extends ServiceEntityRepository
             ->select('COUNT(c.id)')
             ->getQuery()
             ->getSingleScalarResult();
+    }
+
+    public function getAll(array $queryParams):array {
+        return $this->paginatorService->dataTableByQueryBuilder(
+            $this->createQueryBuilder('c'),
+            $queryParams,
+        );
     }
 }
