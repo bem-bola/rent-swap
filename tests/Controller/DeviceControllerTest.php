@@ -9,7 +9,7 @@ final class DeviceControllerTest extends WebTestCase
     public function testIndex(): void
     {
         $client = static::createClient();
-        $client->request('GET', '/device');
+        $client->request('GET', '/device/index');
 
         self::assertResponseIsSuccessful();
     }
