@@ -3374,6 +3374,11 @@ tapable@^2.1.1, tapable@^2.2.0, tapable@^2.2.1:
   resolved "https://registry.npmjs.org/tapable/-/tapable-2.2.1.tgz"
   integrity sha512-GNzQvQTOIP6RyTfE2Qxb8ZVlNmw0n88vp1szwWRimP02mnTsx3Wtn5qRdqY9w2XduFNUgvOwhNnQsjwCp+kqaQ==
 
+tarteaucitronjs@^1.21.0:
+  version "1.21.0"
+  resolved "https://registry.yarnpkg.com/tarteaucitronjs/-/tarteaucitronjs-1.21.0.tgz#39e176bc74d58ab988c88eeb5c2220ea935a2a37"
+  integrity sha512-PMlWPbnz5u8APuwuGM7YPku+DfwPf5zMSIhq7xZ8uOwX3/lzkLJaFa5ff8wfpoKvjZTS45U0u2JUJ3WreuxQ9Q==
+
 terser-webpack-plugin@^5.3.0, terser-webpack-plugin@^5.3.10:
   version "5.3.10"
   resolved "https://registry.npmjs.org/terser-webpack-plugin/-/terser-webpack-plugin-5.3.10.tgz"

@@ -28,6 +28,10 @@ security:
                 secret: '%kernel.secret%'
                 lifetime: 604800
 
+            # Active le login_throttling avec le service personnalisé
+            login_throttling:
+                limiter: app.login_rate_limiter
+
     role_hierarchy:
         ROLE_ADMIN:          [ROLE_MODERATOR, ROLE_USER]
         ROLE_MODERATOR:      [ROLE_USER]
