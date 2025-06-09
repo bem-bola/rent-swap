@@ -1,7 +1,13 @@
 <!DOCTYPE html>
 <html lang="fr">
     <head>
+        <script type="text/javascript" src="{{ asset('build/tarteaucitron/tarteaucitron.js') }}"></script>
+        <script type="text/javascript" src="{{ asset('build/tarteaucitron/js/tarteaucitron-init.js') }}">
+
+        </script>
+
         <meta charset="UTF-8">
+        <meta name="description" content="{% block description %}{% endblock %}">
         <title>{% block title %}{% endblock %}</title>
         {% block stylesheets %}
             {{ encore_entry_link_tags('style') }}

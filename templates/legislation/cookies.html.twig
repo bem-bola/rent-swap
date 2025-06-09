@@ -1,0 +1,100 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Hello LegislationController!{% endblock %}
+
+{% block main %}
+
+    <div class="container bg-white rounded-3 mt-4 p-4">
+
+        <h1 class="fs-4 mb-0">Politique de gestion des cookies</h1>
+        <small>Date de dernière mise à jour : 28 mai 2025</small>
+
+        <div class="mt-4">
+            <h2 class="fs-5 color-theme-gray-4">1. Qu'est-ce qu'un cookie ?</h2>
+            <hr>
+            <p class="font-size-09">
+                Un cookie est un petit fichier texte enregistré sur le terminal de l’utilisateur (ordinateur, smartphone, tablette) lors de la navigation sur un site web. Il permet de stocker des informations relatives à la navigation, comme les préférences linguistiques, les identifiants de session ou les préférences utilisateur.
+            </p>
+            <p class="font-size-09">
+                Les cookies ne permettent pas d’identifier directement une personne, mais uniquement un appareil ou un navigateur utilisé pour accéder au site. Ils sont gérés par le navigateur web de l’utilisateur.
+            </p>
+        </div>
+
+        <div class="mt-4">
+            <h2 class="fs-5 color-theme-gray-4">2. Utilisation des cookies par Reusiix</h2>
+            <hr>
+            <p class="font-size-09">
+                Reusiix utilise uniquement des cookies strictement nécessaires au bon fonctionnement du site. Aucune technologie de suivi tierce (comme Google Analytics, Facebook, etc.) n’est utilisée.
+            </p>
+            <p class="font-size-09">
+                Ces cookies permettent notamment :
+            </p>
+            <ul class="font-size-09">
+                <li>La gestion de la session utilisateur (connexion/déconnexion),</li>
+                <li>La sécurité (ex. : protection CSRF),</li>
+                <li>La mémorisation de certaines préférences utilisateur (ex. : thème, langue),</li>
+                <li>L’accès aux espaces personnels et aux fonctionnalités du compte utilisateur.</li>
+            </ul>
+        </div>
+
+        <div class="mt-4">
+            <h2 class="fs-5 color-theme-gray-4">3. Cookies utilisés sur le site</h2>
+            <hr>
+            <table class="table table-bordered font-size-09">
+                <thead>
+                <tr>
+                    <th>Nom du cookie</th>
+                    <th>Fonction</th>
+                    <th>Durée de vie</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr>
+                    <td>session_id</td>
+                    <td>Identifiant unique de session pour les utilisateurs connectés</td>
+                    <td>1 jour</td>
+                </tr>
+                <tr>
+                    <td>csrf_token</td>
+                    <td>Protection contre les attaques CSRF (sécurité)</td>
+                    <td>Session</td>
+                </tr>
+                <tr>
+                    <td>user_preferences</td>
+                    <td>Mémorisation des préférences utilisateur</td>
+                    <td>13 mois</td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="mt-4">
+            <h2 class="fs-5 color-theme-gray-4">4. Gestion des cookies</h2>
+            <hr>
+            <p class="font-size-09">
+                Vous pouvez configurer votre navigateur pour bloquer ou supprimer les cookies. Cependant, cela pourrait altérer certaines fonctionnalités du site, notamment l’accès à votre compte ou la sauvegarde de vos préférences.
+            </p>
+            <p class="font-size-09">
+                Voici les liens vers les pages d’aide des principaux navigateurs pour gérer les cookies :
+            </p>
+            <ul class="font-size-09">
+                <li><a href="https://support.google.com/chrome/answer/95647" target="_blank">Google Chrome</a></li>
+                <li><a href="https://support.mozilla.org/fr/kb/activer-desactiver-cookies-preferences" target="_blank">Mozilla Firefox</a></li>
+                <li><a href="https://support.apple.com/fr-fr/guide/safari/sfri11471/mac" target="_blank">Apple Safari</a></li>
+                <li><a href="https://support.microsoft.com/fr-fr/help/17442/windows-internet-explorer-delete-manage-cookies" target="_blank">Internet Explorer</a></li>
+                <li><a href="https://privacy.microsoft.com/fr-fr/windows-10-microsoft-edge-and-privacy" target="_blank">Microsoft Edge</a></li>
+            </ul>
+        </div>
+
+        <div class="mt-4">
+            <h2 class="fs-5 color-theme-gray-4">5. Contact</h2>
+            <hr>
+            <p class="font-size-09">
+                Pour toute question relative à l’utilisation des cookies sur Reusiix, vous pouvez nous contacter à l’adresse suivante : <a href="mailto:contact@reusiix.com">contact@reusiix.com</a>.
+            </p>
+        </div>
+
+    </div>
+
+
+{% endblock %}
