@@ -43,6 +43,14 @@ class DeviceController extends AbstractController
         private readonly LoggerInterface        $logger)
     {}
 
+    #[Route('/index', name: 'index')]
+    public function index(): Response
+    {
+
+        return $this->render('device/search.html.twig', [
+        ]);
+    }
+
     /**
      * @throws \Doctrine\DBAL\Exception
      */

@@ -26,6 +26,11 @@ Encore
     .addStyleEntry('style-admin', './assets/styles/templates/style.scss')
     .addStyleEntry('icons', './node_modules/bootstrap-icons/font/bootstrap-icons.css')
 
+    .copyFiles({
+        from: './assets/tarteaucitron/',
+        to: 'tarteaucitron/[path][name].[ext]'
+    })
+
     // When enabled, Webpack "splits" your files into smaller pieces for greater optimization.
     .splitEntryChunks()
 

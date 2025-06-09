@@ -16,7 +16,6 @@ class HomeController extends AbstractController
     public function index(EntityManagerInterface $entityManager): Response
     {
 
-
         return $this->render('home/index.html.twig', [
             'slides' => [
         ['text' => "Ça fait plus d'un an que je partage Youtube Famille tout marche comme sur des roulettes", 'alt' => 'Slide 1', 'auteur' => 'Bolain'],

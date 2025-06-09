@@ -1,0 +1,39 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Questions générales{% endblock %}
+{% block description %}Questions générales sur le fonctionnement de Reusiix{% endblock %}
+
+{% block main %}
+
+    <section class="container d-flex flex-wrap justify-content-center align-items-baseline gap-2 position-relative">
+        <div class="col-4 bg-white rounded-3 mt-4 p-4" id="navigation">
+            <h2 class="fs-5 ">Navigation</h2>
+            <ul class="list-group">
+                {% for key, value in data %}
+                    <li class="py-2 fw-300 list-group-item"><a href="#question-{{ key }}" class="col-12">{{ value.question }}</a></li>
+                {% endfor %}
+            </ul>
+        </div>
+        <div class="col bg-white rounded-3 mt-4 p-4">
+            <h1 class="fs-4 mb-0">Questions générales sur Reusiix </h1>
+
+            {% for key, value in data %}
+                <div class="mt-4" id="question-{{ key }}">
+                    <h2 class="fs-5 color-theme-gray-4">{{ value.question }}</h2>
+                    <p class="fs-6">{{ value.answer }}</p>
+                    <hr>
+
+                </div>
+            {% endfor %}
+
+            <div class="scroll-to-top-btn position-fixed bottom-70 end-12">
+                <a href="#navigation">
+                    <i class="bi bi-arrow-up-circle-fill color-theme-dark fs-1"></i>
+                </a>
+            </div>
+
+        </div>
+    </section>
+
+
+{% endblock %}

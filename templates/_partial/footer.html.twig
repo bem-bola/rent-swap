@@ -5,11 +5,11 @@
    <div class="row align-items-start">
 
       <div class="col col-sm-12 col-xs-12 col-md-12 col-lg text-xs-center text-sm-center text-md-center text-lg-start mt-xs-3 mt-sm-3 mt-md-3 mt-lg-0">
-         <h3 class="fs-5">INFORMATIONS GÉNÉRALES</h3>
+         <h3 class="fs-5">QUESTIONS FRÉQUENTES</h3>
          <ul class="mx-0 px-0">
-            <li class="mb-1 nav-item"><a href="#">Qui sommes-nous ?</a></li>
-            <li class="mb-1 nav-item"><a href="#">Conditions générales d'utilisation</a></li>
-            <li class="mb-1 nav-item"><a href="#">RGPD et Gestions de cookies</a></li>
+            <li class="mb-1 nav-item"><a href="{{ path('app_faq_general') }}">Question génerales sur le fonctionnement de Reusiix</a></li>
+            <li class="mb-1 nav-item"><a href="#">Je n'arrive pas à me connecter à mon compte</a></li>
+            <li class="mb-1 nav-item"><a href="#">Comment réinitialiser  / modifier mon mot de passe</a></li>
          </ul>
       </div>
 
@@ -17,8 +17,9 @@
          <h3 class="fs-5">INFORMATIONS LÉGALES</h3>
          <ul class="mx-0 px-0">
             <li class="mb-1 nav-item"><a href="{{ path('app_legislation_mentions_legales') }}">Mentions légales</a></li>
-            <li class="mb-1 nav-item"><a href="{{ path('app_legislation_cgvu') }}">CGVU</a></li>
-            <li class="mb-1 nav-item"><a href="#">Cookies</a></li>
+            <li class="mb-1 nav-item"><a href="{{ path('app_legislation_cgvu') }}">Conditions Générales de Vente et d'Utilisation</a></li>
+            <li class="mb-1 nav-item"><a href="{{ path('app_legislation_politique') }}">Politique de confidentialité et respect de la vie privée </a></li>
+            <li class="mb-1 nav-item"><a href="{{ path('app_legislation_cookies') }}">Cookies</a></li>
          </ul>
       </div>
 
