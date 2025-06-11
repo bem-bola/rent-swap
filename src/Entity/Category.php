@@ -9,6 +9,7 @@ use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Serializer\Annotation\Groups;
 use Symfony\Component\Uid\Uuid;
+use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: CategoryRepository::class)]
 class Category
@@ -21,6 +22,11 @@ class Category
 
     #[ORM\Column(type: 'string', length: 150)]
     #[Groups(['device:read', 'category:read'])]
+    #[Assert\NotBlank()]
+    #[Assert\Regex(
+        pattern: '/^[A-Za-zÀ-ÖØ-öø-ÿ]{2,}$/',
+        message: 'Le nom doit contenir au moins 2 caractères alphabétiques.'
+    )]
     private string $name;
 
     #[ORM\Column(type: Types::GUID)]

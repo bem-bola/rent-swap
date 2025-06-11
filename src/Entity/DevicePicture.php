@@ -6,6 +6,8 @@ use App\Repository\DevicePictureRepository;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Serializer\Annotation\Groups;
+use Symfony\Component\Validator\Constraints as Assert;
+
 
 #[ORM\Entity(repositoryClass: DevicePictureRepository::class)]
 class DevicePicture
@@ -18,6 +20,7 @@ class DevicePicture
 
     #[ORM\ManyToOne(targetEntity: Device::class)]
     #[ORM\JoinColumn(nullable: false)]
+    #[Assert\NotBlank()]
     private ?Device $device = null;
 
     #[ORM\Column(type: 'datetime')]
@@ -30,6 +33,7 @@ class DevicePicture
 
     #[ORM\Column(type: Types::TEXT)]
     #[Groups(['device:read'])]
+    #[Assert\NotBlank()]
     private ?string $filename = null;
 
     #[ORM\Column(length: 255, nullable: true)]
