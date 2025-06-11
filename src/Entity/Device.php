@@ -9,6 +9,7 @@ use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Uid\Uuid;
 use Symfony\Component\Serializer\Annotation\Groups;
+use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: DeviceRepository::class)]
 class Device
@@ -22,6 +23,7 @@ class Device
     #[ORM\ManyToOne(targetEntity: User::class)]
     #[ORM\JoinColumn(nullable: false)]
     #[Groups(['device:read'])]
+    #[Assert\NotBlank()]
     private ?User $user = null;
 
     #[ORM\ManyToOne(targetEntity: Device::class, cascade: ['persist'])]
@@ -30,18 +32,23 @@ class Device
     #[ORM\ManyToOne(targetEntity: TypeDevice::class)]
     #[ORM\JoinColumn(nullable: false)]
     #[Groups(['device:read'])]
+    #[Assert\NotBlank()]
     private TypeDevice $type;
 
     #[ORM\Column(type: 'string', length: 250)]
     #[Groups(['device:read'])]
+    #[Assert\NotBlank()]
     private string $slug;
 
     #[ORM\Column(type: 'text')]
     #[Groups(['device:read'])]
+    #[Assert\NotBlank()]
+    #[Assert\Length(min: 2)]
     private string $body;
 
     #[ORM\Column(type: 'float')]
     #[Groups(['device:read'])]
+    #[Assert\NotBlank()]
     private float $price;
 
     #[ORM\Column(type: 'boolean', nullable: true)]
@@ -50,6 +57,7 @@ class Device
 
     #[ORM\Column(type: 'datetime')]
     #[Groups(['device:read'])]
+    #[Assert\NotBlank()]
     private \DateTimeInterface $created;
 
     #[ORM\Column(type: 'datetime', nullable: true)]
@@ -58,6 +66,8 @@ class Device
 
     #[ORM\Column(type: 'string', length: 100)]
     #[Groups(['device:read'])]
+    #[Assert\NotBlank()]
+    #[Assert\Length(min: 2, max: 100)]
     private string $title;
 
     #[ORM\Column(type: 'string', length: 10)]
@@ -66,6 +76,7 @@ class Device
 
     #[ORM\Column(type: 'string', length: 100)]
     #[Groups(['device:read'])]
+    #[Assert\NotBlank()]
     private string $location;
 
     #[ORM\Column(type: 'string', length: 20, nullable: true)]
@@ -139,12 +150,6 @@ class Device
     public function getSlug(): string
     {
         return $this->slug;
-    }
-
-    public function setSlug(string $slug): self
-    {
-        $this->slug = $slug;
-        return $this;
     }
 
     public function getBody(): string

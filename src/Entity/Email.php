@@ -5,6 +5,7 @@ namespace App\Entity;
 use App\Repository\EmailRepository;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: EmailRepository::class)]
 class Email
@@ -15,12 +16,15 @@ class Email
     private ?int $id = null;
 
     #[ORM\ManyToOne(inversedBy: 'emails')]
+    #[Assert\NotBlank()]
     private ?User $sender = null;
 
     #[ORM\ManyToOne]
+    #[Assert\NotBlank()]
     private ?User $receiver = null;
 
     #[ORM\Column(type: Types::TEXT)]
+    #[Assert\NotBlank()]
     private ?string $Content = null;
 
     #[ORM\Column(length: 255, nullable: true)]

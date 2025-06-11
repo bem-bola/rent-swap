@@ -7,12 +7,12 @@ use App\Service\Constances;
 use DateTimeInterface;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
-use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Serializer\Annotation\Groups;
+use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: UserRepository::class)]
 #[ORM\UniqueConstraint(name: 'UNIQ_IDENTIFIER_EMAIL', fields: ['email'])]
@@ -27,6 +27,9 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
     #[ORM\Column(length: 180)]
     #[Groups(['device:read', 'user:read', 'warn:read'])]
+    #[Assert\NotBlank(message: 'L\'email est requis.')]
+    #[Assert\Length(min: 2, minMessage: 'L\'email doit contenir au moins {{ limit }} caractères.')]
+    #[Assert\Email(message: 'L\'adresse email "{{ value }}" n\'est pas valide.')]
     private ?string $email = null;
 
     /**
@@ -40,6 +43,11 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
      * @var string The hashed password
      */
     #[ORM\Column]
+    #[Assert\NotBlank()]
+    #[Assert\Regex(
+        pattern: '/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!#%*\-?&])[A-Za-z\d@$!#%*\-?&]{12,}$/',
+        message: 'Le mot de passe doit contenir au moins 12 caractères, avec au moins une majuscule, une minuscule, un chiffre et un caractère spécial.'
+    )]
     private ?string $password = null;
 
     #[ORM\Column(type: 'datetime')]
@@ -56,14 +64,29 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
     #[ORM\Column(type: 'string', length: 100)]
     #[Groups(['device:read', 'user:read', 'warn:read'])]
+    #[Assert\NotBlank()]
+    #[Assert\Regex(
+        pattern: '/^[A-Za-zÀ-ÖØ-öø-ÿ]{2,}$/',
+        message: 'Le nom doit contenir au moins 2 caractères alphabétiques.'
+    )]
     private string $username;
 
     #[ORM\Column(type: 'string', length: 255, nullable: true)]
     #[Groups(['device:read', 'user:read', 'warn:read'])]
+    #[Assert\NotBlank()]
+    #[Assert\Regex(
+        pattern: '/^[A-Za-zÀ-ÖØ-öø-ÿ]{2,}$/',
+        message: 'Le nom doit contenir au moins 2 caractères alphabétiques.'
+    )]
     private ?string $firstname = null;
 
     #[ORM\Column(type: 'string', length: 255, nullable: true)]
     #[Groups(['device:read', 'user:read', 'warn:read'])]
+    #[Assert\NotBlank()]
+    #[Assert\Regex(
+        pattern: '/^[A-Za-zÀ-ÖØ-öø-ÿ]{2,}$/',
+        message: 'Le nom doit contenir au moins 2 caractères alphabétiques.'
+    )]
     private ?string $lastname = null;
 
     #[ORM\Column(nullable: true)]

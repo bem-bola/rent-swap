@@ -71,6 +71,7 @@ class ResetPasswordController extends AbstractController
 
     /**
      * Valide et traite l’URL de réinitialisation cliquée par l’utilisateur dans l’email.
+     * @throws TransportExceptionInterface
      */
     #[Route('/reset/{token}', name: 'reset')]
     public function reset(Request $request, TranslatorInterface $translator, ?string $token = null): Response

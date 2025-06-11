@@ -21,5 +21,4 @@ return [
     Knp\Bundle\PaginatorBundle\KnpPaginatorBundle::class => ['all' => true],
     Symfony\UX\Dropzone\DropzoneBundle::class => ['all' => true],
     SymfonyCasts\Bundle\ResetPassword\SymfonyCastsResetPasswordBundle::class => ['all' => true],
-    Gregwar\CaptchaBundle\GregwarCaptchaBundle::class => ['all' => true],
 ];
