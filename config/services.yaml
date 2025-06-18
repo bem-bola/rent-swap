@@ -55,4 +55,10 @@ services:
             $pathItemsMenu: '%kernel.project_dir%/config/items-menu.yaml'
         tags: ['twig.extension']
 
+    App\EventListener\AccessDeniedToNotFoundListener:
+        tags:
+            - { name: kernel.event_listener, event: kernel.exception }
 
+    App\EventListener\LoginFailureListener:
+        tags:
+            - { name: kernel.event_subscriber }

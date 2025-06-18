@@ -22,11 +22,12 @@ use App\Service\UploadFileService;
 use Doctrine\DBAL\Exception;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Symfony\Component\Finder\Exception\AccessDeniedException;
+use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Mailer\Exception\TransportExceptionInterface;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
@@ -158,6 +159,7 @@ class UserController extends AbstractController
      * @param Request $request
      * @param Device $device
      * @return Response
+     * @throws \Exception
      */
     #[Route(path: '/device/update/{slug}', name: 'update_device')]
     public function updateDevice(Request $request, Device $device): Response
@@ -194,14 +196,13 @@ class UserController extends AbstractController
 
                 return $this->deviceService->redirect($form, ['slug' => $device->getSlug()], $this->getUser());
            }
-        }catch (AccessDeniedHttpException $e){
+        } catch (AccessDeniedException $e){
             $this->loggerService->write(Constances::LEVEL_ERROR, $e->getMessage(), Response::HTTP_UNAUTHORIZED, $this->getUser());
-            dd($e->getMessage(), $e->getCode(), 'renvoyer page 404 - acces refusé');
-        }catch (\Exception $e){
-            $this->loggerService->write(Constances::LEVEL_ERROR, $e->getMessage(), null, $this->getUser());
+            throw new NotFoundHttpException('Not found');
+        } catch (\Exception $e){
+            $this->loggerService->write(Constances::LEVEL_ERROR, $e->getMessage(), $e->getCode(), $this->getUser());
             $this->addFlash('error', "une erreur s'est produite lors de la modification de cette annonce");
-
-            dd('renvoyer page 404 - acces refusé', $e->getMessage());
+            throw new \Exception();
         }
 
         return $this->render('security/update_device.html.twig', [
@@ -245,6 +246,10 @@ class UserController extends AbstractController
             'form' => $form->createView(),
         ]);
     }
+
+    /**
+     * @throws \Exception
+     */
     #[Route(path: '/device/update/status/{slug}/{status}', name: 'device_set_status')]
     public function setStatus(string $slug, string $status): Response{
         try{
@@ -259,10 +264,13 @@ class UserController extends AbstractController
             elseif($status === Constances::PENDING) $this->addFlash('success', 'Votre annonce a été sauvergardée et sera validée par notre équipe');
 
             return $this->redirectToRoute('app_user_devices');
-        }catch (\Exception $e){
-            $this->loggerService->write(Constances::LEVEL_ERROR, $e->getMessage(), null, $this->getUser());
-
-            dd('page error', $e->getMessage());
+        }catch (AccessDeniedException $e){
+            $this->loggerService->write(Constances::LEVEL_ERROR, $e->getMessage(), Response::HTTP_UNAUTHORIZED, $this->getUser());
+            throw new NotFoundHttpException('Not found');
+        } catch (\Exception $e){
+            $this->loggerService->write(Constances::LEVEL_ERROR, $e->getMessage(), $e->getCode(), $this->getUser());
+            $this->addFlash('error', "une erreur s'est produite lors de la modification de cette annonce");
+            throw new \Exception();
         }
     }
 
@@ -270,6 +278,7 @@ class UserController extends AbstractController
      * @param Request $request
      * @param Device $device
      * @return Response
+     * @throws \Exception
      */
     #[Route(path: '/device/images/uploads/{slug}', name: 'upload_image_device', options: ["expose" => true])]
     public function categoriesDevices(Request $request, Device $device): Response{
@@ -298,11 +307,13 @@ class UserController extends AbstractController
             }
 
 
-        }catch (AccessDeniedHttpException $e){
+        }catch (AccessDeniedException $e){
             $this->loggerService->write(Constances::LEVEL_ERROR, $e->getMessage(), Response::HTTP_UNAUTHORIZED, $this->getUser());
-            dd($e->getMessage(), $e->getCode(), 'renvoyer page 404 - acces refusé');
-        } catch (\Exception $e) {
-            dd($e->getMessage(), $e->getCode(), 'renvoyer page 404 - acces refusé');
+            throw new NotFoundHttpException('Not found');
+        } catch (\Exception $e){
+            $this->loggerService->write(Constances::LEVEL_ERROR, $e->getMessage(), $e->getCode(), $this->getUser());
+            $this->addFlash('error', "une erreur s'est produite lors de la modification de cette annonce");
+            throw new \Exception();
         }
 
         return $this->render('security/upload_image.html.twig', [

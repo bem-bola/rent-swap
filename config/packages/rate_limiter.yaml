@@ -10,5 +10,5 @@ framework:
     # Limiteur global : IP seule
     ip_login:
       policy: sliding_window
-      limit: 50              # Max 50 tentatives toutes IP confondues
-      interval: '15 minutes'
+      limit: 10              # Max 10 tentatives toutes IP confondues
+      interval: '60 minutes'

@@ -1,0 +1,98 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Hello ContactController!{% endblock %}
+
+{% block main %}
+<div class="col-7 mx-auto d-flex search-item flex-column flex-wrap flex-lg-row mt-5 bg-white rounded-4 py-5">
+
+    <h1 class="text-center mb-5 col-12 h3 fw-700">Nous contacter</h1>
+    {{ form_start(form, {
+        'attr': {
+            'class': 'col-12'
+        }
+    }) }}
+
+
+    <div class="my-custom-class-for-errors">
+        {{ form_errors(form) }}
+    </div>
+
+    <div class="col-10 mx-auto mb-4">
+        {{ form_label(form.name, '', {
+            'label_attr': {
+                'class': 'mb-2 fw-500'
+            }
+        }) }}
+        <span class="text-danger">*</span>
+        <div class="col-6">
+            {{ form_widget(form.name, {
+                'attr': {
+                    'class': 'form-control rounded-4 py-2 fw-300'
+                }
+            }) }}
+        </div>
+
+        <div class="content-error bg-theme-gray bg-opacity-25 px-4 mt-3">
+            <p class="text-danger mb-0 font-size-08 mt-1 fst-italic input-error">{{ form_errors(form.name) }}</p>
+            <p class="text-danger mb-0 font-size-08 mt-1 fst-italic input-error-pattern d-none">Le nom doit contenir au moins 2 caractères alphabétiques</p>
+        </div>
+
+    </div>
+
+    <div class="col-10 mx-auto mb-4">
+        {{ form_label(form.email, '', {
+            'label_attr': {
+                'class': 'mb-2 fw-500'
+            }
+        }) }}
+        <span class="text-danger">*</span>
+        <div class="col-6">
+            {{ form_widget(form.email, {
+                'attr': {
+                    'class': 'form-control rounded-4 py-2 fw-300'
+                }
+            }) }}
+        </div>
+    </div>
+
+    <div class="col-10 mx-auto mb-4">
+        {{ form_label(form.subject, 'Objet', {
+            'label_attr': {
+                'class': 'mb-2 fw-500'
+            }
+        }) }}
+        <span class="text-danger">*</span>
+        <div class="col-6">
+            {{ form_widget(form.subject, {
+                'attr': {
+                    'class': 'form-control rounded-4 py-2 fw-300'
+                }
+            }) }}
+        </div>
+    </div>
+
+    <div class="col-10 mx-auto mb-4">
+        {{ form_label(form.message, '', {
+            'label_attr': {
+                'class': 'mb-2 fw-500'
+            }
+        }) }}
+        {{ form_widget(form.message, {
+            'attr': {
+                'class': 'form-control rounded-4 py-3 fw-300',
+                'rows': 10,
+            }
+        }) }}
+    </div>
+    <div class="d-flex justify-content-center">
+        {{ form_widget(form.send, {
+            'attr': {
+                'class': 'bg-theme-dark text-white border-0 px-auto py-2 rounded-pill col-2'
+            }
+        }) }}
+    </div>
+
+    {{ form_end(form) }}
+
+</div>
+{% endblock %}
