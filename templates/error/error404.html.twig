@@ -1,0 +1,11 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Reusiix - Error 404{% endblock %}
+{% block main %}
+
+    <div class="d-flex justify-content-center flex-column align-items-center vh-30">
+        <h1>Oups, je suis dans le désert...</h1>
+        <p>La page que vous essayez d’atteindre est introuvable.</p>
+        <a href="{{ path('app_home') }}" class=" bg-theme-dark text-white fw-500 py-3 px-5 rounded-pill">Retourner à l'accueil</a>
+    </div>
+{% endblock %}

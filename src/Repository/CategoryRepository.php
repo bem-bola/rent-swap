@@ -21,6 +21,7 @@ class CategoryRepository extends ServiceEntityRepository
     }
 
     /**
+     * categories by name
      * @return Category[] Returns an array of Category objects
      */
     public function findByLikeByName(string $name): array
