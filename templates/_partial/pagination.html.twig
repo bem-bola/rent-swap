@@ -1,4 +1,4 @@
-<div class="pagination-content col-auto mx-auto bg-white rounded-pill">
+<div class="pagination-content col-auto mx-auto bg-white rounded-3">
 
     <ul class="pagination d-flex justify-content-center mt-5">
 
@@ -11,7 +11,7 @@
             %}
 
             {# Bouton "Précédent" #}
-            <li class="{{ currentPage == 1 ? 'pointer-events-none' : 'cursor-pointer' }} rounded-3 p-2"
+            <li class="{{ currentPage == 1 ? 'pointer-events-none opacity-25' : 'cursor-pointer' }} rounded-3 p-2"
                 hx-get="{{ path(routeName) ~ url|replacePage(currentPage-1, sort, status, title) }}"
                 hx-target="#result"
                 hx-swap="outerHTML"
@@ -39,7 +39,7 @@
 
             {# Affichage des boutons de pagination #}
             {% for page in startPage..endPage %}
-                <li  class="{{ page == currentPage ? 'bg-theme-dark color-theme-white-2 active pointer-events-none': 'cursor-pointer' }} rounded-pill p-2"
+                <li  class="{{ page == currentPage ? 'opacity-25 active pointer-events-none': 'cursor-pointer' }} rounded-pill p-2"
                      hx-get="{{ path(routeName) ~ url|replacePage(page, sort, status, title) }}"
                      hx-target="#result"
                      hx-swap="outerHTML"
@@ -49,7 +49,7 @@
             {% endfor %}
 
             {# Bouton "Suivant" #}
-            <li class="{{ currentPage == nbPage ? 'pointer-events-none' : 'cursor-pointer' }} rounded-3 p-2"
+            <li class="{{ currentPage == nbPage ? 'pointer-events-none opacity-25gh' : 'cursor-pointer' }} rounded-3 p-2"
                 hx-get="{{ path(routeName) ~ url|replacePage(currentPage+1, sort, status, title) }}"
                 hx-target="#result"
                 hx-swap="outerHTML"

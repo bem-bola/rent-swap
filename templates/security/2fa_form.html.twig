@@ -1,0 +1,36 @@
+{% extends 'base_user.html.twig' %}
+
+{% block title %}Reusiix - Confirmation{% endblock %}
+
+{% block body %}
+
+    <form action="{{ path('2fa_login_check') }}" method="post">
+        <input type="hidden" name="_csrf_token" value="{{ csrf_token('2fa') }}">
+        <div class="mb-5">
+            <h1 class="h3 fw-700 text-center mb-1">Vérification en deux étapes</h1>
+            {% include '_partial/alert_user.html.twig' %}
+
+            <div class="text-success text-center">Un code de vérification a été envoyé à votre adresse e-mail.</div>
+        </div>
+
+
+        <div class="">
+            <label for="auth_code" class="mb-2 fw-500">Code de vérification <span class="text-danger">*</span></label>
+            <input type="text" id="auth_code" name="_auth_code"
+                   class="form-control mb-4 fw-300 py-3 px-3 rounded-4"
+                   required>
+        </div>
+
+        <div class="mb-4">
+            <input type="checkbox" id="trusted" name="_trusted" class="rounded-1 border-theme-dark form-check-input"
+                   >
+            <label for="trusted" class="fw-500 mb-2 font-size-08 fst-italic">Je fais confiance à cet appareil</label>
+        </div>
+
+        <div class="d-flex justify-content-center gap-2">
+            <a href="{{ path('app_logout') }}" class="bg-danger text-white border-0 px-5 py-3 rounded-pill">Annuler</a>
+            <button class="bg-theme-dark text-white border-0 px-5 py-3 rounded-pill" type="submit">Valider</button>
+        </div>
+
+    </form>
+{% endblock %}

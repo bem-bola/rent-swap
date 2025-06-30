@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-BmbxuPwQa2lc/FVzBcNJ7UAyJxM6wuqIj61tLrc4wSX0szH/Ev+nYRRuWlolflfl" crossorigin="anonymous">
+    <title>Document</title>
+</head>
+<body>
+
+<div style="width: 45%; margin: 5rem auto; padding: 1.5rem; background-color: #F2F2F2; border-radius: 5px;">
+
+<p>Bonjour {{ user.username|capitalize }},</p>
+
+<p>Nous avons reçu votre demande de code à usage unique à utiliser avec votre compte Reusiix.</p>
+
+<p>Votre code à usage unique est :
+   <span style="background-color: #1a1d20; color: #FFF; text-align: center; font-size: 1.5rem; padding: 0.3rem;">{{ code }}</span>
+</p>
+
+<p>Ce code ne peut être saisi que sur un site web ou une application officielle. Ne le partagez avec personne. Nous ne vous le demanderons jamais en dehors d’une plateforme officielle.</p>
+
+
+<p>
+    Merci,<br>
+    L’équipe des comptes Reusiix<br>
+    <a href="{{ absolute_url(path('app_home')) }}" class="fw-bold">Reusiix</a>
+</p>
+
+
+</div>
+</body>
+
+</html>
