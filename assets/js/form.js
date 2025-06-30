@@ -4,6 +4,7 @@ const regexMap = {
     name: /^[A-Za-zÀ-ÖØ-öø-ÿ\s'-]{2,}$/, // Supporte les espaces et apostrophes
 };
 
+
 const togglePassword = () => {
     const btnToggles = document.querySelectorAll('.toggle-password');
     if (!btnToggles) return;

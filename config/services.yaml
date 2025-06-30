@@ -50,6 +50,10 @@ services:
             $dataFixture: '%kernel.project_dir%/dataFixtures/'
             $uploadFileDevice: '%kernel.project_dir%/public/upload/devices/'
 
+    App\Service\TwoFaCodeMailerService:
+        arguments:
+            $adressEmailNoReply: '%env(EMAIL_NO_REPLY)%'
+
     App\Twig\GlobalVariable:
         arguments:
             $pathItemsMenu: '%kernel.project_dir%/config/items-menu.yaml'

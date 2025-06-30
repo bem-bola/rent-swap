@@ -85,35 +85,6 @@
             </div>
         </div>
     </section>
-    <section class="mt-5" id="section-home-5">
-        <h2 class="text-center fs-2 fw-bold">Ils nous font déjà confiance !</h2>
-
-        <div class="carousel-container position-relative overflow-hidden m-auto col-10 col-lg-5 mt-5 py-3 ">
-            {% for slide in slides %}
-                <div class="carousel-slide py-5 col-12 col-lg-8  mx-auto bg-theme-yellow-2  rounded-3 {{ loop.first ? 'active' : '' }}">
-
-                    <div class="bg-white col-9 px-4 py-4 rounded-3 mx-auto">
-                        <!-- Les étoiles -->
-                        {% for i in 1..5 %}
-                            <span class="me-1"><i class="bi bi-star-fill fs-4 color-theme-yellow"></i></span>
-                        {% endfor %}
-                        <p>{{ slide.auteur }}</p>
-
-                        <p class="h6"> {{ slide.text|length > 100 ? slide.text |slice(0, 100) ~ '...' : slide.text }} </p>
-                    </div>
-                </div>
-            {% endfor %}
-
-            <div class="carousel-buttons position-absolute d-flex justify-content-between col-12 top-50">
-                <button id="carousel-prev" class="width-height-2 carousel-prev border-0 bg-theme-dark text-white rounded-circle"><i
-                            class="bi bi-chevron-left fw-bold "></i></button>
-                <button id="carousel-next" class="carousel-next width-height-2 border-0 bg-theme-dark text-white rounded-circle"><i
-                            class="bi bi-chevron-right"></i></button>
-            </div>
-        </div>
-
-    </section>
-
 
 {% endblock %}
 
